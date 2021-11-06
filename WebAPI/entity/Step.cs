@@ -1,19 +1,13 @@
-﻿using Dapper.Contrib.Extensions;
-using DapperExtensions.Mapper;
+﻿using SqlSugar;
 
 namespace WebAPI.entity {
-	[Table("step")]
+	[SugarTable("step")]
 	public class Step {
-		[Key]
+		[SugarColumn(ColumnName = "id", IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
+		[SugarColumn(ColumnName = "step_id")]
 		public int StepId { get; set; }
+		[SugarColumn(ColumnName = "name")]
 		public string Name { get; set; }
-	}
-	public sealed class StepCustomMapper : ClassMapper<Step> {
-		public StepCustomMapper() {
-			Table("step");
-			Map(o => o.StepId).Column("step_id");
-			AutoMap();
-		}
 	}
 }

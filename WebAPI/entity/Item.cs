@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
-using DapperExtensions.Mapper;
 
 namespace WebAPI.entity {
-	[Table("item")]
 	public class Item {
 		public Item() {
 		}
@@ -21,7 +18,6 @@ namespace WebAPI.entity {
 			Report_id = reportId;
 		}
 
-		[Key]
 		public int Id { get; set; }
 		public string Module_id { get; set; }
 		public string Item_id { get; set; }

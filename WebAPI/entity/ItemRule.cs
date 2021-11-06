@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
 
 namespace WebAPI.entity {
-	[Table("item_rule")]
 	public class ItemRule {
 		public ItemRule() {
 		}
@@ -26,7 +24,6 @@ namespace WebAPI.entity {
 			Max_length_text = maxLengthText;
 		}
 
-		[Key]
 		public int Id { get; set; }
 		public string Module_id { get; set; }
 		public string Item_id { get; set; }

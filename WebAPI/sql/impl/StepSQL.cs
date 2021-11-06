@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using WebAPI.dto;
 using WebAPI.entity;
 using WebAPI.utils;
-using Dapper;
 
 namespace WebAPI.sql.impl {
 	public class StepSQL : IStepSQL {
@@ -34,7 +33,7 @@ namespace WebAPI.sql.impl {
                         FROM
                             role_step rs
                         WHERE
-                            rs.role_id IN @ids
+                            rs.role_id IN (@ids)
                         AND
                             s.step_id = rs.step_id
                     )
@@ -59,7 +58,7 @@ namespace WebAPI.sql.impl {
                            FROM
                                role_step rs
                            WHERE
-                               rs.role_id IN @ids
+                               rs.role_id IN (@ids)
                            AND
                                s0.step_id = rs.step_id
                        )
@@ -84,9 +83,6 @@ namespace WebAPI.sql.impl {
 		}
 
 		long IStepSQL.Save(Step step) {
-			string sql = @"
-				INSERT INTO step([step]) OUTPUT INSERTED.id VALUES(@step);
-			";
 			return dataSource.Save(step);
 		}
 

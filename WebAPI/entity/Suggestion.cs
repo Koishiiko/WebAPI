@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
 
 namespace WebAPI.entity {
-	[Table("suggestion")]
 	public class Suggestion {
 		public Suggestion() {
 		}
@@ -17,7 +15,6 @@ namespace WebAPI.entity {
 			Value = value;
 		}
 
-		[Key]
 		public int Id { get; set; }
 		public string Module_id { get; set; }
 		public string Item_id { get; set; }

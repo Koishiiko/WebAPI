@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
+using SqlSugar;
 
 namespace WebAPI.entity {
-	[Table("account")]
+	[SugarTable("account")]
 	public class Account {
-		[Key]
+		[SugarColumn(IsPrimaryKey =true, IsIdentity =true)]
 		public int Id { get; set; }
-		public string Account_key { get; set; }
-		public string Account_name { get; set; }
+		public string AccountKey { get; set; }
+		public string AccountName { get; set; }
 		public string Password { get; set; }
 	}
 }

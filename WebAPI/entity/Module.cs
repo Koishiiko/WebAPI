@@ -1,7 +1,4 @@
-﻿using Dapper.Contrib.Extensions;
-
-namespace WebAPI.entity {
-	[Table("module")]
+﻿namespace WebAPI.entity {
 	public class Module {
 		public Module() {
 		}
@@ -13,7 +10,6 @@ namespace WebAPI.entity {
 			Name = name;
 		}
 
-		[Key]
 		public int Id { get; set; }
 		public int Step_id { get; set; }
 		public string Module_id { get; set; }
