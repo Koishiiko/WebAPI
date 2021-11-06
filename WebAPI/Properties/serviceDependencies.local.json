@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:StepContext"
+    },
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:ModuleContext"
+    },
+    "mssql3": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:WebAPIContext"
+    }
+  }
+}
