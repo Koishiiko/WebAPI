@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SqlSugar;
 
 namespace WebAPI.entity {
 	public class Suggestion {
@@ -10,14 +11,15 @@ namespace WebAPI.entity {
 
 		public Suggestion(int id, string moduleId, string itemId, string value) {
 			Id = id;
-			Module_id = moduleId;
-			Item_id = itemId;
+			ModuleId = moduleId;
+			ItemId = itemId;
 			Value = value;
 		}
 
+		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
-		public string Module_id { get; set; }
-		public string Item_id { get; set; }
+		public string ModuleId { get; set; }
+		public string ItemId { get; set; }
 		public string Value { get; set; }
 	}
 }

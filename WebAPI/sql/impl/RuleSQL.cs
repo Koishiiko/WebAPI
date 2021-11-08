@@ -8,7 +8,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class RuleSQL : IRuleSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; }
 
 		public RuleSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;
@@ -57,9 +57,6 @@ namespace WebAPI.sql.impl {
 		}
 
 		public bool Update(ItemRule rule) {
-			string sql = @"
-				
-			";
 			return dataSource.Update(rule);
 		}
 

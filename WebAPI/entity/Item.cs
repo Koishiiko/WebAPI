@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SqlSugar;
 
 namespace WebAPI.entity {
 	public class Item {
@@ -10,21 +11,22 @@ namespace WebAPI.entity {
 
 		public Item(int id, string moduleId, string itemId, string name, string type, string recordId, string reportId) {
 			Id = id;
-			Module_id = moduleId;
-			Item_id = itemId;
+			ModuleId = moduleId;
+			ItemId = itemId;
 			Name = name;
 			Type = type;
-			Record_id = recordId;
-			Report_id = reportId;
+			RecordId = recordId;
+			ReportId = reportId;
 		}
 
+		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
-		public string Module_id { get; set; }
-		public string Item_id { get; set; }
+		public string ModuleId { get; set; }
+		public string ItemId { get; set; }
 		public string Name { get; set; }
 		public string Type { get; set; }
-		public string Record_id { get; set; }
-		public string Report_id { get; set; }
+		public string RecordId { get; set; }
+		public string ReportId { get; set; }
 	}
 
 }

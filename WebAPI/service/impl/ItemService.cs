@@ -9,9 +9,9 @@ using WebAPI.sql;
 namespace WebAPI.service.impl {
 	public class ItemService : IItemService {
 
-		private readonly IItemSQL itemSQL;
-		private readonly IRuleSQL ruleSQL;
-		private readonly ISuggestionSQL suggestionSQL;
+		private IItemSQL itemSQL { get; }
+		private IRuleSQL ruleSQL { get; }
+		private ISuggestionSQL suggestionSQL { get; }
 
 		public ItemService(IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL) {
 			this.itemSQL = itemSQL;
@@ -32,8 +32,8 @@ namespace WebAPI.service.impl {
 				if (curr == null || curr.Id != row.id) {
 					ItemRule rules = row.rule_id != null ? new ItemRule(row.rule_id, row.module_id, row.item_id,
 									row.required, row.required_text,
-									row.minValue, row.minValueText, row.maxValue, row.maxValueText,
-									row.minLength, row.minLengthText, row.maxLength, row.maxLengthText)
+									row.min_value, row.min_value_text, row.max_value, row.max_value_text,
+									row.min_length, row.min_length_text, row.max_length, row.max_length_text)
 									: null;
 
 					curr = new ItemDTO(
@@ -63,8 +63,8 @@ namespace WebAPI.service.impl {
 
 			ItemRule rules = rows[0].rule_id != null ? new ItemRule(rows[0].rule_id, rows[0].module_id, rows[0].item_id,
 								rows[0].required, rows[0].required_text,
-								rows[0].minValue, rows[0].minValueText, rows[0].maxValue, rows[0].maxValueText,
-								rows[0].minLength, rows[0].minLengthText, rows[0].maxLength, rows[0].maxLengthText)
+								rows[0].min_value, rows[0].min_value_text, rows[0].max_value, rows[0].max_value_text,
+								rows[0].min_length, rows[0].min_length_text, rows[0].max_length, rows[0].max_length_text)
 								: null;
 
 			ItemDTO data = new ItemDTO(
@@ -85,14 +85,14 @@ namespace WebAPI.service.impl {
 			long id = itemSQL.Save(data);
 
 			ItemRule rules = item.Rules;
-			rules.Module_id = item.ModuleId;
-			rules.Item_id = item.ItemId;
+			rules.ModuleId = item.ModuleId;
+			rules.ItemId = item.ItemId;
 			ruleSQL.Save(rules);
 
 			if (item.Suggestions.Any()) {
 				item.Suggestions.ForEach((suggestion) => {
-					suggestion.Module_id = item.ModuleId;
-					suggestion.Item_id = item.ItemId;
+					suggestion.ModuleId = item.ModuleId;
+					suggestion.ItemId = item.ItemId;
 					suggestionSQL.Save(suggestion);
 				});
 			}
@@ -105,15 +105,15 @@ namespace WebAPI.service.impl {
 			bool res = itemSQL.Update(data);
 
 			ItemRule rules = item.Rules;
-			rules.Module_id = item.ModuleId;
-			rules.Item_id = item.ItemId;
+			rules.ModuleId = item.ModuleId;
+			rules.ItemId = item.ItemId;
 			ruleSQL.Update(item.Rules);
 
 			suggestionSQL.DeleteByItemId(item.ModuleId, item.ItemId);
 			if (item.Suggestions.Any()) {
 				item.Suggestions.ForEach((suggestion) => {
-					suggestion.Module_id = item.ModuleId;
-					suggestion.Item_id = item.ItemId;
+					suggestion.ModuleId = item.ModuleId;
+					suggestion.ItemId = item.ItemId;
 					suggestionSQL.Save(suggestion);
 				});
 			}

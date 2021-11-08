@@ -8,7 +8,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class ItemSQL : IItemSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; } 
 
 		public ItemSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;

@@ -8,7 +8,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class RecordSQL : IRecordSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; }
 
 		public RecordSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;

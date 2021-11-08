@@ -8,7 +8,7 @@ using WebAPI.sql;
 namespace WebAPI.service.impl {
 	public class ModuleService : IModuleService {
 
-		private readonly IModuleSQL moduleSQL;
+		private IModuleSQL moduleSQL { get; }
 
 		public ModuleService(IModuleSQL moduleSQL) {
 			this.moduleSQL = moduleSQL;

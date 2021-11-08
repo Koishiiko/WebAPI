@@ -7,7 +7,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class StepSQL : IStepSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; }
 
 		public StepSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;

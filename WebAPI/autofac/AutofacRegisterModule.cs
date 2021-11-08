@@ -11,10 +11,6 @@ namespace WebAPI.autofac {
 			builder.RegisterAssemblyTypes(Assembly.Load("WebAPI"))
 				.Where(a => a.Name.EndsWith("SQL") || a.Name.EndsWith("Service")).AsImplementedInterfaces();
 
-			//var controllerBaseType = typeof(ControllerBase);
-			//builder.RegisterAssemblyTypes(typeof(Program).Assembly)
-			//	.Where(t => controllerBaseType.IsAssignableFrom(t) && t != controllerBaseType);
-
 			builder.RegisterType<DataSource>().As<IDataSource>().InstancePerDependency().AsImplementedInterfaces();
 		}
 	}

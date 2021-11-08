@@ -8,7 +8,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class SuggestionSQL : ISuggestionSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; }
 
 		public SuggestionSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;

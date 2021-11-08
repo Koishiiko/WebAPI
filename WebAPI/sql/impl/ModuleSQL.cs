@@ -8,7 +8,7 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class ModuleSQL : IModuleSQL {
 
-		private readonly IDataSource dataSource;
+		private IDataSource dataSource { get; }
 
 		public ModuleSQL(IDataSource dataSource) {
 			this.dataSource = dataSource;
@@ -26,7 +26,7 @@ namespace WebAPI.sql.impl {
 
 		public int GetCountByStepId(int id) {
 			string sql = @"SELECT COUNT(id) AS rows FROM module WHERE step_id = @id";
-			return dataSource.Count(sql, new { id = id });
+			return dataSource.QueryOne<int>(sql, new { id = id });
 		}
 
 		public long Save(Module module) {
@@ -34,7 +34,6 @@ namespace WebAPI.sql.impl {
 		}
 
 		public bool Update(Module module) {
-			string sql = @"";
 			return dataSource.Update(module);
 		}
 

@@ -13,7 +13,7 @@ namespace WebAPI.controller {
 	[ApiController]
 	public class ModulesController : ControllerBase {
 
-		private readonly IModuleService moduleService;
+		private IModuleService moduleService { get; }
 
 		public ModulesController(IModuleService moduleService) {
 			this.moduleService = moduleService;

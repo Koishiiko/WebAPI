@@ -9,7 +9,7 @@ using WebAPI.sql;
 namespace WebAPI.service.impl {
 	public class StepService : IStepService {
 
-		private readonly IStepSQL stepSQL;
+		private IStepSQL stepSQL { get; }
 
 		public StepService(IStepSQL stepSQL) {
 			this.stepSQL = stepSQL;

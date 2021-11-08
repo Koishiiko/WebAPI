@@ -14,7 +14,7 @@ namespace WebAPI.controller {
 	[ApiController]
 	public class ItemsController : ControllerBase {
 
-		private readonly IItemService itemService;
+		private IItemService itemService { get; }
 
 		public ItemsController(IItemService itemService) {
 			this.itemService = itemService;
