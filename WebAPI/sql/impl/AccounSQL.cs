@@ -26,14 +26,14 @@ namespace WebAPI.sql.impl {
 			string sql = @"
                 SELECT id, account_key, account_name, password FROM account WHERE account_key = @accountKey
 			";
-			return dataSource.QueryOne<Account>(sql, accountKey);
+			return dataSource.QueryOne<Account>(sql, new { accountKey });
 		}
 
 		public Account GetById(int id) {
 			string sql = @"
                 SELECT id, account_key, account_name, password FROM account WHERE id = @id
 			";
-			return dataSource.QueryOne<Account>(sql, id);
+			return dataSource.QueryOne<Account>(sql, new { id });
 		}
 
 		public List<dynamic> GetByPage(AccountPagination pagination) {

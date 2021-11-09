@@ -19,7 +19,7 @@ namespace WebAPI.sql {
 
 		List<ReportDTO> GetALLByProductId(string productId);
 
-		ReportDTO GetLastByProductId(int stepId, string productId);
+		Report GetLastByProductId(int stepId, string productId);
 
 		Report GetByGuid(string guid);
 

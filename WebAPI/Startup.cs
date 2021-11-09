@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using WebAPI.autofac;
+using WebAPI.filter;
 
 namespace WebAPI {
 	public class Startup {
@@ -21,7 +22,10 @@ namespace WebAPI {
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddOptions();
-			services.AddControllers();
+			services.AddControllers(options => {
+				options.Filters.Add<LogFilter>();
+				options.Filters.Add<ResultFilter>();
+			});
 			services.AddSwaggerGen(c => {
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
 			});

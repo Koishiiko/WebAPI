@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SqlSugar;
 
 namespace WebAPI.entity {
+	[SugarTable("report_template")]
 	public class ReportTemplate {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }

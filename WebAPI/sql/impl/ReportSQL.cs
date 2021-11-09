@@ -143,7 +143,7 @@ namespace WebAPI.sql.impl {
 			return dataSource.QueryMany<ReportDTO>(sql, new { productId });
 		}
 
-		public ReportDTO GetLastByProductId(int stepId, string productId) {
+		public Report GetLastByProductId(int stepId, string productId) {
 			string sql = @"
                 SELECT
                     id, test_guid,
@@ -155,7 +155,7 @@ namespace WebAPI.sql.impl {
                 WHERE product_id = @productId AND step_id = @stepId
                 ORDER BY end_time DESC
 			";
-			return dataSource.QueryOne<ReportDTO>(sql, new { stepId, productId });
+			return dataSource.QueryOne<Report>(sql, new { stepId, productId });
 		}
 
 		public Report GetByGuid(string guid) {

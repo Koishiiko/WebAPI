@@ -7,7 +7,7 @@ using WebAPI.dto;
 using WebAPI.pagination;
 
 namespace WebAPI.sql {
-	interface IDetailSQL {
+	public interface IDetailSQL {
 
 		List<Detail> GetByGuid(string guid);
 

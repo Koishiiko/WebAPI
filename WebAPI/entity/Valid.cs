@@ -6,6 +6,6 @@ namespace WebAPI.entity {
 		public int Id { get; set; }
 		public string Guid { get; set; }
 		public string ModuleId { get; set; }
-		public string Value { get; set; }
+		public bool Value { get; set; }
 	}
 }

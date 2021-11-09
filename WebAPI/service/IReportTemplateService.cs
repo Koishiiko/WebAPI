@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.entity;
 
-namespace WebAPI.sql {
-	public interface IValidSQL {
-		List<Valid> GetByGuid(string guid);
-
-		long Save(Valid valid);
+namespace WebAPI.service {
+	public interface IReportTemplateService {
+		List<ReportTemplate> GetAll();
 	}
 }

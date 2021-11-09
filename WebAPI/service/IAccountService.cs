@@ -18,13 +18,17 @@ namespace WebAPI.service {
 
 		AccountPageDTO GetByPage(AccountPagination pagination);
 
+		Account GetById(int id);
+
 		AccountDTO GetDataById(int id);
 
 		Account GetByAccountKey(string accountKey);
 
+		AccountDTO GetDataByAccountKey(string accountKey);
+
 		long Save(AccountDTO account);
 
-		bool Updata(AccountDTO account);
+		bool Update(AccountDTO account);
 
 		int Delete(int id);
 	}

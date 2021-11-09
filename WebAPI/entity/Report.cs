@@ -17,7 +17,7 @@ namespace WebAPI.entity {
 		public DateTime BeginTime { get; set; }
 		public DateTime EndTime { get; set; }
 		public string Testor { get; set; }
-		public string TestResult { get; set; }
+		public int TestResult { get; set; }
 		public string UploadFlag { get; set; }
 	}
 }
