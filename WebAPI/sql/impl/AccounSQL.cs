@@ -87,7 +87,7 @@ namespace WebAPI.sql.impl {
 		               ON a0.id = ar.account_id
                        WHERE (
                            @accountKey IS NULL OR
-                           @accounKey = '' OR
+                           @accountKey = '' OR
                            a0.account_key = @accountKey
                        ) AND (
                            @roleId IS NULL OR

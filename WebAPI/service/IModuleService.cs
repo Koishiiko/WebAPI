@@ -12,10 +12,10 @@ namespace WebAPI.service {
 
 		List<Module> GetByStepId(int id);
 
-		bool Update(Module module);
+		int Update(Module module);
 
 		long Save(Module module);
 
-		int Delete(int id);
+		int Delete(string id);
 	}
 }

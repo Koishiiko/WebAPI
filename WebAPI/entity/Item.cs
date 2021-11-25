@@ -6,18 +6,6 @@ using SqlSugar;
 
 namespace WebAPI.entity {
 	public class Item {
-		public Item() {
-		}
-
-		public Item(int id, string moduleId, string itemId, string name, string type, string recordId, string reportId) {
-			Id = id;
-			ModuleId = moduleId;
-			ItemId = itemId;
-			Name = name;
-			Type = type;
-			RecordId = recordId;
-			ReportId = reportId;
-		}
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }

@@ -8,88 +8,88 @@ using WebAPI.pagination;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
-	public class RoleService : IRoleService {
+    public class RoleService : IRoleService {
 
-		private IRoleSQL roleSQL { get; }
-		private IAccountRoleSQL accountRoleSQL { get; }
-		private IRoleStepSQL roleStepSQL { get; }
+        private IRoleSQL roleSQL { get; }
+        private IAccountRoleSQL accountRoleSQL { get; }
+        private IRoleStepSQL roleStepSQL { get; }
 
 
-		public RoleService(IRoleSQL roleSQL, IAccountRoleSQL accountRoleSQL, IRoleStepSQL roleStepSQL) {
-			this.roleSQL = roleSQL;
-			this.accountRoleSQL = accountRoleSQL;
-			this.roleStepSQL = roleStepSQL;
-		}
+        public RoleService(IRoleSQL roleSQL, IAccountRoleSQL accountRoleSQL, IRoleStepSQL roleStepSQL) {
+            this.roleSQL = roleSQL;
+            this.accountRoleSQL = accountRoleSQL;
+            this.roleStepSQL = roleStepSQL;
+        }
 
-		public int Delete(int id) {
-			return roleSQL.Delete(id);
-		}
+        public int Delete(int id) {
+            return roleSQL.Delete(id);
+        }
 
-		public List<Role> GetAll() {
-			return roleSQL.GetAll();
-		}
+        public List<Role> GetAll() {
+            return roleSQL.GetAll();
+        }
 
-		public RolePageDTO GetByPage(RolePagination pagination) {
-			return new RolePageDTO() {
-				Data = roleSQL.GetByPage(pagination),
-				Total = roleSQL.GetCount(pagination)
-			};
-		}
+        public RolePageDTO GetByPage(RolePagination pagination) {
+            return new RolePageDTO() {
+                Data = roleSQL.GetByPage(pagination),
+                Total = roleSQL.GetCount(pagination)
+            };
+        }
 
-		public RoleDTO GetDataById(int id) {
-			List<dynamic> rows = roleSQL.GetDataById(id);
-			if (!rows.Any()) {
-				return null;
-			}
+        public RoleDTO GetDataById(int id) {
+            List<dynamic> rows = roleSQL.GetDataById(id);
+            if (!rows.Any()) {
+                return null;
+            }
 
-			RoleDTO data = new RoleDTO() {
-				Id = rows[0].id,
-				Name = rows[0].name,
-				StepIds = roleSQL.GetStepIdsByRoleId(id)
-			};
+            RoleDTO data = new RoleDTO() {
+                Id = rows[0].id,
+                Name = rows[0].name,
+                StepIds = roleSQL.GetStepIdsByRoleId(id)
+            };
 
-			if (rows[0].account_id != null) {
-				data.AccountIds = new List<int>();
-				rows.ForEach((row) => {
-					data.AccountIds.Add(row.account_id);
-				});
-			}
+            if (rows[0].account_id != null) {
+                data.AccountIds = new List<int>();
+                rows.ForEach((row) => {
+                    data.AccountIds.Add(row.account_id);
+                });
+            }
 
-			return data;
-		}
+            return data;
+        }
 
-		public long Save(RoleDTO role) {
-			Role data = new Role() { Id = role.Id, Name = role.Name };
-			long id = roleSQL.Save(data);
+        public long Save(RoleDTO role) {
+            Role data = new Role() { Id = role.Id, Name = role.Name };
+            long id = roleSQL.Save(data);
 
-			if (role.StepIds.Any()) {
-				roleStepSQL.SaveSteps(id, role.StepIds);
-			}
+            if (role.StepIds.Any()) {
+                roleStepSQL.SaveSteps(id, role.StepIds);
+            }
 
-			if (role.AccountIds.Any()) {
-				accountRoleSQL.SaveAccounts(id, role.AccountIds);
-			}
+            if (role.AccountIds.Any()) {
+                accountRoleSQL.SaveAccounts(id, role.AccountIds);
+            }
 
-			return id;
-		}
+            return id;
+        }
 
-		public bool Update(RoleDTO role) {
-			Role data = new Role() { Id = role.Id, Name = role.Name };
-			bool res = roleSQL.Update(data);
+        public int Update(RoleDTO role) {
+            Role data = new Role() { Id = role.Id, Name = role.Name };
+            int res = roleSQL.Update(data) ? 1 : 0;
 
-			if (res) {
-				roleStepSQL.DeleteByRoleId(role.Id);
-				if (role.StepIds.Any()) {
-					roleStepSQL.SaveSteps(role.Id, role.StepIds);
-				}
+            if (res == 1) {
+                roleStepSQL.DeleteByRoleId(role.Id);
+                if (role.StepIds.Any()) {
+                    roleStepSQL.SaveSteps(role.Id, role.StepIds);
+                }
 
-				accountRoleSQL.DeleteByRoleId(role.Id);
-				if (role.AccountIds.Any()) {
-					accountRoleSQL.SaveAccounts(role.Id, role.AccountIds);
-				}
-			}
+                accountRoleSQL.DeleteByRoleId(role.Id);
+                if (role.AccountIds.Any()) {
+                    accountRoleSQL.SaveAccounts(role.Id, role.AccountIds);
+                }
+            }
 
-			return res;
-		}
-	}
+            return res;
+        }
+    }
 }

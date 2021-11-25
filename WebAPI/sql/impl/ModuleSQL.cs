@@ -37,7 +37,7 @@ namespace WebAPI.sql.impl {
 			return dataSource.Update(module);
 		}
 
-		public int Delete(int id) {
+		public int Delete(string id) {
 			string sql = @"DELETE FROM Module WHERE module_id = @id";
 			return dataSource.Delete(sql, new { id = id });
 		}

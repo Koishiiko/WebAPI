@@ -6,15 +6,6 @@ using SqlSugar;
 
 namespace WebAPI.entity {
 	public class Suggestion {
-		public Suggestion() {
-		}
-
-		public Suggestion(int id, string moduleId, string itemId, string value) {
-			Id = id;
-			ModuleId = moduleId;
-			ItemId = itemId;
-			Value = value;
-		}
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }

@@ -22,12 +22,12 @@ namespace WebAPI.controller {
 
 		[HttpGet]
 		public List<Item> GetByModuleId([FromQuery] string moduleId) {
-			return itemService.getByModuleId(moduleId);
+			return itemService.GetByModuleId(moduleId);
 		}
 
 		[HttpGet("form")]
 		public List<ItemDTO> GetFormByModuleId([FromQuery] string moduleId) {
-			return itemService.getDataByModuleId(moduleId);
+			return itemService.GetDataByModuleId(moduleId);
 		}
 
 		[HttpGet("{moduleId}/{itemId}")]
@@ -37,12 +37,7 @@ namespace WebAPI.controller {
 
 		[HttpPost]
 		public long Save([FromBody] ItemDTO item) {
-			return itemService.Save(item);
-		}
-
-		[HttpPut]
-		public bool Update([FromBody] ItemDTO item) {
-			return itemService.Update(item);
+			return item.Id == 0 ? itemService.Save(item) : itemService.Update(item);
 		}
 
 		[HttpDelete("{moduleId}/{itemId}")]

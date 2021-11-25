@@ -11,6 +11,10 @@ namespace WebAPI.service.impl {
 		
 		private IDetailSQL detailSQL { get; }
 
+		public DetailService(IDetailSQL detailSQL) {
+			this.detailSQL = detailSQL;
+		}
+
 		public DetailPageDTO GetPageByGuid(DetailPagination pagination) {
 			return new DetailPageDTO() {
 				Data = detailSQL.GetPageByGuid(pagination),

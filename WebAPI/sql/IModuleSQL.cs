@@ -18,7 +18,7 @@ namespace WebAPI.sql {
 
 		long Save(Module module);
 
-		int Delete(int id);
+		int Delete(string id);
 
 		int DeleteByStepId(int id);
 	}

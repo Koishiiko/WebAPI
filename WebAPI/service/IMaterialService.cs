@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.dto;
+using WebAPI.utils;
 
 namespace WebAPI.service {
 	public interface IMaterialService {
@@ -13,6 +14,6 @@ namespace WebAPI.service {
 
 		MaterialDTO GetByGuid(string guid);
 
-		bool Save(MaterialDTO material);
+		bool Save(MaterialDTO material, AccountJWTPayload payload);
 	}
 }

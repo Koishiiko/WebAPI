@@ -31,5 +31,13 @@ namespace WebAPI.sql.impl {
 
 			return dataSource.Delete(sql, new { id });
 		}
+
+		public int DeleteByStepId(int id) {
+			string sql = @"
+				DELETE FROM role_step WHERE step_id = @id
+			";
+
+			return dataSource.Delete(sql, new { id });
+		}
 	}
 }

@@ -21,7 +21,7 @@ namespace WebAPI.sql.impl {
 
 		public Record GetByRecordId(int id) {
 			string sql = @"SELECT id, record_id, name FROM record WHERE record_id = @id";
-			return dataSource.QueryOne<Record>(sql, new { id = id });
+			return dataSource.QueryOne<Record>(sql, new { id });
 		}
 	}
 }

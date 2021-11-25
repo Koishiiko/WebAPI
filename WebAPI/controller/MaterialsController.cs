@@ -1,44 +1,37 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.service;
-using WebAPI.entity;
 using WebAPI.dto;
-using WebAPI.filter;
+using WebAPI.utils;
 
 namespace WebAPI.controller {
-	[Route("[controller]")]
-	[ApiController]
-	public class MaterialsController : ControllerBase {
+    [Route("[controller]")]
+    [ApiController]
+    public class MaterialsController : ControllerBase {
 
-		private IMaterialService materialService { get; }
+        private IMaterialService materialService { get; }
 
-		public MaterialsController(IMaterialService materialService) {
-			this.materialService = materialService;
-		}
+        public MaterialsController(IMaterialService materialService) {
+            this.materialService = materialService;
+        }
 
-		[HttpGet("productId/{id}")]
-		public MaterialDTO GetByProductId(string id) {
-			return materialService.GetByProductId(id);
-		}
+        [HttpGet("{id}")]
+        public MaterialDTO GetByProductId(string id) {
+            return materialService.GetByProductId(id);
+        }
 
-		[HttpGet("step/{stepId}/{productId}")]
-		public MaterialDTO GetByProductId(int stepId, string productId) {
-			return materialService.GetStepDataByProductId(stepId, productId);
-		}
+        [HttpGet("step/{stepId}/{productId}")]
+        public MaterialDTO GetByStep(int stepId, string productId) {
+            return materialService.GetStepDataByProductId(stepId, productId);
+        }
 
-		[HttpGet("guid/{guid}")]
-		public MaterialDTO GetByGuid(string guid) {
-			return materialService.GetByGuid(guid);
-		}
+        [HttpGet("guid/{guid}")]
+        public MaterialDTO GetByGuid(string guid) {
+            return materialService.GetByGuid(guid);
+        }
 
-		[HttpPost]
-		public bool Save([FromBody] MaterialDTO material) {
-			return materialService.Save(material);
-		}
-
-	}
+        [HttpPost]
+        public bool Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
+            return materialService.Save(material, JWTUtils.Decode<AccountJWTPayload>(authorization));
+        }
+    }
 }

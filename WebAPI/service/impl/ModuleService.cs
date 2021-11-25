@@ -6,32 +6,42 @@ using WebAPI.entity;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
-	public class ModuleService : IModuleService {
+    public class ModuleService : IModuleService {
 
-		private IModuleSQL moduleSQL { get; }
+        private IModuleSQL moduleSQL { get; }
+        private IItemSQL itemSQL { get; }
+        private IRuleSQL ruleSQL { get; }
+        private ISuggestionSQL suggestionSQL { get; }
 
-		public ModuleService(IModuleSQL moduleSQL) {
-			this.moduleSQL = moduleSQL;
-		}
+        public ModuleService(IModuleSQL moduleSQL, IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL){
+            this.moduleSQL = moduleSQL;
+            this.itemSQL = itemSQL;
+            this.ruleSQL = ruleSQL;
+            this.suggestionSQL = suggestionSQL;
+        }
 
-		Module IModuleService.GetById(string id) {
-			return moduleSQL.getById(id);
-		}
+        public Module GetById(string id) {
+            return moduleSQL.getById(id);
+        }
 
-		List<Module> IModuleService.GetByStepId(int id) {
-			return moduleSQL.getByStepId(id);
-		}
+        public List<Module> GetByStepId(int id) {
+            return moduleSQL.getByStepId(id);
+        }
 
-		long IModuleService.Save(Module module) {
-			return moduleSQL.Save(module);
-		}
+        public long Save(Module module) {
+            return moduleSQL.Save(module);
+        }
 
-		bool IModuleService.Update(Module module) {
-			return moduleSQL.Update(module);
-		}
+        public int Update(Module module) {
+            return moduleSQL.Update(module) ? 1 : 0;
+        }
 
-		int IModuleService.Delete(int id) {
-			return moduleSQL.Delete(id);
-		}
-	}
+        public int Delete(string id) {
+            int res = moduleSQL.Delete(id);
+            itemSQL.DeleteByModuleId(id);
+            ruleSQL.DeleteByModuleId(id);
+            suggestionSQL.DeleteByModuleId(id);
+            return res;
+        }
+    }
 }

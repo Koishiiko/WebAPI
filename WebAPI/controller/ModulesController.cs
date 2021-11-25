@@ -9,39 +9,34 @@ using WebAPI.service;
 
 namespace WebAPI.controller {
 
-	[Route("[controller]")]
-	[ApiController]
-	public class ModulesController : ControllerBase {
+    [Route("[controller]")]
+    [ApiController]
+    public class ModulesController : ControllerBase {
 
-		private IModuleService moduleService { get; }
+        private IModuleService moduleService { get; }
 
-		public ModulesController(IModuleService moduleService) {
-			this.moduleService = moduleService;
-		}
+        public ModulesController(IModuleService moduleService) {
+            this.moduleService = moduleService;
+        }
 
-		[HttpGet]
-		public List<Module> GetByStepId([FromQuery] int stepId) {
-			return moduleService.GetByStepId(stepId);
-		}
+        [HttpGet]
+        public List<Module> GetByStepId([FromQuery] int stepId) {
+            return moduleService.GetByStepId(stepId);
+        }
 
-		[HttpGet("{id}")]
-		public Module GetById(string id) {
-			return moduleService.GetById(id);
-		}
+        [HttpGet("{id}")]
+        public Module GetById(string id) {
+            return moduleService.GetById(id);
+        }
 
-		[HttpPut]
-		public bool Update(Module module) {
-			return moduleService.Update(module);
-		}
+        [HttpPost]
+        public long Save([FromBody] Module module) {
+            return module.Id == 0 ? moduleService.Save(module) : moduleService.Update(module);
+        }
 
-		[HttpPost]
-		public long Save(Module module) {
-			return moduleService.Save(module);
-		}
-
-		[HttpDelete("{id}")]
-		public int Delete(int id) {
-			return moduleService.Delete(id);
-		}
-	}
+        [HttpDelete("{id}")]
+        public int Delete(string id) {
+            return moduleService.Delete(id);
+        }
+    }
 }

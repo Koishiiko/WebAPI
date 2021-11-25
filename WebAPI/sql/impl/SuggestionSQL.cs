@@ -54,14 +54,14 @@ namespace WebAPI.sql.impl {
 
 		public int DeleteByStepId(int id) {
 			string sql = @"
-				DELETE FROM suggestion WHERE step_id = @id
+				DELETE FROM suggestion WHERE EXISTS (SELECT module_id FROM module WHERE step_id = @id)
 			";
 			return dataSource.Delete(sql, new { id = id });
 		}
 
 		public int DeleteByItemId(string moduleId, string itemId) {
 			string sql = @"
-				DELETE FROM suggestion WHERE module_id = @moduleId AND item_id = @item_id
+				DELETE FROM suggestion WHERE module_id = @moduleId AND item_id = @itemId
 			";
 			return dataSource.Delete(sql, new { moduleId, itemId });
 		}

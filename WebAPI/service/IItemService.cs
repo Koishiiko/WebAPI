@@ -8,15 +8,15 @@ using WebAPI.dto;
 namespace WebAPI.service {
 	public interface IItemService {
 		
-		List<Item> getByModuleId(string moduleId);
+		List<Item> GetByModuleId(string moduleId);
 
-		List<ItemDTO> getDataByModuleId(string moduleId);
+		List<ItemDTO> GetDataByModuleId(string moduleId);
 
 		ItemDTO getByItemId(string moduleId, string itemId);
 
 		long Save(ItemDTO item);
 
-		bool Update(ItemDTO item);
+		int Update(ItemDTO item);
 
 		int Delete(string moduleId, string itemId);
 	}

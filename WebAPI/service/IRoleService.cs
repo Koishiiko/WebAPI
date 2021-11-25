@@ -18,7 +18,7 @@ namespace WebAPI.service {
 
 		long Save(RoleDTO role);
 
-		bool Update(RoleDTO role);
+		int Update(RoleDTO role);
 
 		int Delete(int id);
 	}

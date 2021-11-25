@@ -42,16 +42,19 @@ namespace WebAPI.sql.impl {
 	                LEFT JOIN record r 
 						ON d1.record_key = r.record_id,
                     (
-                        SELECT TOP @end ROW_NUMBER() OVER (ORDER BY id ASC) n, id FROM test_detail
+                        SELECT
+							TOP (@end) ROW_NUMBER() OVER(ORDER BY id ASC) n,
+							id
+						FROM test_detail
 	                    WHERE
                             test_guid = @guid
                         AND (
-                            module_key = @moduleId OR
                             @moduleId IS NULL OR
-                            @moduleId = ''
+                            @moduleId = '' OR
+                            module_key = @moduleId 
                         )
                     ) d2
-                WHERE d1.id = d2.id AND d2.n > %(start)s
+                WHERE d1.id = d2.id AND d2.n > @start
 			";
 			return dataSource.QueryMany<DetailDTO>(sql, new {
 				start = pagination.Page * pagination.Size,
@@ -65,11 +68,11 @@ namespace WebAPI.sql.impl {
 			string sql = @"
                 SELECT COUNT(id) as rows FROM test_detail
                 WHERE
-                    test_guid = %(test_guid)s
+                    test_guid = @guid
                 AND (
-                    module_key = %(module_key)s OR
-                    %(module_key)s IS NULL OR
-                    %(module_key)s = ''
+                    module_key = @moduleId OR
+                    @moduleId IS NULL OR
+                    @moduleId = ''
                 )
 			";
 			return dataSource.QueryOne<int>(sql, new {

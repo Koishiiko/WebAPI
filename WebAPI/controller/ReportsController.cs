@@ -20,7 +20,7 @@ namespace WebAPI.controller {
 			this.reportService = reportService;
 		}
 
-		[HttpGet("page")]
+		[HttpPost("page")]
 		public ReportPageDTO GetByPage([FromBody] ReportPagination pagination) {
 			return reportService.GetByPage(pagination);
 		}

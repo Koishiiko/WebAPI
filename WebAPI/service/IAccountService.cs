@@ -28,7 +28,7 @@ namespace WebAPI.service {
 
 		long Save(AccountDTO account);
 
-		bool Update(AccountDTO account);
+		int Update(AccountDTO account);
 
 		int Delete(int id);
 	}

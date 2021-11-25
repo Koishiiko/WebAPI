@@ -9,5 +9,4 @@ namespace WebAPI.dto {
 		public IDictionary<int, IDictionary<string, IDictionary<string, string>>> Data { get; set; }
 		public IDictionary<int, IDictionary<string, bool>> Valids { get; set; }
 	}
-
 }

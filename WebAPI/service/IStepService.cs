@@ -4,21 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.entity;
 using WebAPI.dto;
+using WebAPI.utils;
 
 namespace WebAPI.service {
 	public interface IStepService {
 
 		List<Step> GetAll();
 
-		List<Step> GetSteps();
+		List<Step> GetSteps(AccountJWTPayload payload);
 
-		List<StepDTO> GetStepDatas();
+		List<StepDTO> GetStepDatas(AccountJWTPayload payload);
 
 		Step GetById(int id);
 
 		long Save(Step step);
 
-		bool Update(Step step);
+		int Update(Step step);
 
 		int Delete(int id);
 	}

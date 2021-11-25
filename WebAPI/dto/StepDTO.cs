@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.entity;
 
 namespace WebAPI.dto {
@@ -9,15 +6,15 @@ namespace WebAPI.dto {
 		public StepDTO() {
 		}
 
-		public StepDTO(int id, int step_id, string name, List<Module> modules) {
+		public StepDTO(int id, int stepId, string name, List<Module> modules) {
 			Id = id;
-			Step_id = step_id;
+			StepId = stepId;
 			Name = name;
 			Modules = modules;
 		}
 
 		public int Id { get; set; }
-		public int Step_id { get; set; }
+		public int StepId { get; set; }
 		public string Name { get; set; }
 		public List<Module> Modules { get; set; }
 	}

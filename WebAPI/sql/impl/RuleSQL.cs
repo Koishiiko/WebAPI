@@ -76,7 +76,7 @@ namespace WebAPI.sql.impl {
 
 		public int DeleteByStepId(int id) {
 			string sql = @"
-				DELETE FROM item_rule WHERE step_id = @id
+				DELETE FROM item_rule WHERE EXISTS (SELECT module_id FROM module WHERE step_id = @id)
 			";
 			return dataSource.Delete(sql, new { id = id });
 		}

@@ -19,7 +19,7 @@ namespace WebAPI.controller {
 			this.detailService = detailService;
 		}
 
-		[HttpGet("page")]
+		[HttpPost("page")]
 		public DetailPageDTO GetPageByGuid([FromBody] DetailPagination pagination) {
 			return detailService.GetPageByGuid(pagination);
 		}

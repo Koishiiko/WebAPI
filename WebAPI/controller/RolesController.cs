@@ -30,19 +30,14 @@ namespace WebAPI.controller {
 			return roleService.GetDataById(id);
 		}
 
-		[HttpGet("page")]
+		[HttpPost("page")]
 		public RolePageDTO GetByPage([FromBody] RolePagination pagination) {
 			return roleService.GetByPage(pagination);
 		}
 
 		[HttpPost]
 		public long Save([FromBody] RoleDTO role) {
-			return roleService.Save(role);
-		}
-
-		[HttpPut]
-		public bool Update([FromBody] RoleDTO role) {
-			return roleService.Update(role);
+			return role.Id == 0 ? roleService.Save(role) : roleService.Update(role);
 		}
 
 		[HttpDelete("{id}")]

@@ -33,6 +33,8 @@ namespace WebAPI.sql.impl {
                         FROM
                             role_step rs
                         WHERE
+							s.step_id != 0
+						AND
                             rs.role_id IN (@ids)
                         AND
                             s.step_id = rs.step_id
@@ -54,20 +56,20 @@ namespace WebAPI.sql.impl {
                        step s0
                    WHERE EXISTS (
                            SELECT
-                               rs.id
+								rs.id
                            FROM
-                               role_step rs
+								role_step rs
                            WHERE
-                               rs.role_id IN (@ids)
-                           AND
-                               s0.step_id = rs.step_id
+								s0.step_id != 0
+							AND
+								rs.role_id IN (@ids)
+							AND
+								s0.step_id = rs.step_id
                        )
                    ) s
 	               LEFT JOIN
                        module m
 		           ON s.step_id = m.step_id
-               WHERE
-                   s.step_id != 0
                ORDER BY
                    step_id, module_id
 			";

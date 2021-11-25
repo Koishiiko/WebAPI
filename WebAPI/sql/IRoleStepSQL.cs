@@ -8,5 +8,7 @@ namespace WebAPI.sql {
 		int SaveSteps(long roleId, List<int> ids);
 
 		int DeleteByRoleId(int id);
+
+		int DeleteByStepId(int id);
 	}
 }

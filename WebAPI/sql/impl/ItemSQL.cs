@@ -29,7 +29,7 @@ namespace WebAPI.sql.impl {
                 SELECT
                     i.id, i.module_id, i.item_id,
                     i.name, i.type, i.record_id, i.report_id,
-                    r.id AS rule_id, r.required, r.required_text,
+                    r.id AS rule_id, r.default_value, r.required, r.required_text, 
                     r.min_value, r.min_value_text, r.max_value, r.max_value_text,
                     r.min_length, r.min_length_text, r.max_length, r.max_length_text,
                     s.id AS suggestion_id, s.value AS suggestion_value
@@ -59,7 +59,7 @@ namespace WebAPI.sql.impl {
                 SELECT
                     i.id, i.module_id, i.item_id,
                     i.name, i.type, i.record_id, i.report_id,
-                    r.id AS rule_id, r.required, r.required_text,
+                    r.id AS rule_id, r.default_value, r.required, r.required_text,
                     r.min_value, r.min_value_text, r.max_value, r.max_value_text,
                     r.min_length, r.min_length_text, r.max_length, r.max_length_text,
                     s.id AS suggestion_id, s.value AS suggestion_value
@@ -98,7 +98,7 @@ namespace WebAPI.sql.impl {
 
 		public int DeleteByStepId(int id) {
 			string sql = @"
-				DELETE FROM item WHERE step_id = @id
+				DELETE FROM item WHERE EXISTS (SELECT step_id FROM module WHERE step_id = @id)
 			";
 			return dataSource.Delete(sql, new { id = id });
 		}

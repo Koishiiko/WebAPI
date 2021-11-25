@@ -41,7 +41,7 @@ namespace WebAPI.sql.impl {
 			string sql = @"
                     SELECT id, name
                     FROM (
-                        SELECT TOP (@end) id, name, ROW_NUMBER() OVER(ORDER BY r.id) AS n FROM role 
+                        SELECT TOP (@end) id, name, ROW_NUMBER() OVER(ORDER BY id) AS n FROM role 
                     ) r
                     where r.n > @start
 			";

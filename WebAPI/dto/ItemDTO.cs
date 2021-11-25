@@ -6,20 +6,6 @@ using WebAPI.entity;
 
 namespace WebAPI.dto {
 	public class ItemDTO {
-		public ItemDTO() {
-		}
-
-		public ItemDTO(int id, string moduleId, string itemId, string name, string type, string recordId, string reportId, ItemRule rules, List<Suggestion> suggestions) {
-			Id = id;
-			ModuleId = moduleId;
-			ItemId = itemId;
-			Name = name;
-			Type = type;
-			RecordId = recordId;
-			ReportId = reportId;
-			Rules = rules;
-			Suggestions = suggestions;
-		}
 
 		public int Id { get; set; }
 		public string ModuleId { get; set; }

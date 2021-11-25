@@ -8,71 +8,72 @@ using WebAPI.service;
 using WebAPI.entity;
 using WebAPI.dto;
 using WebAPI.pagination;
+using WebAPI.utils;
+using Microsoft.Extensions.Options;
 
 namespace WebAPI.controller {
-	[Route("[controller]")]
-	[ApiController]
-	public class AccountsController : ControllerBase {
+    [Route("[controller]")]
+    [ApiController]
+    public class AccountsController : ControllerBase {
 
-		private IAccountService accountService { get; }
+        private IAccountService accountService { get; }
 
-		public AccountsController(IAccountService accountService) {
-			this.accountService = accountService;
-		}
+		private readonly IOptions<WebAPISettings> configuration;
 
-		[HttpPost("login")]
-		public string Login([FromBody] Account account) {
-			return accountService.Login(account);
-		}
 
-		[HttpPost("loginByToken")]
-		public string LoginByToken() {
-			return accountService.LoginByToken("aaa");
-		}
+        public AccountsController(IAccountService accountService, IOptions<WebAPISettings> configuration) {
+            this.accountService = accountService;
+            this.configuration = configuration;
+        }
 
-		[HttpGet]
-		public List<Account> GetAll() {
-			return accountService.GetAll();
-		}
+        [HttpPost("login")]
+        public string Login([FromBody] Account account) {
+            return accountService.Login(account);
+        }
 
-		[HttpGet("page")]
-		public AccountPageDTO GetByPage([FromBody] AccountPagination pagination) {
-			return accountService.GetByPage(pagination);
-		}
+        [HttpPost("loginByToken")]
+        public string LoginByToken([FromHeader] string authorization) {
+            return accountService.LoginByToken(authorization);
+        }
 
-		[HttpGet("{id}")]
-		public Account GetById(int id) {
-			return accountService.GetById(id);
-		}
+        [HttpGet]
+        public List<Account> GetAll() {
+            return accountService.GetAll();
+        }
 
-		[HttpGet("data/{id}")]
-		public AccountDTO GetDataById(int id) {
-			return accountService.GetDataById(id);
-		}
+        [HttpPost("page")]
+        public AccountPageDTO GetByPage([FromBody] AccountPagination pagination) {
+            return accountService.GetByPage(pagination);
+        }
 
-		[HttpGet("accountKey/{key}")]
-		public Account GetByAccountKey(string key) {
-			return accountService.GetByAccountKey(key);
-		}
+        [HttpGet("{id}")]
+        public Account GetById(int id) {
+            return accountService.GetById(id);
+        }
 
-		[HttpGet("data/accountkey/{key}")]
-		public AccountDTO GetDataByAccountKey(string key) {
-			return accountService.GetDataByAccountKey(key);
-		}
+        [HttpGet("data/{id}")]
+        public AccountDTO GetDataById(int id) {
+            return accountService.GetDataById(id);
+        }
 
-		[HttpPost]
-		public long Save([FromBody] AccountDTO account) {
-			return accountService.Save(account);
-		}
+        [HttpGet("accountKey/{key}")]
+        public Account GetByAccountKey(string key) {
+            return accountService.GetByAccountKey(key);
+        }
 
-		[HttpPut]
-		public bool Update([FromBody] AccountDTO account) {
-			return accountService.Update(account);
-		}
+        [HttpGet("data/accountkey/{key}")]
+        public AccountDTO GetDataByAccountKey(string key) {
+            return accountService.GetDataByAccountKey(key);
+        }
 
-		[HttpDelete("{id}")]
-		public int Delete(int id) {
-			return accountService.Delete(id);
-		}
-	}
+        [HttpPost]
+        public long Save([FromBody] AccountDTO account) {
+            return account.Id == 0 ? accountService.Save(account) :accountService.Update(account);
+        }
+
+        [HttpDelete("{id}")]
+        public int Delete(int id) {
+            return accountService.Delete(id);
+        }
+    }
 }
