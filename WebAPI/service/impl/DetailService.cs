@@ -9,7 +9,7 @@ using WebAPI.sql;
 namespace WebAPI.service.impl {
 	public class DetailService : IDetailService {
 		
-		private IDetailSQL detailSQL { get; }
+		private readonly IDetailSQL detailSQL;
 
 		public DetailService(IDetailSQL detailSQL) {
 			this.detailSQL = detailSQL;

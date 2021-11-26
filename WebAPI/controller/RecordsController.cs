@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.service;
 using WebAPI.po;
+using WebAPI.service;
 
 namespace WebAPI.controller {
     [Route("[controller]")]
     [ApiController]
     public class RecordsController : ControllerBase {
 
-        private IRecordService recordService { get; }
+        private readonly IRecordService recordService;
 
         public RecordsController(IRecordService recordService) {
             this.recordService = recordService;

@@ -1,29 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.service;
-using WebAPI.po;
 using WebAPI.dto;
 using WebAPI.pagination;
-using WebAPI.utils;
-using Microsoft.Extensions.Options;
+using WebAPI.po;
+using WebAPI.service;
 
 namespace WebAPI.controller {
     [Route("[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase {
 
-        private IAccountService accountService { get; }
+        private readonly IAccountService accountService;
 
-		private readonly IOptions<WebAPISettings> configuration;
-
-
-        public AccountsController(IAccountService accountService, IOptions<WebAPISettings> configuration) {
+        public AccountsController(IAccountService accountService) {
             this.accountService = accountService;
-            this.configuration = configuration;
         }
 
         [HttpPost("login")]

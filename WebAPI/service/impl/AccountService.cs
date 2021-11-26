@@ -10,8 +10,8 @@ using WebAPI.exception;
 namespace WebAPI.service.impl {
     public class AccountService : IAccountService {
 
-        private IAccountSQL accountSQL { get; }
-        private IAccountRoleSQL accountRoleSQL { get; }
+        private readonly IAccountSQL accountSQL;
+        private readonly IAccountRoleSQL accountRoleSQL;
 
         public AccountService(IAccountSQL accountSQL, IAccountRoleSQL accountRoleSQL) {
             this.accountSQL = accountSQL;
@@ -24,7 +24,6 @@ namespace WebAPI.service.impl {
             if (!rows.Any() || rows[0].Password != account.Password) {
                 throw new AccountException(ResultCode.ACCOUNT_OR_PASSWORD_ERROR);
             }
-
             return GetJWT(rows);
         }
 
@@ -35,7 +34,6 @@ namespace WebAPI.service.impl {
             if (!rows.Any()) {
                 return string.Empty;
             }
-
             return GetJWT(rows);
         }
 
@@ -58,6 +56,7 @@ namespace WebAPI.service.impl {
 
         public AccountDTO GetDataByAccountKey(string accountKey) {
             List<AccountDataPO> rows = accountSQL.GetDataByAccountKey(accountKey);
+
             if (!rows.Any()) {
                 return null;
             }
@@ -74,6 +73,7 @@ namespace WebAPI.service.impl {
         private List<AccountDTO> GetPageData(AccountPagination pagination) {
             List<AccountPagePO> rows = accountSQL.GetByPage(pagination);
             List<AccountDTO> accounts = new List<AccountDTO>();
+
             AccountDTO curr = null;
             rows.ForEach((row) => {
                 if (curr == null || curr.Id != row.Id) {
@@ -104,6 +104,7 @@ namespace WebAPI.service.impl {
 
         public AccountDTO GetDataById(int id) {
             List<AccountDataPO> rows = accountSQL.GetDataById(id);
+
             if (!rows.Any()) {
                 return null;
             }
@@ -125,6 +126,7 @@ namespace WebAPI.service.impl {
                     });
                 });
             }
+
             return data;
         }
 

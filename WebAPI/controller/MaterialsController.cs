@@ -8,7 +8,7 @@ namespace WebAPI.controller {
     [ApiController]
     public class MaterialsController : ControllerBase {
 
-        private IMaterialService materialService { get; }
+        private readonly IMaterialService materialService;
 
         public MaterialsController(IMaterialService materialService) {
             this.materialService = materialService;
@@ -30,8 +30,8 @@ namespace WebAPI.controller {
         }
 
         [HttpPost]
-        public bool Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
-            return materialService.Save(material, JWTUtils.Decode<AccountJWTPayload>(authorization));
+        public void Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
+            materialService.Save(material, JWTUtils.Decode<AccountJWTPayload>(authorization));
         }
     }
 }

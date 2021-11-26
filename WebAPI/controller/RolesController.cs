@@ -14,7 +14,8 @@ namespace WebAPI.controller {
 	[Route("[controller]")]
 	[ApiController]
 	public class RolesController : ControllerBase {
-		private IRoleService roleService { get; }
+
+		private readonly IRoleService roleService;
 
 		public RolesController(IRoleService roleService) {
 			this.roleService = roleService;

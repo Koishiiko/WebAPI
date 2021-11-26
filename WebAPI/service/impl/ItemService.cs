@@ -7,9 +7,9 @@ using WebAPI.sql;
 namespace WebAPI.service.impl {
     public class ItemService : IItemService {
 
-        private IItemSQL itemSQL { get; }
-        private IRuleSQL ruleSQL { get; }
-        private ISuggestionSQL suggestionSQL { get; }
+        private readonly IItemSQL itemSQL;
+        private readonly IRuleSQL ruleSQL;
+        private readonly ISuggestionSQL suggestionSQL;
 
         public ItemService(IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL) {
             this.itemSQL = itemSQL;
@@ -22,44 +22,44 @@ namespace WebAPI.service.impl {
         }
 
         public List<ItemDTO> GetDataByModuleId(string moduleId) {
-            List<dynamic> rows = itemSQL.getDataByModuleId(moduleId);
+            List<ItemDataPO> rows = itemSQL.getDataByModuleId(moduleId);
             List<ItemDTO> datas = new List<ItemDTO>();
 
             ItemDTO curr = null;
             rows.ForEach((row) => {
-                if (curr == null || curr.Id != row.id) {
-                    ItemRule rules = row.rule_id != null ? new ItemRule {
-                        Id = row.rule_id,
-                        ModuleId = row.module_id,
-                        ItemId = row.item_id,
-                        DefaultValue = row.default_value,
-                        Required = row.required,
-                        RequiredText = row.required_text,
-                        MinValue = row.min_value,
-                        MinValueText = row.min_value_text,
-                        MaxValue = row.max_value,
-                        MaxValueText = row.max_value_text,
-                        MinLength = row.min_length,
-                        MinLengthText = row.min_length_text,
-                        MaxLength = row.max_length,
-                        MaxLengthText = row.max_length_text
+                if (curr == null || curr.Id != row.Id) {
+                    ItemRule rules = row.RuleId != 0 ? new ItemRule {
+                        Id = row.RuleId,
+                        ModuleId = row.ModuleId,
+                        ItemId = row.ItemId,
+                        DefaultValue = row.DefaultValue,
+                        Required = row.Required,
+                        RequiredText = row.RequiredText,
+                        MinValue = row.MinValue,
+                        MinValueText = row.MinValueText,
+                        MaxValue = row.MaxValue,
+                        MaxValueText = row.MaxValueText,
+                        MinLength = row.MinLength,
+                        MinLengthText = row.MinLengthText,
+                        MaxLength = row.MaxLength,
+                        MaxLengthText = row.MaxLengthText
                     } : null;
 
                     curr = new ItemDTO {
-                        Id = row.id,
-                        ModuleId = row.module_id,
-                        ItemId = row.item_id,
-                        Name = row.name,
-                        Type = row.type,
-                        RecordId = row.record_id,
-                        ReportId = row.report_id,
+                        Id = row.Id,
+                        ModuleId = row.ModuleId,
+                        ItemId = row.ItemId,
+                        Name = row.Name,
+                        Type = row.Type,
+                        RecordId = row.RecordId,
+                        ReportId = row.ReportId,
                         Rules = rules,
                         Suggestions = new List<Suggestion>()
                     };
                 }
-                if (row.suggestion_id != null) {
+                if (row.SuggestionId != 0) {
                     Suggestion suggestion =
-                        new Suggestion { Id = row.suggestion_id, ModuleId = row.module_id, ItemId = row.item_id, Value = row.suggestion_value };
+                        new Suggestion { Id = row.SuggestionId, ModuleId = row.ModuleId, ItemId = row.ItemId, Value = row.SuggestionValue };
                     curr.Suggestions.Add(suggestion);
                 }
                 if (!datas.Any() || datas.Last().Id != curr.Id) {
@@ -70,43 +70,43 @@ namespace WebAPI.service.impl {
         }
 
         public ItemDTO getByItemId(string moduleId, string itemId) {
-            List<dynamic> rows = itemSQL.getByItemId(moduleId, itemId);
+            List<ItemDataPO> rows = itemSQL.getByItemId(moduleId, itemId);
             if (!rows.Any()) {
                 return null;
             }
 
-            ItemRule rules = rows[0].rule_id != null ?
+            ItemRule rules = rows[0].RuleId != 0 ?
                     new ItemRule {
-                        Id = rows[0].rule_id,
-                        ModuleId = rows[0].module_id,
-                        ItemId = rows[0].item_id,
-                        DefaultValue = rows[0].default_value,
-                        Required = rows[0].required,
-                        RequiredText = rows[0].required_text,
-                        MinValue = rows[0].min_value,
-                        MinValueText = rows[0].min_value_text,
-                        MaxValue = rows[0].max_value,
-                        MaxValueText = rows[0].max_value_text,
-                        MinLength = rows[0].min_length,
-                        MinLengthText = rows[0].min_length_text,
-                        MaxLength = rows[0].max_length,
-                        MaxLengthText = rows[0].max_length_text
+                        Id = rows[0].RuleId,
+                        ModuleId = rows[0].ModuleId,
+                        ItemId = rows[0].ItemId,
+                        DefaultValue = rows[0].DefaultValue,
+                        Required = rows[0].Required,
+                        RequiredText = rows[0].RequiredText,
+                        MinValue = rows[0].MinValue,
+                        MinValueText = rows[0].MinValueText,
+                        MaxValue = rows[0].MaxValue,
+                        MaxValueText = rows[0].MaxValueText,
+                        MinLength = rows[0].MinLength,
+                        MinLengthText = rows[0].MinLengthText,
+                        MaxLength = rows[0].MaxLength,
+                        MaxLengthText = rows[0].MaxLengthText
                     } : null;
 
             ItemDTO data = new ItemDTO {
-                Id = rows[0].id,
-                ModuleId = rows[0].module_id,
-                ItemId = rows[0].item_id,
-                Name = rows[0].name,
-                Type = rows[0].type,
-                RecordId = rows[0].record_id,
-                ReportId = rows[0].report_id,
+                Id = rows[0].Id,
+                ModuleId = rows[0].ModuleId,
+                ItemId = rows[0].ItemId,
+                Name = rows[0].Name,
+                Type = rows[0].Type,
+                RecordId = rows[0].RecordId,
+                ReportId = rows[0].ReportId,
                 Rules = rules,
                 Suggestions = new List<Suggestion>()
             };
-            if (rows[0].suggestion_id != null) {
+            if (rows[0].SuggestionId != 0) {
                 rows.ForEach((row) => {
-                    data.Suggestions.Add(new Suggestion { Id = row.suggestion_id, ModuleId = row.module_id, ItemId = row.item_id, Value = row.suggestion_value });
+                    data.Suggestions.Add(new Suggestion { Id = row.SuggestionId, ModuleId = row.ModuleId, ItemId = row.ItemId, Value = row.SuggestionValue });
                 });
             }
             return data;

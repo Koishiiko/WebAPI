@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class RoleStepSQL : IRoleStepSQL {
+    public class RoleStepSQL : IRoleStepSQL {
 
 		public int SaveSteps(long roleId, List<int> ids) {
 			List<RoleStep> roleSteps = new List<RoleStep>();

@@ -8,7 +8,6 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
 	public class ReportTemplateSQL : IReportTemplateSQL {
 
-
 		public List<ReportTemplate> GetAll() {
 			string sql = @"
 				SELECT id, name, path FROM report_template

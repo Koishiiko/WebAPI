@@ -5,7 +5,7 @@ using WebAPI.po;
 namespace WebAPI.service.impl {
     public class RecordService : IRecordService {
 
-        private IRecordSQL recordSQL { get; }
+        private readonly IRecordSQL recordSQL;
 
         public RecordService(IRecordSQL recordSQL) {
             this.recordSQL = recordSQL;

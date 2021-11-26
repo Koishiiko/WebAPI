@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebAPI.dto;
-using WebAPI.po;
 using WebAPI.pagination;
+using WebAPI.po;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
     public class RoleService : IRoleService {
 
-        private IRoleSQL roleSQL { get; }
-        private IAccountRoleSQL accountRoleSQL { get; }
-        private IRoleStepSQL roleStepSQL { get; }
+        private readonly IRoleSQL roleSQL;
+        private readonly IAccountRoleSQL accountRoleSQL;
+        private readonly IRoleStepSQL roleStepSQL;
 
 
         public RoleService(IRoleSQL roleSQL, IAccountRoleSQL accountRoleSQL, IRoleStepSQL roleStepSQL) {

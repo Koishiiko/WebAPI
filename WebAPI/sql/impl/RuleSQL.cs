@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class RuleSQL : IRuleSQL {
+    public class RuleSQL : IRuleSQL {
 
 		public List<ItemRule> getAll() {
 			string sql = @"

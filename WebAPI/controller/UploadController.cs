@@ -7,7 +7,7 @@ namespace WebAPI.controller {
     [ApiController]
     public class UploadController : ControllerBase {
 
-        private IUploadService uploadService;
+        private readonly IUploadService uploadService;
 
         public UploadController(IUploadService uploadService) {
             this.uploadService = uploadService;

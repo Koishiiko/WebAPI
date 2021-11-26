@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebAPI.dto;
 using WebAPI.po;
 using WebAPI.sql;
@@ -10,12 +8,12 @@ using WebAPI.utils;
 namespace WebAPI.service.impl {
     public class StepService : IStepService {
 
-        private IStepSQL stepSQL { get; }
-        private IModuleSQL moduleSQL { get; }
-        private IItemSQL itemSQL { get; }
-        private IRuleSQL ruleSQL { get; }
-        private ISuggestionSQL suggestionSQL { get; }
-        private IRoleStepSQL roleStepSQL { get; }
+        private readonly IStepSQL stepSQL;
+        private readonly IModuleSQL moduleSQL;
+        private readonly IItemSQL itemSQL;
+        private readonly IRuleSQL ruleSQL;
+        private readonly ISuggestionSQL suggestionSQL;
+        private readonly IRoleStepSQL roleStepSQL;
 
         public StepService(IStepSQL stepSQL, IModuleSQL moduleSQL, IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL, IRoleStepSQL roleStepSQL) {
             this.stepSQL = stepSQL;

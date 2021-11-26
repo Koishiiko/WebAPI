@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class ValidSQL : IValidSQL {
+    public class ValidSQL : IValidSQL {
 
 		public List<Valid> GetByGuid(string guid) {
 			string sql = @"

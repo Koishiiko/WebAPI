@@ -13,8 +13,8 @@ using System.Text.RegularExpressions;
 namespace WebAPI.service.impl {
     public class ReportTemplateService : IReportTemplateService {
 
-        private IReportTemplateSQL reportTemplateSQL { get; }
-        private IDetailSQL detailSQL { get; }
+        private readonly IReportTemplateSQL reportTemplateSQL;
+        private readonly IDetailSQL detailSQL;
 
         public ReportTemplateService(IReportTemplateSQL reportTemplateSQL, IDetailSQL detailSQL) {
             this.reportTemplateSQL = reportTemplateSQL;
@@ -52,6 +52,14 @@ namespace WebAPI.service.impl {
             return workbook;
         }
 
+        /// <summary>
+        /// 获取当前产品的所有记录值字典
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>
+        ///     Key: reportId
+        ///     Value: recordValue
+        /// </returns>
         private IDictionary<string, string> GetDetailValues(string productId) {
             return detailSQL.GetTemplates(productId)
                  .ToDictionary(
@@ -60,6 +68,11 @@ namespace WebAPI.service.impl {
                  );
         }
 
+        /// <summary>
+        /// 将sheet表中的reportId替换为对应的recordValue
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <param name="valueDict"></param>
         private void FillTemplate(ISheet sheet, IDictionary<string, string> valueDict) {
             int rows = sheet.LastRowNum;
             for (int rowNum = 0; rowNum <= rows; rowNum++) {

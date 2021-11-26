@@ -17,7 +17,7 @@ namespace WebAPI.controller {
 	[ApiController]
 	public class ReportTemplatesController : ControllerBase {
 
-		private IReportTemplateService reportTemplateService { get; }
+		private readonly IReportTemplateService reportTemplateService;
 
 		public ReportTemplatesController(IReportTemplateService reportTemplateService) {
 			this.reportTemplateService = reportTemplateService;

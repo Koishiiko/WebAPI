@@ -11,7 +11,7 @@ namespace WebAPI.controller {
     [ApiController]
     public class StepsController : ControllerBase {
 
-        private IStepService stepService { get; }
+        private readonly IStepService stepService;
 
         public StepsController(IStepService stepService) {
             this.stepService = stepService;

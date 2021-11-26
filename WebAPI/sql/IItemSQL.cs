@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
-using WebAPI.dto;
 
 namespace WebAPI.sql {
-	public interface IItemSQL {
+    public interface IItemSQL {
 
 		List<Item> getByModuleId(string id);
 
-		List<dynamic> getDataByModuleId(string id);
+		List<ItemDataPO> getDataByModuleId(string id);
 
 		Item getById(int id);
 
-		List<dynamic> getByItemId(string moduleId, string itemId);
+		List<ItemDataPO> getByItemId(string moduleId, string itemId);
 
 		bool Update(Item item);
 

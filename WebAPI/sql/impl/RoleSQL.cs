@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.dto;
-using WebAPI.po;
+﻿using System.Collections.Generic;
 using WebAPI.pagination;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class RoleSQL : IRoleSQL {
-
+    public class RoleSQL : IRoleSQL {
 
 		public int Delete(int id) {
 			string sql = @"

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class SuggestionSQL : ISuggestionSQL {
+    public class SuggestionSQL : ISuggestionSQL {
 
 		public List<Suggestion> getByItemId(string moduleId, string itemId) {
 			string sql = @"

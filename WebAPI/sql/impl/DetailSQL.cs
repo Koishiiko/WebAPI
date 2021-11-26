@@ -7,7 +7,6 @@ using WebAPI.pagination;
 namespace WebAPI.sql.impl {
 	public class DetailSQL : IDetailSQL {
 
-
 		public List<Detail> GetByGuid(string guid) {
 			string sql = @"
 				SELECT

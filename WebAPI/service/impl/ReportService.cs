@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.dto;
 using WebAPI.pagination;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
-	public class ReportService : IReportService {
+    public class ReportService : IReportService {
 
-		private IReportSQL reportSQL { get; }
+		private readonly IReportSQL reportSQL;
 
 		public ReportService(IReportSQL reportSQL) {
 			this.reportSQL = reportSQL;

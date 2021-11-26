@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SqlSugar;
 
 namespace WebAPI.utils {
-    public class DataSource {
+    public static class DataSource {
 
-        private static SqlSugarScope db;
+        public static SqlSugarScope DB { get; }
 
         static DataSource() {
-            db = new SqlSugarScope(new ConnectionConfig() {
+            DB = new SqlSugarScope(new ConnectionConfig() {
                 ConnectionString = AppSettings.MSSQLString,
                 DbType = SqlSugar.DbType.SqlServer,
                 IsAutoCloseConnection = true,
@@ -25,27 +24,27 @@ namespace WebAPI.utils {
         }
 
         public static List<T> QueryMany<T>(string sql, object args = null) {
-            return db.Ado.SqlQuery<T>(sql, args).ToList();
+            return DB.Ado.SqlQuery<T>(sql, args).ToList();
         }
 
         public static T QueryOne<T>(string sql, object args = null) {
-            return db.Ado.SqlQuerySingle<T>(sql, args);
+            return DB.Ado.SqlQuerySingle<T>(sql, args);
         }
 
         public static long Save<T>(T entity) where T : class, new() {
-            return db.Insertable(entity).ExecuteReturnIdentity();
+            return DB.Insertable(entity).ExecuteReturnIdentity();
         }
 
         public static int Save<T>(List<T> list) where T : class, new() {
-            return db.Insertable(list).ExecuteCommand();
+            return DB.Insertable(list).ExecuteCommand();
         }
 
         public static bool Update<T>(T entity) where T : class, new() {
-            return db.Updateable(entity).IgnoreColumns(ignoreAllNullColumns: true).ExecuteCommandHasChange();
+            return DB.Updateable(entity).IgnoreColumns(ignoreAllNullColumns: true).ExecuteCommandHasChange();
         }
 
         public static int Delete(string sql, object args) {
-            return db.Ado.ExecuteCommand(sql, args);
+            return DB.Ado.ExecuteCommand(sql, args);
         }
     }
 }

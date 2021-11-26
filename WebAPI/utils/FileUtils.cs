@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Http;
 namespace WebAPI.utils {
     public static class FileUtils {
 
+        /// <summary>
+        /// 保存文件
+        /// 如果文件重名 则会在之后添加或修改(i)并返回新的文件名
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="path"></param>
+        /// <returns>保存后的文件名</returns>
         public static string SaveFile(IFormFile file, string path) {
             string newPath = Renamne(path, out string newName);
             using (var fs = File.Create(newPath)) {

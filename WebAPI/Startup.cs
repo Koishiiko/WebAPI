@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.FileProviders;
 using WebAPI.autofac;
 using WebAPI.filter;
+using WebAPI.formatter;
 using WebAPI.middleware;
 using WebAPI.utils;
 
@@ -41,6 +42,7 @@ namespace WebAPI {
             services.AddControllers(options => {
                 options.Filters.Add<LogFilter>();
                 options.Filters.Add<ResultFilter>();
+                //options.OutputFormatters.Insert(0, new CustomOutputFormatter());
             });
 
             services.AddSwaggerGen(c => {

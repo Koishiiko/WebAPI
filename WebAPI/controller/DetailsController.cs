@@ -1,19 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.service;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.dto;
 using WebAPI.pagination;
+using WebAPI.service;
 
 namespace WebAPI.controller {
-	[Route("[controller]")]
+    [Route("[controller]")]
 	[ApiController]
 	public class DetailsController : ControllerBase {
 
-		private IDetailService detailService { get; }
+		private readonly IDetailService detailService;
 
 		public DetailsController(IDetailService detailService) {
 			this.detailService = detailService;

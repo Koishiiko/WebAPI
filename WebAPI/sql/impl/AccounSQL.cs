@@ -6,7 +6,6 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
     public class AccounSQL : IAccountSQL {
 
-
 		public List<Account> GetAll() {
 			string sql = @"
 				SELECT id, account_key, account_name FROM account ORDER BY id

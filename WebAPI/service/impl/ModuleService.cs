@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.po;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
     public class ModuleService : IModuleService {
 
-        private IModuleSQL moduleSQL { get; }
-        private IItemSQL itemSQL { get; }
-        private IRuleSQL ruleSQL { get; }
-        private ISuggestionSQL suggestionSQL { get; }
+        private readonly IModuleSQL moduleSQL;
+        private readonly IItemSQL itemSQL;
+        private readonly IRuleSQL ruleSQL;
+        private readonly ISuggestionSQL suggestionSQL;
 
         public ModuleService(IModuleSQL moduleSQL, IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL){
             this.moduleSQL = moduleSQL;

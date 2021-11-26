@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.dto;
-using WebAPI.po;
 using WebAPI.pagination;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class ReportSQL : IReportSQL {
+    public class ReportSQL : IReportSQL {
 
 		public List<Report> GetAll() {
 			string sql = @"

@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebAPI.po;
 using WebAPI.service;
 
@@ -13,7 +9,7 @@ namespace WebAPI.controller {
     [ApiController]
     public class ModulesController : ControllerBase {
 
-        private IModuleService moduleService { get; }
+        private readonly IModuleService moduleService;
 
         public ModulesController(IModuleService moduleService) {
             this.moduleService = moduleService;
