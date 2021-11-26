@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebAPI.utils;
 using WebAPI.dto;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.pagination;
 
 namespace WebAPI.sql.impl {
 	public class DetailSQL : IDetailSQL {
 
-		private IDataSource dataSource { get; }
-
-		public DetailSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public List<Detail> GetByGuid(string guid) {
 			string sql = @"
@@ -23,7 +15,7 @@ namespace WebAPI.sql.impl {
 				FROM test_detail WHERE test_guid = @guid
 			";
 
-			return dataSource.QueryMany<Detail>(sql, new { guid });
+			return DataSource.QueryMany<Detail>(sql, new { guid });
 		}
 
 		public List<DetailDTO> GetPageByGuid(DetailPagination pagination) {
@@ -56,7 +48,7 @@ namespace WebAPI.sql.impl {
                     ) d2
                 WHERE d1.id = d2.id AND d2.n > @start
 			";
-			return dataSource.QueryMany<DetailDTO>(sql, new {
+			return DataSource.QueryMany<DetailDTO>(sql, new {
 				start = pagination.Page * pagination.Size,
 				end = (pagination.Page + 1) * pagination.Size,
 				guid = pagination.Guid,
@@ -75,7 +67,7 @@ namespace WebAPI.sql.impl {
                     @moduleId = ''
                 )
 			";
-			return dataSource.QueryOne<int>(sql, new {
+			return DataSource.QueryOne<int>(sql, new {
 				guid = pagination.Guid,
 				moduleId = pagination.ModuleId,
 			});
@@ -98,11 +90,11 @@ namespace WebAPI.sql.impl {
 		                ON d.test_guid = r.test_guid
 			";
 
-			return dataSource.QueryMany<DetailTemplateDTO>(sql, new { productId });
+			return DataSource.QueryMany<DetailTemplateDTO>(sql, new { productId });
 		}
 
 		public long Save(Detail detail) {
-			return dataSource.Save(detail);
+			return DataSource.Save(detail);
 		}
 	}
 }

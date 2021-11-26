@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebAPI.dto;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.pagination;
 using WebAPI.sql;
 using WebAPI.utils;
@@ -19,9 +19,9 @@ namespace WebAPI.service.impl {
         }
 
         public string Login(Account account) {
-            List<dynamic> rows = accountSQL.GetDataByAccountKey(account.AccountKey);
+            List<AccountDataPO> rows = accountSQL.GetDataByAccountKey(account.AccountKey);
 
-            if (!rows.Any() || rows[0].password != account.Password) {
+            if (!rows.Any() || rows[0].Password != account.Password) {
                 throw new AccountException(ResultCode.ACCOUNT_OR_PASSWORD_ERROR);
             }
 
@@ -30,7 +30,7 @@ namespace WebAPI.service.impl {
 
         public string LoginByToken(string token) {
             AccountJWTPayload payload = JWTUtils.Decode<AccountJWTPayload>(token);
-            List<dynamic> rows = accountSQL.GetDataById(payload.Id);
+            List<AccountDataPO> rows = accountSQL.GetDataById(payload.Id);
 
             if (!rows.Any()) {
                 return string.Empty;
@@ -39,12 +39,12 @@ namespace WebAPI.service.impl {
             return GetJWT(rows);
         }
 
-        private string GetJWT(List<dynamic> rows) {
+        private string GetJWT(List<AccountDataPO> rows) {
             return JWTUtils.Encode(new AccountJWTPayload {
-                Id = rows[0].id,
-                AccountKey = rows[0].account_key,
-                AccountName = rows[0].account_name,
-                Roles = rows.Select<dynamic, int>(row => row.role_id).ToList()
+                Id = rows[0].Id,
+                AccountKey = rows[0].AccountKey,
+                AccountName = rows[0].AccountName,
+                Roles = rows.Select(row => row.RoleId).ToList()
             });
         }
 
@@ -57,7 +57,7 @@ namespace WebAPI.service.impl {
         }
 
         public AccountDTO GetDataByAccountKey(string accountKey) {
-            List<dynamic> rows = accountSQL.GetDataByAccountKey(accountKey);
+            List<AccountDataPO> rows = accountSQL.GetDataByAccountKey(accountKey);
             if (!rows.Any()) {
                 return null;
             }
@@ -72,23 +72,23 @@ namespace WebAPI.service.impl {
         }
 
         private List<AccountDTO> GetPageData(AccountPagination pagination) {
-            List<dynamic> rows = accountSQL.GetByPage(pagination);
+            List<AccountPagePO> rows = accountSQL.GetByPage(pagination);
             List<AccountDTO> accounts = new List<AccountDTO>();
             AccountDTO curr = null;
             rows.ForEach((row) => {
-                if (curr == null || curr.Id != row.id) {
+                if (curr == null || curr.Id != row.Id) {
                     curr = new AccountDTO() {
-                        Id = row.id,
-                        AccountKey = row.account_key,
-                        AccountName = row.account_name,
+                        Id = row.Id,
+                        AccountKey = row.AccountKey,
+                        AccountName = row.AccountName,
                         Roles = new List<Role>()
                     };
                 }
-                if (row.role_id != null) {
+                if (row.RoleId != 0) {
                     curr.Roles.Add(
                         new Role() {
-                            Id = row.role_id,
-                            Name = row.role_name
+                            Id = row.RoleId,
+                            Name = row.RoleName
                         });
                 }
                 if (!accounts.Any() || accounts.Last().Id != curr.Id) {
@@ -103,25 +103,25 @@ namespace WebAPI.service.impl {
         }
 
         public AccountDTO GetDataById(int id) {
-            List<dynamic> rows = accountSQL.GetDataById(id);
+            List<AccountDataPO> rows = accountSQL.GetDataById(id);
             if (!rows.Any()) {
                 return null;
             }
             return GetData(rows);
         }
 
-        private AccountDTO GetData(List<dynamic> rows) {
+        private AccountDTO GetData(List<AccountDataPO> rows) {
             AccountDTO data = new AccountDTO() {
-                Id = rows[0].id,
-                AccountKey = rows[0].account_key,
-                AccountName = rows[0].account_name,
+                Id = rows[0].Id,
+                AccountKey = rows[0].AccountKey,
+                AccountName = rows[0].AccountName,
                 Roles = new List<Role>()
             };
 
-            if (rows[0].role_id != null) {
+            if (rows[0].RoleId != 0) {
                 rows.ForEach((row) => {
                     data.Roles.Add(new Role() {
-                        Id = row.role_id
+                        Id = row.RoleId
                     });
                 });
             }

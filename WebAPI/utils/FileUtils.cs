@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAPI.utils {
     public static class FileUtils {

@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace WebAPI.entity {
+namespace WebAPI.po {
 	public class Module {
 		public Module() {
 		}

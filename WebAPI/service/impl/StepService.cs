@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.dto;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.sql;
 using WebAPI.utils;
 
@@ -35,17 +35,17 @@ namespace WebAPI.service.impl {
         }
 
         public List<StepDTO> GetStepDatas(AccountJWTPayload payload) {
-            List<dynamic> rows = stepSQL.GetStepDatas(payload.Roles.ToArray());
+            List<StepData> rows = stepSQL.GetStepDatas(payload.Roles.ToArray());
 
             List<StepDTO> datas = new List<StepDTO>();
 
             StepDTO curr = null;
             rows.ForEach((row) => {
-                if (curr == null || curr.Id != row.s_id) {
-                    curr = new StepDTO(row.s_id, row.step_id, row.step_name, new List<Module>());
+                if (curr == null || curr.Id != row.SId) {
+                    curr = new StepDTO() { Id = row.SId, StepId = row.StepId, Name = row.StepName, Modules = new List<Module>() };
                 }
-                if (row.m_id != null) {
-                    Module module = new Module(row.m_id, row.step_id, row.module_id, row.module_name);
+                if (row.MId != 0) {
+                    Module module = new Module() { Id = row.MId, StepId = row.StepId, ModuleId = row.ModuleId, Name = row.ModuleName };
                     curr.Modules.Add(module);
                 }
                 if (!datas.Any() || datas.Last().Id != curr.Id) {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.entity;
+using WebAPI.po;
 
 namespace WebAPI.service {
     public interface IRecordService {

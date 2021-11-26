@@ -3,23 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.utils;
-using WebAPI.entity;
+using WebAPI.po;
 
 namespace WebAPI.sql.impl {
 	public class AccountRoleSQL : IAccountRoleSQL {
-
-		private IDataSource dataSource { get; }
-
-		public AccountRoleSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public int SaveAccounts(long roleId, List<int> ids) {
 			List<AccountRole> accountRoles = new List<AccountRole>();
 			ids.ForEach((accountId) => {
 				accountRoles.Add(new AccountRole() { RoleId = (int)roleId, AccountId = accountId });
 			});
-			return dataSource.Save(accountRoles);
+			return DataSource.Save(accountRoles);
 		}
 
 		public int SaveRoles(long accountId, List<int> ids) {
@@ -27,14 +21,14 @@ namespace WebAPI.sql.impl {
 			ids.ForEach((roleId) => {
 				accountRoles.Add(new AccountRole() { AccountId = (int)accountId, RoleId = roleId });
 			});
-			return dataSource.Save(accountRoles);
+			return DataSource.Save(accountRoles);
 		}
 
 		public int DeleteByRoleId(int id) {
 			string sql = @"
                 DELETE FROM account_role WHERE role_id = @id
 			";
-			return dataSource.Delete(sql, new { id });
+			return DataSource.Delete(sql, new { id });
 		}
 
 
@@ -42,7 +36,7 @@ namespace WebAPI.sql.impl {
 			string sql = @"
 				DELETE FROM account_role WHERE account_id = @id;
 			";
-			return dataSource.Delete(sql, new { id });
+			return DataSource.Delete(sql, new { id });
 		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.service;
-using WebAPI.entity;
+using WebAPI.po;
 
 namespace WebAPI.controller {
     [Route("[controller]")]

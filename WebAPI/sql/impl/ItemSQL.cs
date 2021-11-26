@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
 	public class ItemSQL : IItemSQL {
-
-		private IDataSource dataSource { get; } 
-
-		public ItemSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public List<Item> getByModuleId(string id) {
 			string sql = @"
@@ -21,7 +15,7 @@ namespace WebAPI.sql.impl {
 				FROM item WHERE module_id = @id
                 ORDER BY item_id
 			";
-			return dataSource.QueryMany<Item>(sql, new { id = id });
+			return DataSource.QueryMany<Item>(sql, new { id = id });
 		}
 
 		public List<dynamic> getDataByModuleId(string id) {
@@ -41,7 +35,7 @@ namespace WebAPI.sql.impl {
                 WHERE i.module_id = @id
                 ORDER BY i.item_id
 			";
-			return dataSource.QueryMany<dynamic>(sql, new { id = id });
+			return DataSource.QueryMany<dynamic>(sql, new { id = id });
 		}
 
 		public Item getById(int id) {
@@ -51,7 +45,7 @@ namespace WebAPI.sql.impl {
 				FROM item WHERE id = @id
                 ORDER BY item_id
 			";
-			return dataSource.QueryOne<Item>(sql, new { id = id });
+			return DataSource.QueryOne<Item>(sql, new { id = id });
 		}
 
 		public List<dynamic> getByItemId(string moduleId, string itemId) {
@@ -71,43 +65,43 @@ namespace WebAPI.sql.impl {
                 WHERE i.module_id = @moduleId AND i.item_id = @itemId
                 ORDER BY i.item_id
 			";
-			return dataSource.QueryMany<dynamic>(sql, new { moduleId, itemId });
+			return DataSource.QueryMany<dynamic>(sql, new { moduleId, itemId });
 		}
 
 		public long Save(Item item) {
-			return dataSource.Save(item);
+			return DataSource.Save(item);
 		}
 
 		public bool Update(Item item) {
-			return dataSource.Update(item);
+			return DataSource.Update(item);
 		}
 
 		public int Delete(string id) {
 			string sql = @"
 				DELETE FROM item WHERE id = @id
 			";
-			return dataSource.Delete(sql, new { id = id });
+			return DataSource.Delete(sql, new { id = id });
 		}
 
 		public int DeleteByModuleId(string id) {
 			string sql = @"
 				DELETE FROM item WHERE module_id = @id
 			";
-			return dataSource.Delete(sql, new { id = id });
+			return DataSource.Delete(sql, new { id = id });
 		}
 
 		public int DeleteByStepId(int id) {
 			string sql = @"
 				DELETE FROM item WHERE EXISTS (SELECT step_id FROM module WHERE step_id = @id)
 			";
-			return dataSource.Delete(sql, new { id = id });
+			return DataSource.Delete(sql, new { id = id });
 		}
 
 		public int DeleteByItemId(string moduleId, string itemId) {
 			string sql = @"
 				DELETE FROM item WHERE module_id = @moduleId AND item_id = @itemId
 			";
-			return dataSource.Delete(sql, new { moduleId, itemId });
+			return DataSource.Delete(sql, new { moduleId, itemId });
 		}
 	}
 }

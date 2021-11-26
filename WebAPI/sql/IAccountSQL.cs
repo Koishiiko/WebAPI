@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.pagination;
 
 namespace WebAPI.sql {
 	public interface IAccountSQL {
+
 		List<Account> GetAll();
 
 		Account GetById(int id);
 
-		List<dynamic> GetDataById(int id);
+		List<AccountDataPO> GetDataById(int id);
 
 		Account GetByAccountKey(string accountKey);
 
-		List<dynamic> GetDataByAccountKey(string accountKey);
+		List<AccountDataPO> GetDataByAccountKey(string accountKey);
 
-		List<dynamic> GetByPage(AccountPagination pagination);
+		List<AccountPagePO> GetByPage(AccountPagination pagination);
 
 		int GetCount(AccountPagination pagination);
 

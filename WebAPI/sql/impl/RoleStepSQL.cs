@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
 	public class RoleStepSQL : IRoleStepSQL {
-
-		private IDataSource dataSource { get; }
-
-		public RoleStepSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public int SaveSteps(long roleId, List<int> ids) {
 			List<RoleStep> roleSteps = new List<RoleStep>();
@@ -21,7 +15,7 @@ namespace WebAPI.sql.impl {
 				roleSteps.Add(new RoleStep() { RoleId = (int)roleId, StepId = stepId });
 			});
 
-			return dataSource.Save(roleSteps);
+			return DataSource.Save(roleSteps);
 		}
 
 		public int DeleteByRoleId(int id) {
@@ -29,7 +23,7 @@ namespace WebAPI.sql.impl {
 				DELETE FROM role_step WHERE role_id = @id
 			";
 
-			return dataSource.Delete(sql, new { id });
+			return DataSource.Delete(sql, new { id });
 		}
 
 		public int DeleteByStepId(int id) {
@@ -37,7 +31,7 @@ namespace WebAPI.sql.impl {
 				DELETE FROM role_step WHERE step_id = @id
 			";
 
-			return dataSource.Delete(sql, new { id });
+			return DataSource.Delete(sql, new { id });
 		}
 	}
 }

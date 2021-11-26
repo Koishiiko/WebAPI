@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.sql;
 using WebAPI.utils;
 using System.IO;
@@ -76,7 +76,7 @@ namespace WebAPI.service.impl {
                     }
                     string cellValue = cell.ToString();
 
-                    // cellValue match reportId(xxx_xxx_xx) 
+                    // reportId(xxx_xxx_xx) 
                     if (Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
                         cell.SetCellValue(valueDict.TryGetValue(cellValue, out string value) ? value : "");
                     }

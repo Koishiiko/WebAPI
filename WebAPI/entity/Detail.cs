@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SqlSugar;
 
-namespace WebAPI.entity {
+namespace WebAPI.po {
 	[SugarTable("test_detail")]
 	public class Detail {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace WebAPI.entity {
+namespace WebAPI.po {
 	[SugarTable("step")]
 	public class Step {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

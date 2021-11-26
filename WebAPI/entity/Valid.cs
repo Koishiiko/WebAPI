@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace WebAPI.entity {
+namespace WebAPI.po {
 	public class Valid {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }

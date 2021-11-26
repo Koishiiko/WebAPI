@@ -47,10 +47,7 @@ namespace WebAPI.middleware {
         }
 
         private async void ExceptionResponseHandler(HttpContext context, Exception e) {
-            log.LogError($"[{context.Connection.RemoteIpAddress}] {context.Request.Method} {context.Response.StatusCode}:" +
-                $" {context.Request.Path}{context.Request.QueryString} {e.Message}\n{e.StackTrace}\n");
-
-            //context.Response.StatusCode = 200;
+            log.LogError($"[{context.Connection.RemoteIpAddress}] {context.Request.Method} {context.Response.StatusCode}: {context.Request.Path}{context.Request.QueryString} {e.Message}\n{e.StackTrace}\n");
 
             Result result = Result.Failure(e is CustomException ? (e as CustomException).resultCode : ResultCode.SERVER_EXECUTE_ERROR);
             // 在Startup.cs中只能配置Controller范围内的JsonSerializer

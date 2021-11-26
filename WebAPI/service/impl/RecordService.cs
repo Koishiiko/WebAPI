@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using WebAPI.sql;
-using WebAPI.entity;
+using WebAPI.po;
 
 namespace WebAPI.service.impl {
     public class RecordService : IRecordService {

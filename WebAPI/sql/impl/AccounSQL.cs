@@ -1,42 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.entity;
+﻿using System.Collections.Generic;
 using WebAPI.pagination;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class AccounSQL : IAccountSQL {
+    public class AccounSQL : IAccountSQL {
 
-		private IDataSource dataSource { get; }
-
-		public AccounSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public List<Account> GetAll() {
 			string sql = @"
 				SELECT id, account_key, account_name FROM account ORDER BY id
 			";
-			return dataSource.QueryMany<Account>(sql);
+			return DataSource.QueryMany<Account>(sql);
 		}
 
 		public Account GetByAccountKey(string accountKey) {
 			string sql = @"
                 SELECT id, account_key, account_name, password FROM account WHERE account_key = @accountKey
 			";
-			return dataSource.QueryOne<Account>(sql, new { accountKey });
+			return DataSource.QueryOne<Account>(sql, new { accountKey });
 		}
 
 		public Account GetById(int id) {
 			string sql = @"
                 SELECT id, account_key, account_name, password FROM account WHERE id = @id
 			";
-			return dataSource.QueryOne<Account>(sql, new { id });
+			return DataSource.QueryOne<Account>(sql, new { id });
 		}
 
-		public List<dynamic> GetByPage(AccountPagination pagination) {
+		public List<AccountPagePO> GetByPage(AccountPagination pagination) {
 			string sql = @"
                 SELECT
                     a.id, a.account_key, a.account_name, r.id AS role_id, r.name AS role_name
@@ -66,7 +58,7 @@ namespace WebAPI.sql.impl {
                 )
                 ORDER BY a.id
 			";
-			return dataSource.QueryMany<dynamic>(sql, new {
+			return DataSource.QueryMany<AccountPagePO>(sql, new {
 				start = pagination.Page * pagination.Size,
 				end = (pagination.Page + 1) * pagination.Size,
 				accountKey = pagination.AccountKey,
@@ -97,13 +89,13 @@ namespace WebAPI.sql.impl {
 	               GROUP BY a0.id
                ) a
 			";
-			return dataSource.QueryOne<int>(sql, new {
+			return DataSource.QueryOne<int>(sql, new {
 				accountKey = pagination.AccountKey,
 				roleId = pagination.RoleId
 			});
 		}
 
-		public List<dynamic> GetDataByAccountKey(string accountKey) {
+		public List<AccountDataPO> GetDataByAccountKey(string accountKey) {
 			string sql = @"
                 SELECT
 	                a.id, a.account_key, a.account_name, a.password, ar.role_id
@@ -119,10 +111,10 @@ namespace WebAPI.sql.impl {
 		                account_role ar
 	                ON a.id = ar.account_id
 			";
-			return dataSource.QueryMany<dynamic>(sql, new { accountKey });
+			return DataSource.QueryMany<AccountDataPO>(sql, new { accountKey });
 		}
 
-		public List<dynamic> GetDataById(int id) {
+		public List<AccountDataPO> GetDataById(int id) {
 			string sql = @"
                 SELECT
 	                a.id, a.account_key, a.account_name, ar.role_id
@@ -138,22 +130,22 @@ namespace WebAPI.sql.impl {
 		                account_role ar
 	                ON a.id = ar.account_id
 			";
-			return dataSource.QueryMany<dynamic>(sql, new { id });
+			return DataSource.QueryMany<AccountDataPO>(sql, new { id });
 		}
 
 		public long Save(Account account) {
-			return dataSource.Save(account);
+			return DataSource.Save(account);
 		}
 
 		public bool Update(Account account) {
-			return dataSource.Update(account);
+			return DataSource.Update(account);
 		}
 
 		public int Delete(int id) {
 			string sql = @"
 				DELETE FROM account WHERE id = @id
 			";
-			return dataSource.Delete(sql, new { id });
+			return DataSource.Delete(sql, new { id });
 		}
-	}
+    }
 }

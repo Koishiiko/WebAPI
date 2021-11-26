@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.dto;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.pagination;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
 	public class ReportSQL : IReportSQL {
-
-		private IDataSource dataSource { get; }
-
-		public ReportSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
 
 		public List<Report> GetAll() {
 			string sql = @"
@@ -28,7 +22,7 @@ namespace WebAPI.sql.impl {
                 ORDER BY end_time DESC
 			";
 
-			return dataSource.QueryMany<Report>(sql);
+			return DataSource.QueryMany<Report>(sql);
 		}
 
 		public List<ReportDTO> GetByPage(ReportPagination pagination) {
@@ -66,7 +60,7 @@ namespace WebAPI.sql.impl {
                 ORDER BY r2.n ASC
 			";
 
-			return dataSource.QueryMany<ReportDTO>(sql, new {
+			return DataSource.QueryMany<ReportDTO>(sql, new {
 				start = pagination.Page * pagination.Size,
 				end = (pagination.Page + 1) * pagination.Size,
 				beginTime = pagination.BeginTime,
@@ -98,7 +92,7 @@ namespace WebAPI.sql.impl {
                 WHERE row_num = 1
 			";
 
-			return dataSource.QueryOne<int>(sql, new {
+			return DataSource.QueryOne<int>(sql, new {
 				beginTime = pagination.BeginTime,
 				endTime = pagination.EndTime,
 				productId = pagination.ProductId
@@ -120,7 +114,7 @@ namespace WebAPI.sql.impl {
                 ORDER BY step_id
 			";
 
-			return dataSource.QueryMany<ReportDTO>(sql, new { productId });
+			return DataSource.QueryMany<ReportDTO>(sql, new { productId });
 		}
 
 		public List<ReportDTO> GetByProductId(string productId) {
@@ -140,7 +134,7 @@ namespace WebAPI.sql.impl {
                     r.step_id, station_id, end_time DESC
 			";
 
-			return dataSource.QueryMany<ReportDTO>(sql, new { productId });
+			return DataSource.QueryMany<ReportDTO>(sql, new { productId });
 		}
 
 		public Report GetLastByProductId(int stepId, string productId) {
@@ -155,7 +149,7 @@ namespace WebAPI.sql.impl {
                 WHERE product_id = @productId AND step_id = @stepId
                 ORDER BY end_time DESC
 			";
-			return dataSource.QueryOne<Report>(sql, new { stepId, productId });
+			return DataSource.QueryOne<Report>(sql, new { stepId, productId });
 		}
 
 		public Report GetByGuid(string guid) {
@@ -169,12 +163,12 @@ namespace WebAPI.sql.impl {
                 FROM test_record
                 WHERE test_guid = @test_guid
 			";
-			return dataSource.QueryOne<Report>(sql, new { guid });
+			return DataSource.QueryOne<Report>(sql, new { guid });
 		}
 
 
 		public long Save(Report report) {
-			return dataSource.Save(report);
+			return DataSource.Save(report);
 		}
 	}
 }

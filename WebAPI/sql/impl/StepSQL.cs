@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebAPI.dto;
-using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
 	public class StepSQL : IStepSQL {
 
-		private IDataSource dataSource { get; }
-
-		public StepSQL(IDataSource dataSource) {
-			this.dataSource = dataSource;
-		}
-
 		List<Step> IStepSQL.GetAll() {
 			string sql = @"
 				SELECT id, step_id, name FROM step WHERE step_id > 0 ORDER BY step_id;
 			";
-			return dataSource.QueryMany<Step>(sql);
+			return DataSource.QueryMany<Step>(sql);
 		}
 
 		List<Step> IStepSQL.GetSteps(int[] roles) {
@@ -41,10 +35,10 @@ namespace WebAPI.sql.impl {
                     )
                 ORDER BY step_id
 			";
-			return dataSource.QueryMany<Step>(sql, new { ids = roles });
+			return DataSource.QueryMany<Step>(sql, new { ids = roles });
 		}
 
-		List<dynamic> IStepSQL.GetStepDatas(int[] roles) {
+		List<StepData> IStepSQL.GetStepDatas(int[] roles) {
 			string sql = @"
                SELECT
 	               s.id AS s_id, s.step_id, s.name AS step_name,
@@ -74,29 +68,29 @@ namespace WebAPI.sql.impl {
                    step_id, module_id
 			";
 
-			return dataSource.QueryMany<dynamic>(sql, new { ids = roles });
+			return DataSource.QueryMany<StepData>(sql, new { ids = roles });
 		}
 
 		Step IStepSQL.GetById(int id) {
 			string sql = @"
 				SELECT id, step_id, name FROM step WHERE step_id = @step_id
 			";
-			return dataSource.QueryOne<Step>(sql, new { step_id = id });
+			return DataSource.QueryOne<Step>(sql, new { step_id = id });
 		}
 
 		long IStepSQL.Save(Step step) {
-			return dataSource.Save(step);
+			return DataSource.Save(step);
 		}
 
 		bool IStepSQL.Update(Step step) {
-			return dataSource.Update(step);
+			return DataSource.Update(step);
 		}
 
 		int IStepSQL.Delete(int id) {
 			string sql = @"
 				DELETE FROM step WHERE step_id = @step_id
 			";
-			return dataSource.Delete(sql, new { step_id = id });
+			return DataSource.Delete(sql, new { step_id = id });
 		}
 	}
 }
