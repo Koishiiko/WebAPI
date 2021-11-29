@@ -10,6 +10,11 @@ using Microsoft.Net.Http.Headers;
 using WebAPI.utils;
 
 namespace WebAPI.formatter {
+    /// <summary>
+    /// 响应格式器
+    /// 
+    /// 将返回的对象统一封装成Result对象(JSON格式)并返回
+    /// </summary>
     public class ResultFormatter : OutputFormatter {
 
         public ResultFormatter() {
@@ -37,7 +42,7 @@ namespace WebAPI.formatter {
             httpContext.Response.WriteAsync(bodyString);
 
             log.LogInformation(
-                $"[{httpContext.Connection.RemoteIpAddress}] {httpContext.Request.Method}: {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
+                $"[{httpContext.Connection.RemoteIpAddress.MapToIPv4()}:{httpContext.Connection.RemotePort}] {httpContext.Request.Method}: {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
 
             return Task.CompletedTask;
         }

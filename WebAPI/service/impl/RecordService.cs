@@ -14,9 +14,5 @@ namespace WebAPI.service.impl {
         public List<Record> GetAll() {
             return recordSQL.GetAll();
         }
-
-        public Record GetById(int id) {
-            return recordSQL.GetByRecordId(id);
-        }
     }
 }

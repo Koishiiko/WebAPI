@@ -29,7 +29,7 @@ namespace WebAPI.service.impl {
         }
 
         public string LoginByToken(string token) {
-            AccountJWTPayload payload = JWTUtils.Decode<AccountJWTPayload>(token);
+            AccountPayload payload = JWTUtils.Decode<AccountPayload>(token);
             List<AccountDataPO> rows = accountSQL.GetDataById(payload.Id);
 
             if (!rows.Any()) {
@@ -39,7 +39,7 @@ namespace WebAPI.service.impl {
         }
 
         private string GetJWT(List<AccountDataPO> rows) {
-            return JWTUtils.Encode(new AccountJWTPayload {
+            return JWTUtils.Encode(new AccountPayload {
                 Id = rows[0].Id,
                 AccountKey = rows[0].AccountKey,
                 AccountName = rows[0].AccountName,

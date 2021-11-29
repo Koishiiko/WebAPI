@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebAPI.dto {
-	public class AccountPageDTO {
-		public List<AccountDTO> Data { get; set; }
-		public int Total;
+	public class DetailPageDTO {
+
+		public List<DetailDTO> Data { get; set; }
+		public int Total { get; set; }
 	}
 }

@@ -13,6 +13,11 @@ namespace WebAPI.controller {
             this.uploadService = uploadService;
         }
 
+        /// <summary>
+        /// 保存图片到配置文件中设置的目录
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns>图片相对路径(image/photo.jpg)</returns>
         [HttpPost("image")]
         public string SaveImage(IFormFile image) {
             return uploadService.SaveImage(image);

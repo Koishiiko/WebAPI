@@ -11,7 +11,7 @@ namespace WebAPI.utils {
         static DataSource() {
             DB = new SqlSugarScope(new ConnectionConfig() {
                 ConnectionString = AppSettings.MSSQLString,
-                DbType = SqlSugar.DbType.SqlServer,
+                DbType = DbType.SqlServer,
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices() {
                     EntityService = (t, column) => {

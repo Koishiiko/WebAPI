@@ -18,10 +18,5 @@ namespace WebAPI.controller {
         public List<Record> GetAll() {
             return recordService.GetAll();
         }
-
-        [HttpGet("{id}")]
-        public Record GetById(int id) {
-            return recordService.GetById(id);
-        }
     }
 }

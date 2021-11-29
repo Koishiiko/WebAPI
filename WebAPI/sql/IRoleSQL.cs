@@ -25,7 +25,5 @@ namespace WebAPI.sql {
 		bool Update(Role role);
 
 		int Delete(int id);
-
-		int DeleteStepsByRoleId(int id);
 	}
 }

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.utils;
+﻿using WebAPI.utils;
 
 namespace WebAPI.exception {
+    /// <summary>
+    /// 400错误时抛出的异常
+    /// </summary>
     public class BadRequestException : CustomException {
 
         public BadRequestException() : base(ResultCode.BAD_REQUEST) { }

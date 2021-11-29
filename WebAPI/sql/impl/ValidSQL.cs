@@ -5,15 +5,12 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
     public class ValidSQL : IValidSQL {
 
-		public List<Valid> GetByGuid(string guid) {
-			string sql = @"
-				SELECT id, guid, module_id, value FROM valid WHERE guid = @guid
-			";
-			return DataSource.QueryMany<Valid>(sql, new { guid });
-		}
+        public List<Valid> GetByGuid(string guid) {
+            return DataSource.DB.Queryable<Valid>().Where(v => v.Guid == guid).ToList();
+        }
 
-		public long Save(Valid valid) {
-			return DataSource.Save(valid);
-		}
-	}
+        public long Save(Valid valid) {
+            return DataSource.Save(valid);
+        }
+    }
 }

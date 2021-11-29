@@ -5,78 +5,46 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
     public class RuleSQL : IRuleSQL {
 
-		public List<ItemRule> getAll() {
-			string sql = @"
-				SELECT
-					id, item_id,
-					required, required_text,
-					min_value, min_value_text, max_value, max_value_text,
-					min_length, min_length_text, max_length, max_length_text
-				FROM item_rule
-			";
-			return DataSource.QueryMany<ItemRule>(sql);
-		}
+        public List<ItemRule> getAll() {
+            return DataSource.DB.Queryable<ItemRule>().ToList();
+        }
 
-		public ItemRule getById(int id) {
-			string sql = @"
-				SELECT
-					id, item_id,
-					required, required_text,
-					min_value, min_value_text, max_value, max_value_text,
-					min_length, min_length_text, max_length, max_length_text
-				FROM item_rule
-				WHERE id = @id
-			";
-			return DataSource.QueryOne<ItemRule>(sql, new { id = id });
-		}
+        public ItemRule getById(int id) {
+            return DataSource.DB.Queryable<ItemRule>().InSingle(id);
+        }
 
-		public List<ItemRule> getByItemId(string moduleId, string itemId) {
-			string sql = @"
-				SELECT
-					id, item_id,
-					required, required_text,
-					min_value, min_value_text, max_value, max_value_text,
-					min_length, min_length_text, max_length, max_length_text
-				FROM item_rule
-				WHERE module_id = @moduleId AND item_id = @itemId
-			";
-			return DataSource.QueryMany<ItemRule>(sql, new { moduleId = moduleId, itemId = itemId });
-		}
+        public List<ItemRule> getByItemId(string moduleId, string itemId) {
+            return DataSource.DB.Queryable<ItemRule>()
+                .Where(r => r.ModuleId == moduleId)
+                .Where(r => r.ItemId == itemId)
+                .ToList();
+        }
 
-		public long Save(ItemRule rule) {
-			return DataSource.Save(rule);
-		}
+        public long Save(ItemRule rule) {
+            return DataSource.Save(rule);
+        }
 
-		public bool Update(ItemRule rule) {
-			return DataSource.Update(rule);
-		}
+        public bool Update(ItemRule rule) {
+            return DataSource.Update(rule);
+        }
 
-		public int Delete(int id) {
-			string sql = @"
-				DELETE FROM item_rule WHERE id = @id
-			";
-			return DataSource.Delete(sql, new { id = id });
-		}
+        public int Delete(int id) {
+            return DataSource.DB.Deleteable<ItemRule>().In(id).ExecuteCommand();
+        }
 
-		public int DeleteByModuleId(string id) {
-			string sql = @"
-				DELETE FROM item_rule WHERE module_id = @id
-			";
-			return DataSource.Delete(sql, new { id = id });
-		}
+        public int DeleteByModuleId(string id) {
+            return DataSource.DB.Deleteable<ItemRule>().Where(ir => ir.ModuleId == id).ExecuteCommand();
+        }
 
-		public int DeleteByStepId(int id) {
-			string sql = @"
+        public int DeleteByStepId(int id) {
+            string sql = @"
 				DELETE FROM item_rule WHERE EXISTS (SELECT module_id FROM module WHERE step_id = @id)
 			";
-			return DataSource.Delete(sql, new { id = id });
-		}
+            return DataSource.Delete(sql, new { id = id });
+        }
 
-		public int DeleteByItemId(string moduleId, string itemId) {
-			string sql = @"
-				DELETE FROM item_rule WHERE module_id = @moduleId AND item_id = @itemId
-			";
-			return DataSource.Delete(sql, new { moduleId, itemId });
-		}
-	}
+        public int DeleteByItemId(string moduleId, string itemId) {
+            return DataSource.DB.Deleteable<ItemRule>().Where(ir => ir.ModuleId == moduleId).Where(ir => ir.ItemId == itemId).ExecuteCommand();
+        }
+    }
 }

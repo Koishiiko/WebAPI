@@ -3,7 +3,7 @@
 namespace WebAPI.exception {
 
     /// <summary>
-    /// 发生500错误(或其他未捕获异常时)抛出的异常
+    /// 用户登录失败时抛出的异常
     /// </summary>
     public class AccountException : CustomException {
 

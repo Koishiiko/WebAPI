@@ -9,6 +9,11 @@ using Microsoft.Net.Http.Headers;
 using WebAPI.utils;
 
 namespace WebAPI.formatter {
+    /// <summary>
+    /// 请求格式器
+    /// 
+    /// 主要用来打印请求日志
+    /// </summary>
     public class RequestFormatter : InputFormatter {
 
         public RequestFormatter() {
@@ -28,7 +33,7 @@ namespace WebAPI.formatter {
                 bodyString = await reader.ReadToEndAsync();
             }
 
-            log.LogInformation($"[{httpContext.Connection.RemoteIpAddress}] {httpContext.Request.Method}:" +
+            log.LogInformation($"[{httpContext.Connection.RemoteIpAddress.MapToIPv4()}:{httpContext.Connection.RemotePort}] {httpContext.Request.Method}:" +
                 $" {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
 
             return await InputFormatterResult.SuccessAsync(JSONUtils.Deserialize(bodyString, context.ModelType));

@@ -8,7 +8,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebAPI.entity;
 using WebAPI.service;
-using WebAPI.attribute;
 using NPOI.SS.UserModel;
 using WebAPI.utils;
 
@@ -28,13 +27,18 @@ namespace WebAPI.controller {
 			return reportTemplateService.GetAll();
 		}
 
+		/// <summary>
+		/// 保存报告模板
+		/// 保存到配置文件中设置的目录下
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns>文件的相对路径(template/filename.xlsx)</returns>
 		[HttpPost]
 		public string Save(IFormFile file) {
 			return reportTemplateService.Save(file);
 		}
 
 		[HttpGet("{productId}/{templateId}")]
-		[UnpackageResult]
 		public IActionResult GetTemplate(string productId, int templateId) {
 			IWorkbook workbook = reportTemplateService.GetTemplate(productId, templateId, out string name);
 

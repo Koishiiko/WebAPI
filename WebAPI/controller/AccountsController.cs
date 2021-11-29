@@ -16,11 +16,24 @@ namespace WebAPI.controller {
             this.accountService = accountService;
         }
 
+        /// <summary>
+        ///  登录
+        /// </summary>
+        /// <param name="account">
+        ///     AccountKey: 账号
+        ///     Password: 密码
+        /// </param>
+        /// <returns>JWT</returns>
         [HttpPost("login")]
         public string Login([FromBody] Account account) {
             return accountService.Login(account);
         }
 
+        /// <summary>
+        /// 使用JWT登录
+        /// </summary>
+        /// <param name="authorization"></param>
+        /// <returns>新的JWT</returns>
         [HttpPost("loginByToken")]
         public string LoginByToken([FromHeader] string authorization) {
             return accountService.LoginByToken(authorization);
@@ -58,7 +71,7 @@ namespace WebAPI.controller {
 
         [HttpPost]
         public long Save([FromBody] AccountDTO account) {
-            return account.Id == 0 ? accountService.Save(account) :accountService.Update(account);
+            return account.Id == 0 ? accountService.Save(account) : accountService.Update(account);
         }
 
         [HttpDelete("{id}")]

@@ -25,7 +25,6 @@ namespace WebAPI.utils {
                     property.SetColumnName(CamelToSnake(property.GetDefaultColumnBaseName()));
                 }
             }
-
         }
 
         public DbSet<Step> Step;

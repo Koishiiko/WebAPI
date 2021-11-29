@@ -10,6 +10,6 @@ namespace WebAPI.service {
 
 		MaterialDTO GetByGuid(string guid);
 
-		void Save(MaterialDTO material, AccountJWTPayload payload);
+		void Save(MaterialDTO material, AccountPayload payload);
 	}
 }

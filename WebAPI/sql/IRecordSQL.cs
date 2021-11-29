@@ -9,7 +9,5 @@ namespace WebAPI.sql {
 	public interface IRecordSQL {
 
 		List<Record> GetAll();
-
-		Record GetByRecordId(int id);
 	}
 }

@@ -5,27 +5,18 @@ using WebAPI.utils;
 using WebAPI.po;
 
 namespace WebAPI.sql.impl {
-    public class AccounSQL : IAccountSQL {
+    public class AccountSQL : IAccountSQL {
 
 		public List<Account> GetAll() {
-			string sql = @"
-				SELECT id, account_key, account_name FROM account ORDER BY id
-			";
-			return DataSource.QueryMany<Account>(sql);
+			return DataSource.DB.Queryable<Account>().ToList();
 		}
 
 		public Account GetByAccountKey(string accountKey) {
-			string sql = @"
-                SELECT id, account_key, account_name, password FROM account WHERE account_key = @accountKey
-			";
-			return DataSource.QueryOne<Account>(sql, new { accountKey });
+			return DataSource.DB.Queryable<Account>().Single(a => a.AccountKey == accountKey);
 		}
 
 		public Account GetById(int id) {
-			string sql = @"
-                SELECT id, account_key, account_name, password FROM account WHERE id = @id
-			";
-			return DataSource.QueryOne<Account>(sql, new { id });
+			return DataSource.DB.Queryable<Account>().InSingle(id);
 		}
 
 		public List<AccountPagePO> GetByPage(AccountPagination pagination) {
@@ -142,10 +133,7 @@ namespace WebAPI.sql.impl {
 		}
 
 		public int Delete(int id) {
-			string sql = @"
-				DELETE FROM account WHERE id = @id
-			";
-			return DataSource.Delete(sql, new { id });
+			return DataSource.DB.Deleteable<Account>().In(id).ExecuteCommand();
 		}
     }
 }

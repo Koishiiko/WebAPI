@@ -7,6 +7,12 @@ using WebAPI.exception;
 using Microsoft.Extensions.Logging;
 
 namespace WebAPI.middleware {
+    /// <summary>
+    /// 全局异常捕获
+    /// 
+    /// 404 405等错误不会进入Filter中
+    /// 所以这些错误的处理需要在该方法中实现
+    /// </summary>
     public class GlobalExceptionMiddleware {
 
         private readonly RequestDelegate next;
@@ -17,13 +23,6 @@ namespace WebAPI.middleware {
             this.log = log;
         }
 
-        /// <summary>
-        /// 404 405等错误不会进入Filter中
-        /// 所以这些错误的处理需要在该方法中实现
-        ///
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
         public async Task Invoke(HttpContext context) {
             try {
                 await next(context);
@@ -34,7 +33,7 @@ namespace WebAPI.middleware {
         }
 
         private void CheckStatusCode(int code) {
-            if (code == 200) {
+            if (code < 300) {
                 return;
             }
 
@@ -47,13 +46,12 @@ namespace WebAPI.middleware {
         }
 
         private async void ExceptionResponseHandler(HttpContext context, Exception e) {
-            log.LogError($"[{context.Connection.RemoteIpAddress}] {context.Request.Method} {context.Response.StatusCode}: {context.Request.Path}{context.Request.QueryString} {e.Message}\n{e.StackTrace}\n");
+            log.LogError(
+                $"[{context.Connection.RemoteIpAddress.MapToIPv4()}:{context.Connection.RemotePort}] {context.Request.Method} {context.Response.StatusCode}: {context.Request.Path}{context.Request.QueryString} {e.Message}\n{e.StackTrace}\n");
 
             Result result = Result.Failure(e is CustomException ? (e as CustomException).resultCode : ResultCode.SERVER_EXECUTE_ERROR);
-            // 在Startup.cs中只能配置Controller范围内的JsonSerializer
-            // 暂时不知道如何全局配置 
-            await JsonSerializer.SerializeAsync(context.Response.Body, result,
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+            await context.Response.WriteAsJsonAsync(result);
         }
 
     }

@@ -138,7 +138,7 @@ namespace WebAPI.service {
             return result;
         }
 
-        public void Save(MaterialDTO material, AccountJWTPayload payload) {
+        public void Save(MaterialDTO material, AccountPayload payload) {
             var baseData = material.Data[baseStepId][baseModuleId];
             string productId = baseData[pIdReportId];
             string productType = baseData[typeReportId];

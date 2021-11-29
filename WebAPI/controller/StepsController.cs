@@ -17,11 +17,6 @@ namespace WebAPI.controller {
             this.stepService = stepService;
         }
 
-        [HttpGet("test")]
-        public Result Test() {
-            return Result.Failure();
-        }
-
         [HttpGet("all")]
         public List<Step> GetAll() {
             return stepService.GetAll();
@@ -29,13 +24,13 @@ namespace WebAPI.controller {
 
         [HttpGet]
         public List<Step> GetSteps([FromHeader] string authorization) {
-            var payload = JWTUtils.Decode<AccountJWTPayload>(authorization);
+            var payload = JWTUtils.Decode<AccountPayload>(authorization);
             return stepService.GetSteps(payload);
         }
 
         [HttpGet("data")]
         public List<StepDTO> GetStepDatas([FromHeader] string authorization) {
-            var payload = JWTUtils.Decode<AccountJWTPayload>(authorization);
+            var payload = JWTUtils.Decode<AccountPayload>(authorization);
             return stepService.GetStepDatas(payload);
         }
 

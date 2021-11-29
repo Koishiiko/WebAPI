@@ -8,13 +8,7 @@ namespace WebAPI.sql.impl {
 	public class DetailSQL : IDetailSQL {
 
 		public List<Detail> GetByGuid(string guid) {
-			string sql = @"
-				SELECT
-					id, test_guid, module_key, item_key, record_key, record_value
-				FROM test_detail WHERE test_guid = @guid
-			";
-
-			return DataSource.QueryMany<Detail>(sql, new { guid });
+			return DataSource.DB.Queryable<Detail>().Where(d => d.TestGuid == guid).ToList();
 		}
 
 		public List<DetailDTO> GetPageByGuid(DetailPagination pagination) {

@@ -8,7 +8,5 @@ namespace WebAPI.service {
     public interface IRecordService {
 
         List<Record> GetAll();
-
-        Record GetById(int id);
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.entity;
+﻿using System.Collections.Generic;
 
 namespace WebAPI.dto {
-	public class RoleDTO {
+    public class RoleDTO {
+
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public List<int> AccountIds { get; set; }

@@ -9,17 +9,11 @@ namespace WebAPI.sql.impl {
 	public class ReportTemplateSQL : IReportTemplateSQL {
 
 		public List<ReportTemplate> GetAll() {
-			string sql = @"
-				SELECT id, name, path FROM report_template
-			";
-			return DataSource.QueryMany<ReportTemplate>(sql);
+			return DataSource.DB.Queryable<ReportTemplate>().ToList();
 		}
 
 		public ReportTemplate GetById(int id) {
-			string sql = @"
-				SELECT id, name, path FROM report_template WHERE id = @id
-			";
-			return DataSource.QueryOne<ReportTemplate>(sql, new { id });
+			return DataSource.DB.Queryable<ReportTemplate>().InSingle(id);
 		}
 
 		public long Save(ReportTemplate reportTemplate) {

@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using WebAPI.utils;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAPI.filter {
     public class LogFilter : IActionFilter {
@@ -29,8 +30,8 @@ namespace WebAPI.filter {
             if (httpContext.Request.ContentLength > 1 * 1024) {
                 bodyString = $"content size: {httpContext.Request.ContentLength}";
             } else {
+                httpContext.Request.EnableBuffering();
                 using (var reader = new StreamReader(httpContext.Request.Body)) {
-                    httpContext.Request.Body.Position = 0;
                     bodyString = await reader.ReadToEndAsync();
                     httpContext.Request.Body.Position = 0;
                 }
@@ -40,23 +41,17 @@ namespace WebAPI.filter {
                 $" {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
         }
 
-        /// <summary>
-        /// 后置过滤器
-        /// 
-        /// 在请求执行完Controller方法后 打印日志
-        /// </summary>
-        /// <param name="context"></param>
+        [System.Obsolete("响应日志在ResultFormatter中打印")]
         public void OnActionExecuted(ActionExecutedContext context) {
-            // 出现异常时的日志由全局异常处理方法打印
-            if (context.Exception != null) {
-                return;
-            }
+            //if (context.Exception != null) {
+            //    return;
+            //}
 
-            var httpContext = context.HttpContext;
-            string bodyString = context.Result is JsonResult ? JsonSerializer.Serialize((context.Result as JsonResult).Value, typeof(Result),
-                new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase }) : "";
-            log.LogInformation($"[{httpContext.Connection.RemoteIpAddress}] {httpContext.Request.Method}:" +
-                $" {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
+            //var httpContext = context.HttpContext;
+            //string bodyString = context.Result is JsonResult ? JsonSerializer.Serialize((context.Result as JsonResult).Value, typeof(Result),
+            //    new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase }) : "";
+            //log.LogInformation($"[{httpContext.Connection.RemoteIpAddress}] {httpContext.Request.Method}:" +
+            //    $" {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
         }
     }
 }

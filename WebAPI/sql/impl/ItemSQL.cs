@@ -7,13 +7,7 @@ namespace WebAPI.sql.impl {
     public class ItemSQL : IItemSQL {
 
         public List<Item> getByModuleId(string id) {
-            string sql = @"
-				SELECT
-					id, module_id, item_id, name, type, record_id, report_id
-				FROM item WHERE module_id = @id
-                ORDER BY item_id
-			";
-            return DataSource.QueryMany<Item>(sql, new { id = id });
+            return DataSource.DB.Queryable<Item>().Where(i => i.ModuleId == id).OrderBy("item_id").ToList();
         }
 
         public List<ItemDataPO> getDataByModuleId(string id) {
@@ -37,13 +31,7 @@ namespace WebAPI.sql.impl {
         }
 
         public Item getById(int id) {
-            string sql = @"
-				SELECT
-					id, module_id, item_id, name, type, record_id, report_id
-				FROM item WHERE id = @id
-                ORDER BY item_id
-			";
-            return DataSource.QueryOne<Item>(sql, new { id = id });
+            return DataSource.DB.Queryable<Item>().InSingle(id);
         }
 
         public List<ItemDataPO> getByItemId(string moduleId, string itemId) {
@@ -75,17 +63,11 @@ namespace WebAPI.sql.impl {
         }
 
         public int Delete(string id) {
-            string sql = @"
-				DELETE FROM item WHERE id = @id
-			";
-            return DataSource.Delete(sql, new { id = id });
+            return DataSource.DB.Deleteable<Item>().In(id).ExecuteCommand();
         }
 
         public int DeleteByModuleId(string id) {
-            string sql = @"
-				DELETE FROM item WHERE module_id = @id
-			";
-            return DataSource.Delete(sql, new { id = id });
+            return DataSource.DB.Deleteable<Item>().Where(i => i.ModuleId == id).ExecuteCommand();
         }
 
         public int DeleteByStepId(int id) {
@@ -96,10 +78,7 @@ namespace WebAPI.sql.impl {
         }
 
         public int DeleteByItemId(string moduleId, string itemId) {
-            string sql = @"
-				DELETE FROM item WHERE module_id = @moduleId AND item_id = @itemId
-			";
-            return DataSource.Delete(sql, new { moduleId, itemId });
+            return DataSource.DB.Deleteable<Item>().Where(i => i.ModuleId == moduleId).Where(i => i.ItemId == itemId).ExecuteCommand();
         }
     }
 }

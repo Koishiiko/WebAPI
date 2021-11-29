@@ -6,17 +6,14 @@ using WebAPI.po;
 using WebAPI.utils;
 
 namespace WebAPI.sql.impl {
-	public class StepSQL : IStepSQL {
+    public class StepSQL : IStepSQL {
 
-		public List<Step> GetAll() {
-			string sql = @"
-				SELECT id, step_id, name FROM step WHERE step_id > 0 ORDER BY step_id;
-			";
-			return DataSource.QueryMany<Step>(sql);
-		}
+        public List<Step> GetAll() {
+            return DataSource.DB.Queryable<Step>().Where(s => s.StepId > 0).OrderBy(s => s.StepId).ToList();
+        }
 
-		public List<Step> GetSteps(int[] roles) {
-			string sql = @"
+        public List<Step> GetSteps(int[] roles) {
+            string sql = @"
                 SELECT
                     s.id, s.step_id, s.name
                 FROM
@@ -34,11 +31,11 @@ namespace WebAPI.sql.impl {
                     )
                 ORDER BY step_id
 			";
-			return DataSource.QueryMany<Step>(sql, new { ids = roles });
-		}
+            return DataSource.QueryMany<Step>(sql, new { ids = roles });
+        }
 
-		public List<StepData> GetStepDatas(int[] roles) {
-			string sql = @"
+        public List<StepData> GetStepDatas(int[] roles) {
+            string sql = @"
 				SELECT
 					s.id AS s_id, s.step_id, s.name AS step_name,
 	                m.id AS m_id, m.module_id, m.name AS module_name
@@ -65,29 +62,23 @@ namespace WebAPI.sql.impl {
                     step_id, module_id
 			";
 
-			return DataSource.QueryMany<StepData>(sql, new { ids = roles });
-		}
+            return DataSource.QueryMany<StepData>(sql, new { ids = roles });
+        }
 
-		public Step GetById(int id) {
-			string sql = @"
-				SELECT id, step_id, name FROM step WHERE step_id = @step_id
-			";
-			return DataSource.QueryOne<Step>(sql, new { step_id = id });
-		}
+        public Step GetById(int id) {
+            return DataSource.DB.Queryable<Step>().Single(s => s.StepId == id);
+        }
 
-		public long Save(Step step) {
-			return DataSource.Save(step);
-		}
+        public long Save(Step step) {
+            return DataSource.Save(step);
+        }
 
-		public bool Update(Step step) {
-			return DataSource.Update(step);
-		}
+        public bool Update(Step step) {
+            return DataSource.Update(step);
+        }
 
-		public int Delete(int id) {
-			string sql = @"
-				DELETE FROM step WHERE step_id = @step_id
-			";
-			return DataSource.Delete(sql, new { step_id = id });
-		}
-	}
+        public int Delete(int id) {
+            return DataSource.DB.Deleteable<Step>().Where(s => s.StepId == id).ExecuteCommand();
+        }
+    }
 }

@@ -22,7 +22,7 @@ namespace WebAPI.utils {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         });
 
-        public static string Encode(AccountJWTPayload payload) {
+        public static string Encode(AccountPayload payload) {
             return GetJwtBuilder()
                    .AddClaim("exp", EXPIRED_TIME)
                    .AddClaim("data", payload)
@@ -30,6 +30,9 @@ namespace WebAPI.utils {
         }
 
         public static T Decode<T>(string token) {
+            if (token == null || token == "") {
+                throw new JWTException(ResultCode.TOKEN_VERIFY_ERROR);
+            }
             try {
                 // data为Newtonsoft.Json中的JObject对象
                 return GetJwtBuilder()
@@ -49,7 +52,7 @@ namespace WebAPI.utils {
         }
     }
 
-    public class AccountJWTPayload {
+    public class AccountPayload {
         public int Id { get; set; }
         public string AccountKey { get; set; }
         public string AccountName { get; set; }

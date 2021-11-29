@@ -1,23 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WebAPI.attribute;
 using System.Linq;
 using WebAPI.utils;
 
 namespace WebAPI.filter {
+    [System.Obsolete("使用ResultFormatter代替")]
     public class ResultFilter : IActionFilter {
 
         /// <summary>
         /// Controller接口方行完成后进入的方法
         /// 将执行结果统一格式封装后
         /// 以JSON格式返回
-        /// 
-        /// 拥有UnpackageResultAttribute的接口所返回的结果不会被封装
         /// 出现异常时的返回结果由全局异常处理方法封装
         /// </summary>
         /// <param name="context"></param>
         public void OnActionExecuted(ActionExecutedContext context) {
-            if (IsUnpackageResult(context) || context.Exception != null) {
+            if (context.Exception != null) {
                 return;
             }
 
@@ -38,8 +36,5 @@ namespace WebAPI.filter {
             // unimplemented
         }
 
-        private bool IsUnpackageResult(in ActionExecutedContext context) {
-            return context.ActionDescriptor.EndpointMetadata.Any(a => a.GetType() == typeof(UnpackageResultAttribute));
-        }
     }
 }

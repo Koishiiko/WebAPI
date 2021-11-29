@@ -33,7 +33,7 @@ namespace WebAPI.service.impl {
             return stepSQL.GetById(id);
         }
 
-        public List<StepDTO> GetStepDatas(AccountJWTPayload payload) {
+        public List<StepDTO> GetStepDatas(AccountPayload payload) {
             List<StepData> rows = stepSQL.GetStepDatas(payload.Roles.ToArray());
 
             List<StepDTO> datas = new List<StepDTO>();
@@ -54,7 +54,7 @@ namespace WebAPI.service.impl {
             return datas;
         }
 
-        public List<Step> GetSteps(AccountJWTPayload payload) {
+        public List<Step> GetSteps(AccountPayload payload) {
             return stepSQL.GetSteps(payload.Roles.ToArray());
         }
 

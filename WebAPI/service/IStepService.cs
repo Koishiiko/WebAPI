@@ -11,9 +11,9 @@ namespace WebAPI.service {
 
 		List<Step> GetAll();
 
-		List<Step> GetSteps(AccountJWTPayload payload);
+		List<Step> GetSteps(AccountPayload payload);
 
-		List<StepDTO> GetStepDatas(AccountJWTPayload payload);
+		List<StepDTO> GetStepDatas(AccountPayload payload);
 
 		Step GetById(int id);
 
