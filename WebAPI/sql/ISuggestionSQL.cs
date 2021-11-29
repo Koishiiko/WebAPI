@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.po;
-using WebAPI.dto;
+﻿using System.Collections.Generic;
+using WebAPI.entity;
 
 namespace WebAPI.sql {
-	public interface ISuggestionSQL {
+    public interface ISuggestionSQL {
 
 		Suggestion getById(int id);
 

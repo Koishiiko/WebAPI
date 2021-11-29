@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.dto;
 using WebAPI.sql;
 using WebAPI.pagination;

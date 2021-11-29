@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WebAPI.entity;
 using WebAPI.po;
 
 namespace WebAPI.sql {

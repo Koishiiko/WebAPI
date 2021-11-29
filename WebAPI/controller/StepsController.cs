@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.service;
 using WebAPI.dto;
 using WebAPI.utils;
@@ -15,6 +15,11 @@ namespace WebAPI.controller {
 
         public StepsController(IStepService stepService) {
             this.stepService = stepService;
+        }
+
+        [HttpGet("test")]
+        public Result Test() {
+            return Result.Failure();
         }
 
         [HttpGet("all")]

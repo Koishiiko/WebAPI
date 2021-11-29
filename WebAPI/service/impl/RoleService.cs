@@ -2,8 +2,9 @@
 using System.Linq;
 using WebAPI.dto;
 using WebAPI.pagination;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.sql;
+using WebAPI.po;
 
 namespace WebAPI.service.impl {
     public class RoleService : IRoleService {
@@ -35,21 +36,21 @@ namespace WebAPI.service.impl {
         }
 
         public RoleDTO GetDataById(int id) {
-            List<dynamic> rows = roleSQL.GetDataById(id);
+            List<RoleDataPO> rows = roleSQL.GetDataById(id);
             if (!rows.Any()) {
                 return null;
             }
 
             RoleDTO data = new RoleDTO() {
-                Id = rows[0].id,
-                Name = rows[0].name,
+                Id = rows[0].Id,
+                Name = rows[0].Name,
                 StepIds = roleSQL.GetStepIdsByRoleId(id)
             };
 
-            if (rows[0].account_id != null) {
+            if (rows[0].AccountId != 0) {
                 data.AccountIds = new List<int>();
                 rows.ForEach((row) => {
-                    data.AccountIds.Add(row.account_id);
+                    data.AccountIds.Add(row.AccountId);
                 });
             }
 

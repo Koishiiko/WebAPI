@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NPOI.SS.UserModel;
-using WebAPI.po;
+using WebAPI.entity;
 
 namespace WebAPI.service {
 	public interface IReportTemplateService {

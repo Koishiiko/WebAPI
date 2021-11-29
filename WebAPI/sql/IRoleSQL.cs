@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.dto;
 using WebAPI.pagination;
+using WebAPI.po;
 
 namespace WebAPI.sql {
 	public interface IRoleSQL {
 
 		List<Role> GetAll();
 
-		List<dynamic> GetDataById(int id);
+		List<RoleDataPO> GetDataById(int id);
 
 		List<int> GetStepIdsByRoleId(int id);
 

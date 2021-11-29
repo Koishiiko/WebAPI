@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebAPI.po;
+using WebAPI.entity;
 
 namespace WebAPI.dto {
 	public class StepDTO {

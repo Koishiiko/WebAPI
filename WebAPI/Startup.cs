@@ -2,7 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using System.Text.Encodings.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using WebAPI.autofac;
-using WebAPI.filter;
 using WebAPI.formatter;
 using WebAPI.middleware;
 using WebAPI.utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI {
     public class Startup {
@@ -40,14 +40,26 @@ namespace WebAPI {
             });
 
             services.AddControllers(options => {
-                options.Filters.Add<LogFilter>();
-                options.Filters.Add<ResultFilter>();
-                //options.OutputFormatters.Insert(0, new CustomOutputFormatter());
+                //options.Filters.Add<LogFilter>();
+                //options.Filters.Add<ResultFilter>();
+                options.InputFormatters.Insert(0, new RequestFormatter());
+                options.OutputFormatters.Insert(0, new ResultFormatter());
+            }).AddJsonOptions(options => {
+                // FIXME: 配置不生效
+                /*
+                options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.WriteIndented = true;
+                */
             });
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
             });
+
+            //services.AddDbContext<WebAPIContext>(options => {
+            //    options.UseSqlServer(AppSettings.MSSQLString);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,13 +81,6 @@ namespace WebAPI {
             app.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(AppSettings.FolderPath),
                 RequestPath = "/files"
-            });
-
-            app.Use(async (context, next) => {
-                // 开启后 Request.Body可以重复读取
-                // 用于打印请求日志
-                context.Request.EnableBuffering();
-                await next();
             });
 
             app.UseMiddleware<GlobalExceptionMiddleware>();

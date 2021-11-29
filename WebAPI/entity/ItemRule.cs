@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SqlSugar;
 
-namespace WebAPI.po {
+namespace WebAPI.entity {
 	[SugarTable("item_rule")]
 	public class ItemRule {
 

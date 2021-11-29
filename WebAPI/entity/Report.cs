@@ -1,7 +1,7 @@
 ﻿using System;
 using SqlSugar;
 
-namespace WebAPI.po {
+namespace WebAPI.entity {
 	[SugarTable("test_record")]
 	public class Report {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

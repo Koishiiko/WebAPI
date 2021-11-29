@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.dto;
 using WebAPI.pagination;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.service;
 
 namespace WebAPI.controller {

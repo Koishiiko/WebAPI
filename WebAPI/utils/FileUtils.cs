@@ -32,7 +32,7 @@ namespace WebAPI.utils {
             string extension = Path.GetExtension(path);
 
             // 如果文件名以(i)结尾 则将(i)移除后重新添加
-            Match match = Regex.Match(name, @"^.*?(?=\s?\(\d\))");
+            var match = Regex.Match(name, @"^.*?(?=\s?\(\d\))");
             name = match.Success ? match.Value : name;
 
             int count = 1;

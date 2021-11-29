@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.utils;
-using WebAPI.po;
+using WebAPI.entity;
 
 namespace WebAPI.sql.impl {
 	public class AccountRoleSQL : IAccountRoleSQL {

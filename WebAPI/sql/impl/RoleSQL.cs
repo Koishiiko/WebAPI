@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using WebAPI.pagination;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.utils;
+using WebAPI.po;
 
 namespace WebAPI.sql.impl {
     public class RoleSQL : IRoleSQL {
@@ -48,7 +49,7 @@ namespace WebAPI.sql.impl {
 			return DataSource.QueryOne<int>(sql);
 		}
 
-		public List<dynamic> GetDataById(int id) {
+		public List<RoleDataPO> GetDataById(int id) {
 			string sql = @"
                SELECT
                    r.id, r.name, ar.account_id
@@ -60,7 +61,7 @@ namespace WebAPI.sql.impl {
                WHERE
                    r.id = @id
 			";
-			return DataSource.QueryMany<dynamic>(sql, new { id });
+			return DataSource.QueryMany<RoleDataPO>(sql, new { id });
 		}
 
 		public List<int> GetStepIdsByRoleId(int id) {

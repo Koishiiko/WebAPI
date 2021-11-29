@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.sql;
 
 namespace WebAPI.service.impl {
@@ -18,11 +18,11 @@ namespace WebAPI.service.impl {
         }
 
         public Module GetById(string id) {
-            return moduleSQL.getById(id);
+            return moduleSQL.GetById(id);
         }
 
         public List<Module> GetByStepId(int id) {
-            return moduleSQL.getByStepId(id);
+            return moduleSQL.GetByStepId(id);
         }
 
         public long Save(Module module) {

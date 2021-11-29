@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using WebAPI.utils;
 using WebAPI.dto;
-using WebAPI.po;
+using WebAPI.entity;
 using WebAPI.pagination;
 
 namespace WebAPI.sql.impl {

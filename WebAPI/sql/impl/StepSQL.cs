@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebAPI.dto;
+using WebAPI.entity;
 using WebAPI.po;
 using WebAPI.utils;
 
