@@ -9,11 +9,7 @@ using Microsoft.Net.Http.Headers;
 using WebAPI.utils;
 
 namespace WebAPI.formatter {
-    /// <summary>
-    /// 请求格式器
-    /// 
-    /// 主要用来打印请求日志
-    /// </summary>
+    [Obsolete("InputFormatter只能拦截化包含请求体的请求")]
     public class RequestFormatter : InputFormatter {
 
         public RequestFormatter() {

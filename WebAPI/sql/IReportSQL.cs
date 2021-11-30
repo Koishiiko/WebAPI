@@ -7,22 +7,34 @@ using WebAPI.dto;
 using WebAPI.pagination;
 
 namespace WebAPI.sql {
-	public interface IReportSQL {
+    public interface IReportSQL {
 
-		List<Report> GetAll();
+        List<Report> GetAll();
 
-		List<ReportDTO> GetByPage(ReportPagination pagination);
+        List<ReportDTO> GetByPage(ReportPagination pagination);
 
-		int GetCount(ReportPagination pagination);
+        int GetCount(ReportPagination pagination);
 
-		List<ReportDTO> GetByProductId(string productId);
+        /// <summary>
+        /// 获取当前产品的所有记录信息
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        List<ReportDTO> GetByProductId(string productId);
 
-		List<ReportDTO> GetALLByProductId(string productId);
+        /// <summary>
+        /// 只获取当前产品下所有记录的工序id和guid
+        /// 
+        /// 主要用于查询detail表
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        List<ReportDTO> GetAllByProductId(string productId);
 
-		Report GetLastByProductId(int stepId, string productId);
+        Report GetLastByProductId(int stepId, string productId);
 
-		Report GetByGuid(string guid);
+        Report GetByGuid(string guid);
 
-		long Save(Report report);
-	}
+        long Save(Report report);
+    }
 }

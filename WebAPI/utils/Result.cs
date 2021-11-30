@@ -1,5 +1,9 @@
 ﻿namespace WebAPI.utils {
-
+    /// <summary>
+    /// 统一返回结果
+    /// 所有的响应结果都会被包装为该类的对象并转换为json格式返回(除了二进制文件)
+    /// 响应数据放在Data属性中
+    /// </summary>
     public class Result {
 
         private ResultCode resultCode;
@@ -26,6 +30,10 @@
         }
     }
 
+    ///<summary>
+    /// XXX: 枚举只能赋值为数值类型(大概)
+    /// 所以使用静态对象代替枚举
+    ///</summary>
     public class ResultCode {
 
         public int Code { get; }

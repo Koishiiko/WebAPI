@@ -14,9 +14,16 @@ namespace WebAPI.service {
         private readonly IValidSQL validSQL;
         private readonly IModuleSQL moduleSQL;
 
+        /**
+         * XXX: 一些固定的值 暂时放在这里
+         */
+        // 产品信息数据的工序id为0 模块id为"000"
+        // 方便统一存储和查询
         private static readonly int baseStepId = 0;
         private static readonly string baseModuleId = "000";
+        // 产品id对应的报告id
         private static readonly string pIdReportId = "000_001_31";
+        // 产品类型对应的报告id
         private static readonly string typeReportId = "000_002_31";
 
         private static readonly int stationId = 1;
@@ -31,8 +38,8 @@ namespace WebAPI.service {
         }
 
         public MaterialDTO GetByProductId(string productId) {
-            List<ReportDTO> rows = reportSQL.GetALLByProductId(productId);
-            if (!rows.Any()) {
+            List<ReportDTO> rows = reportSQL.GetAllByProductId(productId);
+            if (rows != null && !rows.Any()) {
                 return null;
             }
 
@@ -58,15 +65,7 @@ namespace WebAPI.service {
         /// </summary>
         /// <param name="guid"></param>
         /// <returns>
-        ///     {
-        ///         模块id: {
-        ///             报告id: 记录值,
-        ///             报告id: 记录值,
-        ///             ...
-        ///         },
-        ///         模块id: {...},
-        ///         ...
-        ///     }
+        ///     { 模块id: { 报告id: 记录值, ...}, , ...}
         /// </returns>
         private IDictionary<string, IDictionary<string, string>> GetModuleData(string guid) {
             List<Detail> details = detailSQL.GetByGuid(guid);
@@ -88,11 +87,7 @@ namespace WebAPI.service {
         /// </summary>
         /// <param name="guid"></param>
         /// <returns>
-        ///     {
-        ///         模块1: 是否验证,
-        ///         模块2: 是否验证,
-        ///         ...
-        ///     }
+        ///     { 模块: 是否验证, ... }
         /// </returns>
         private IDictionary<string, bool> GetModuleValid(string guid) {
             List<Valid> valids = validSQL.GetByGuid(guid);
@@ -113,6 +108,8 @@ namespace WebAPI.service {
                 Valids = new Dictionary<int, IDictionary<string, bool>>()
             };
 
+            // 除了获取当前guid的记录
+            // 还需要获取产品信息
             Report baseReport = reportSQL.GetLastByProductId(baseStepId, report.ProductId);
 
             result.Data.Add(baseStepId, GetModuleData(baseReport.TestGuid));
@@ -123,11 +120,13 @@ namespace WebAPI.service {
         }
 
         public MaterialDTO GetStepDataByProductId(int stepId, string productId) {
-            MaterialDTO result = new MaterialDTO {
+            MaterialDTO result = new MaterialDTO() {
                 Data = new Dictionary<int, IDictionary<string, IDictionary<string, string>>>(),
                 Valids = new Dictionary<int, IDictionary<string, bool>>()
             };
 
+            // 除了获取当前工序的记录
+            // 还需要获取产品信息
             Report baseReport = reportSQL.GetLastByProductId(baseStepId, productId);
             Report report = reportSQL.GetLastByProductId(stepId, productId);
 
@@ -144,6 +143,7 @@ namespace WebAPI.service {
             string productType = baseData[typeReportId];
             string tester = payload.AccountName;
 
+            // 每个工序分别创建一条test_record记录
             foreach (var stepPair in material.Data) {
                 int stepId = stepPair.Key;
                 var modules = stepPair.Value;
@@ -156,7 +156,10 @@ namespace WebAPI.service {
            string productId, string productType, string tester) {
             string guid = Guid.NewGuid().ToString();
 
-            Report report = new Report {
+            // XXX: 目前是在开始保存之前记录BeginTime
+            // 执行完毕后记录EndTime 再将数据插入到表中
+            // 大概先插入数据 执行完成后更新EndTime会比较好
+            Report report = new Report() {
                 TestGuid = guid,
                 ProductId = productId,
                 ProductType = productType,
@@ -169,39 +172,46 @@ namespace WebAPI.service {
 
             // 是否所有模块都通过验证
             int moduleCount = moduleSQL.GetCountByStepId(stepId);
-            report.TestResult = (int)(modulesValid.Count != moduleCount || modulesValid.Select(valid => !valid.Value).Any() ? TestResult.NoValid : TestResult.Valid);
+            report.TestResult = (int)(modulesValid.Count != moduleCount || modulesValid.Select(valid => !valid.Value).Any()
+                                    ? TestResult.NoValid : TestResult.Valid);
 
+            // 根据模块保存当前工序(test_record)下的数据
             foreach (var modulePair in modules) {
                 string moduleId = modulePair.Key;
                 var items = modulePair.Value;
 
-                SaveDetails(guid, stepId, moduleId, items, modulesValid[moduleId]);
+                // 基本信息由前台验证通过
+                if (stepId != baseStepId) {
+                    SaveValid(guid, moduleId, modulesValid[moduleId]);
+                }
+                SaveDetails(guid, items);
             }
 
             report.EndTime = DateTime.Now;
             reportSQL.Save(report);
         }
 
-        private void SaveDetails(string guid, int stepId, string moduleId, in IDictionary<string, string> items, bool isValid) {
+        private void SaveValid(string guid, string moduleId, bool isValid) {
+            Valid valid = new Valid() {
+                Guid = guid,
+                ModuleId = moduleId,
+                Value = isValid
+            };
+            validSQL.Save(valid);
+        }
+
+        private void SaveDetails(string guid, in IDictionary<string, string> items) {
             if (items == null || !items.Any()) {
                 return;
             }
 
-            if (stepId != baseStepId) {
-                Valid valid = new Valid() {
-                    Guid = guid,
-                    ModuleId = moduleId,
-                    Value = isValid
-                };
-                validSQL.Save(valid);
-            }
-
+            // 保存当前模块下的detail数据
             foreach (var itemPair in items) {
                 string reportId = itemPair.Key;
                 string recordValue = itemPair.Value;
 
                 var arr = reportId.Split('_');
-                Detail detail = new Detail {
+                Detail detail = new Detail() {
                     TestGuid = guid,
                     ModuleKey = arr[0],
                     ItemKey = arr[1],

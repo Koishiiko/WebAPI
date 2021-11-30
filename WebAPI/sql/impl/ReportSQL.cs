@@ -85,15 +85,16 @@ namespace WebAPI.sql.impl {
             });
         }
 
-        public List<ReportDTO> GetALLByProductId(string productId) {
+        public List<ReportDTO> GetAllByProductId(string productId) {
             string sql = @"
                 SELECT
 	                r.step_id, r.test_guid
                 FROM test_record AS r
 	                JOIN (
-		                SELECT ROW_NUMBER() OVER(PARTITION BY product_id, step_id ORDER BY end_time DESC) row_num,
-		                id
-		                FROM test_record
+    		            SELECT
+                            ROW_NUMBER() OVER(PARTITION BY product_id, step_id ORDER BY end_time DESC) row_num,
+    		                id
+    		            FROM test_record
 		                WHERE product_id = @productId
 	                ) r1 ON r.id = r1.id
                 WHERE r1.row_num = 1
@@ -124,18 +125,7 @@ namespace WebAPI.sql.impl {
         }
 
         public Report GetLastByProductId(int stepId, string productId) {
-            string sql = @"
-                SELECT
-                    id, test_guid,
-                    product_id, product_type,
-                    step_id, station_id,
-                    begin_time, end_time,
-                    testor, test_result, upload_flag
-                FROM test_record
-                WHERE product_id = @productId AND step_id = @stepId
-                ORDER BY end_time DESC
-			";
-            return DataSource.QueryOne<Report>(sql, new { stepId, productId });
+            return DataSource.DB.Queryable<Report>().Single(r => r.ProductId == productId && r.StepId == stepId);
         }
 
         public Report GetByGuid(string guid) {

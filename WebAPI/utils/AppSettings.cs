@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebAPI.utils {
+﻿namespace WebAPI.utils {
     /// <summary>
     /// 配置信息工具类
     /// 获取appsettings.json中WebAPISettings Section的配置

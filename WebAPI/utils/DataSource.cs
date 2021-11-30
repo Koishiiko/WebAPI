@@ -4,6 +4,13 @@ using System.Text.RegularExpressions;
 using SqlSugar;
 
 namespace WebAPI.utils {
+    /// <summary>
+    /// 数据库操作工具类
+    /// 
+    /// 使用SqlSugar框架
+    /// 除了使用定义的静态方法外
+    /// 还可以通过DataSource.DB调用框架中提供的方法
+    /// </summary>
     public static class DataSource {
 
         public static SqlSugarScope DB { get; }

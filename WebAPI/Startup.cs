@@ -2,7 +2,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.Text.Encodings.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -11,11 +10,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using WebAPI.autofac;
+using WebAPI.filter;
 using WebAPI.formatter;
 using WebAPI.middleware;
 using WebAPI.utils;
-using Microsoft.EntityFrameworkCore;
-using WebAPI.filter;
 
 namespace WebAPI {
     public class Startup {
