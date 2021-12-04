@@ -47,12 +47,12 @@
         }
 
         public static readonly ResultCode SUCCESS = new(200, "执行成功");
-        public static readonly ResultCode FAIL = new(4000, "执行失败");
+        public static readonly ResultCode FAIL = new(401, "执行失败");
 
         public static readonly ResultCode BAD_REQUEST = new(400, "请求参数有误");
         public static readonly ResultCode API_NOT_FOUND = new(404, "请求地址不存在");
         public static readonly ResultCode METHOD_NOT_ALLOWED = new(405, "不支持当前请求方法");
-        public static readonly ResultCode SERVER_EXECUTE_ERROR = new(500, "服务端执行时出现错误");
+        public static readonly ResultCode SERVER_EXECUTED_ERROR = new(500, "服务端执行时出现错误");
 
         public static readonly ResultCode USER_NOT_LOGIN = new(3001, "用户未登录");
         public static readonly ResultCode ACCOUNT_NOT_EXIST = new(3002, "用户不存在");

@@ -43,8 +43,9 @@ namespace WebAPI.controller {
         }
 
         [HttpPost]
-        public void Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
+        public string Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
             materialService.Save(material, JWTUtils.Decode<AccountPayload>(authorization));
+            return "ok";
         }
     }
 }

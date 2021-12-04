@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using WebAPI.utils;
-using System.Text.Json;
-using WebAPI.exception;
 using Microsoft.Extensions.Logging;
+using WebAPI.exception;
+using WebAPI.utils;
 
 namespace WebAPI.middleware {
     /// <summary>
@@ -33,7 +32,7 @@ namespace WebAPI.middleware {
         }
 
         private void CheckStatusCode(int code) {
-            if (code < 300) {
+            if (code < 400) {
                 return;
             }
 
@@ -47,9 +46,10 @@ namespace WebAPI.middleware {
 
         private async void ExceptionResponseHandler(HttpContext context, Exception e) {
             log.LogError(
-                $"[{context.Connection.RemoteIpAddress.MapToIPv4()}:{context.Connection.RemotePort}] {context.Request.Method} {context.Response.StatusCode}: {context.Request.Path}{context.Request.QueryString} {e.Message}\n{e.StackTrace}\n");
+                $"[{context.Connection.RemoteIpAddress.MapToIPv4()}:{context.Connection.RemotePort}] {context.Request.Method} {context.Response.StatusCode}:" +
+                    $" {context.Request.Path}{context.Request.QueryString}\n{e.Message}\n{e.StackTrace}\n");
 
-            Result result = Result.Failure(e is CustomException ? (e as CustomException).resultCode : ResultCode.SERVER_EXECUTE_ERROR);
+            Result result = Result.Failure(e is CustomException ce ? ce.resultCode : ResultCode.SERVER_EXECUTED_ERROR);
 
             await context.Response.WriteAsJsonAsync(result);
         }

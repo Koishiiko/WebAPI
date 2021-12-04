@@ -40,6 +40,7 @@ namespace WebAPI {
 
             services.AddControllers(options => {
                 options.Filters.Add<LogFilter>();
+                options.Filters.Add<AuthorizeFilter>();
                 options.OutputFormatters.Insert(0, new ResultFormatter());
             });
 
@@ -49,7 +50,7 @@ namespace WebAPI {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IOptions<WebAPISettings> webAPISettings) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IOptions<WebAPISettings> webAPISettings, ILogger<Startup> log) {
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
             if (env.IsDevelopment()) {
@@ -76,6 +77,8 @@ namespace WebAPI {
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
+
+            log.LogInformation($"Now running on: {Configuration.GetSection("Kestrel").GetSection("Endpoints").GetSection("Http")["Url"]}");
         }
 
         public void ConfigureContainer(ContainerBuilder builder) {

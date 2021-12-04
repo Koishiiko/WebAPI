@@ -15,6 +15,10 @@ namespace WebAPI.sql.impl {
             return DataSource.DB.Queryable<Role>().ToList();
         }
 
+        public List<Role> GetByIds(List<int> ids) {
+            return DataSource.DB.Queryable<Role>().In(ids).ToList();
+        }
+
         public List<Role> GetByPage(RolePagination pagination) {
             string sql = @"
                     SELECT id, name

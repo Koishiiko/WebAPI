@@ -210,6 +210,7 @@ namespace WebAPI.service {
                 string reportId = itemPair.Key;
                 string recordValue = itemPair.Value;
 
+                // reportId: moduleId_itemId_recordId
                 var arr = reportId.Split('_');
                 Detail detail = new Detail() {
                     TestGuid = guid,

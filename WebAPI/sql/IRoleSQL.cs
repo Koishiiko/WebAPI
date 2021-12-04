@@ -12,6 +12,8 @@ namespace WebAPI.sql {
 
 		List<Role> GetAll();
 
+		List<Role> GetByIds(List<int> ids);
+
 		List<RoleDataPO> GetDataById(int id);
 
 		List<int> GetStepIdsByRoleId(int id);

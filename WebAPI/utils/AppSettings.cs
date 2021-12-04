@@ -11,6 +11,7 @@
 
         private static WebAPISettings settings;
 
+        public static string JWTSecret => settings.JWTSecret;
         public static string MSSQLString => settings.MSSQLString;
         public static string LogConfigPath => settings.LogConfigPath;
         public static string FolderPath => settings.FolderPath;
@@ -24,6 +25,7 @@
 
     public class WebAPISettings {
 
+        public string JWTSecret { get; set; }
         public string MSSQLString { get; set; }
         public string LogConfigPath { get; set; }
         public string FolderPath { get; set; }

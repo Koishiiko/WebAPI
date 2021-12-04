@@ -7,6 +7,6 @@ namespace WebAPI.exception {
     /// </summary>
     public class ExecuteError : CustomException {
 
-        public ExecuteError() : base(ResultCode.SERVER_EXECUTE_ERROR) { }
+        public ExecuteError() : base(ResultCode.SERVER_EXECUTED_ERROR) { }
     }
 }
