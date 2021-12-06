@@ -38,7 +38,7 @@ namespace WebAPI.service.impl {
             return GetJWT(rows);
         }
 
-        private string GetJWT(List<AccountDataPO> rows) {
+        private string GetJWT(in List<AccountDataPO> rows) {
             return JWTUtils.Encode(new AccountPayload {
                 Id = rows[0].Id,
                 AccountKey = rows[0].AccountKey,
@@ -112,7 +112,7 @@ namespace WebAPI.service.impl {
             return GetData(rows);
         }
 
-        private AccountDTO GetData(List<AccountDataPO> rows) {
+        private AccountDTO GetData(in List<AccountDataPO> rows) {
             AccountDTO data = new AccountDTO() {
                 Id = rows[0].Id,
                 AccountKey = rows[0].AccountKey,

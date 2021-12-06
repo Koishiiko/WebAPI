@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAPI.entity;
-using WebAPI.pagination;
+﻿using System.Collections.Generic;
 using WebAPI.dto;
+using WebAPI.pagination;
 
 namespace WebAPI.service {
-	public interface IReportService {
+    public interface IReportService {
+
 		ReportPageDTO GetByPage(ReportPagination pagination);
 
 		List<ReportDTO> GetByProductId(string productId);

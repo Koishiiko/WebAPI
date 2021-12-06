@@ -31,7 +31,7 @@ namespace WebAPI.utils {
 
         public static T Decode<T>(string token) {
             if (token == null || token == "") {
-                throw new JWTException(ResultCode.TOKEN_VERIFY_ERROR);
+                throw new JWTException(ResultCode.TOKEN_IS_EMPTY);
             }
             try {
                 // data为Newtonsoft.Json中的JObject对象
@@ -40,10 +40,10 @@ namespace WebAPI.utils {
                        .Decode<IDictionary<string, dynamic>>(token)["data"].ToObject<T>(); ;
             } catch (TokenExpiredException) {
                 throw new JWTException(ResultCode.TOKEN_IS_EXPIRED);
-            } catch (InvalidTokenPartsException) {
-                throw new JWTException(ResultCode.TOKEN_IS_INVALID);
             } catch (SignatureVerificationException) {
                 throw new JWTException(ResultCode.TOKEN_VERIFY_ERROR);
+            } catch {
+                throw new JWTException(ResultCode.TOKEN_IS_INVALID);
             }
         }
 

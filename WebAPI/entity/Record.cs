@@ -6,6 +6,7 @@ using SqlSugar;
 
 namespace WebAPI.entity {
 	public class Record {
+
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
 		public string RecordId { get; set; }

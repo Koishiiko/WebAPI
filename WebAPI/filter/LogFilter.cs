@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using WebAPI.utils;
 
@@ -29,7 +26,7 @@ namespace WebAPI.filter {
 
         public void OnActionExecuted(ActionExecutedContext context) {
             var httpContext = context.HttpContext;
-            
+
             log.LogInformation(
                 $"[{httpContext.Connection.RemoteIpAddress.MapToIPv4()}:{httpContext.Connection.RemotePort}] {httpContext.Request.Method} {httpContext.Response.StatusCode}:" +
                     $" {httpContext.Request.Path}{httpContext.Request.QueryString}");

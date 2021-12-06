@@ -45,7 +45,8 @@ namespace WebAPI.controller {
         [HttpPost]
         public string Save([FromBody] MaterialDTO material, [FromHeader] string authorization) {
             materialService.Save(material, JWTUtils.Decode<AccountPayload>(authorization));
-            return "ok";
+            // XXX: 返回void不会进入ResultFormatter中 
+            return "";
         }
     }
 }

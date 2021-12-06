@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using SqlSugar;
+using System;
 
 namespace WebAPI.utils {
     /// <summary>
@@ -13,7 +14,7 @@ namespace WebAPI.utils {
     /// </summary>
     public static class DataSource {
 
-        public static SqlSugarScope DB { get; }
+        public static readonly SqlSugarScope DB;
 
         static DataSource() {
             DB = new SqlSugarScope(new ConnectionConfig() {
@@ -26,7 +27,7 @@ namespace WebAPI.utils {
                         // 所以需要手动映射
                         column.DbColumnName = Regex.Replace(column.DbColumnName, "(?<!_|^)[A-Z]", "_$0");
                     }
-                }
+                },
             });
         }
 

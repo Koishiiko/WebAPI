@@ -80,7 +80,7 @@ namespace WebAPI.sql.impl {
 			                FROM test_record
 		                ) r0 WHERE row_num = 1 AND product_id = @productId
 	                ) r
-		                ON d.test_guid = r.test_guid
+		            ON d.test_guid = r.test_guid
 			";
 
 			return DataSource.QueryMany<DetailTemplateDTO>(sql, new { productId });

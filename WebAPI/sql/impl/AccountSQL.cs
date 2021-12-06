@@ -7,20 +7,20 @@ using WebAPI.po;
 namespace WebAPI.sql.impl {
     public class AccountSQL : IAccountSQL {
 
-		public List<Account> GetAll() {
-			return DataSource.DB.Queryable<Account>().ToList();
-		}
+        public List<Account> GetAll() {
+            return DataSource.DB.Queryable<Account>().ToList();
+        }
 
-		public Account GetByAccountKey(string accountKey) {
-			return DataSource.DB.Queryable<Account>().Single(a => a.AccountKey == accountKey);
-		}
+        public Account GetByAccountKey(string accountKey) {
+            return DataSource.DB.Queryable<Account>().Single(a => a.AccountKey == accountKey);
+        }
 
-		public Account GetById(int id) {
-			return DataSource.DB.Queryable<Account>().InSingle(id);
-		}
+        public Account GetById(int id) {
+            return DataSource.DB.Queryable<Account>().InSingle(id);
+        }
 
-		public List<AccountPagePO> GetByPage(AccountPagination pagination) {
-			string sql = @"
+        public List<AccountPagePO> GetByPage(AccountPagination pagination) {
+            string sql = @"
                 SELECT
                     a.id, a.account_key, a.account_name, r.id AS role_id, r.name AS role_name
                 FROM (
@@ -49,16 +49,16 @@ namespace WebAPI.sql.impl {
                 )
                 ORDER BY a.id
 			";
-			return DataSource.QueryMany<AccountPagePO>(sql, new {
-				start = pagination.Page * pagination.Size,
-				end = (pagination.Page + 1) * pagination.Size,
-				accountKey = pagination.AccountKey,
-				roleId = pagination.RoleId
-			});
-		}
+            return DataSource.QueryMany<AccountPagePO>(sql, new {
+                start = pagination.Page * pagination.Size,
+                end = (pagination.Page + 1) * pagination.Size,
+                accountKey = pagination.AccountKey,
+                roleId = pagination.RoleId
+            });
+        }
 
-		public int GetCount(AccountPagination pagination) {
-			string sql = @"
+        public int GetCount(AccountPagination pagination) {
+            string sql = @"
                SELECT
 	               COUNT(a.id) AS rows
                FROM (
@@ -80,60 +80,37 @@ namespace WebAPI.sql.impl {
 	               GROUP BY a0.id
                ) a
 			";
-			return DataSource.QueryOne<int>(sql, new {
-				accountKey = pagination.AccountKey,
-				roleId = pagination.RoleId
-			});
-		}
+            return DataSource.QueryOne<int>(sql, new {
+                accountKey = pagination.AccountKey,
+                roleId = pagination.RoleId
+            });
+        }
 
-		public List<AccountDataPO> GetDataByAccountKey(string accountKey) {
-			string sql = @"
-                SELECT
-	                a.id, a.account_key, a.account_name, a.password, ar.role_id
-                FROM (
-	                    SELECT
-		                    id, account_key, account_name, password
-	                    FROM
-		                    account
-	                    WHERE
-		                    account_key = @accountKey
-                    ) a
-	                LEFT JOIN
-		                account_role ar
-	                ON a.id = ar.account_id
-			";
-			return DataSource.QueryMany<AccountDataPO>(sql, new { accountKey });
-		}
+        public List<AccountDataPO> GetDataByAccountKey(string accountKey) {
+            return DataSource.DB.Queryable<Account>().Where(a => a.AccountKey == accountKey)
+                .LeftJoin<AccountRole>((a, ar) => a.Id == ar.AccountId)
+                .Select((a, ar) => new AccountDataPO { Id = a.Id, AccountKey = a.AccountKey, AccountName = a.AccountName, Password = a.Password, RoleId = ar.RoleId })
+                .ToList();
+        }
 
-		public List<AccountDataPO> GetDataById(int id) {
-			string sql = @"
-                SELECT
-	                a.id, a.account_key, a.account_name, ar.role_id
-                FROM (
-	                SELECT
-		                id, account_key, account_name
-	                FROM
-		                account
-	                WHERE
-		                id = @id
-                ) a
-	                LEFT JOIN
-		                account_role ar
-	                ON a.id = ar.account_id
-			";
-			return DataSource.QueryMany<AccountDataPO>(sql, new { id });
-		}
+        public List<AccountDataPO> GetDataById(int id) {
+            return DataSource.DB.Queryable<Account>()
+                .LeftJoin<AccountRole>((a, ar)=> a.Id == ar.AccountId)
+                .Where(a => a.Id == id)
+                .Select((a, ar) => new AccountDataPO { Id = a.Id, AccountKey = a.AccountKey, AccountName = a.AccountName, RoleId = ar.RoleId })
+                .ToList();
+        }
 
-		public long Save(Account account) {
-			return DataSource.Save(account);
-		}
+        public long Save(Account account) {
+            return DataSource.Save(account);
+        }
 
-		public bool Update(Account account) {
-			return DataSource.Update(account);
-		}
+        public bool Update(Account account) {
+            return DataSource.Update(account);
+        }
 
-		public int Delete(int id) {
-			return DataSource.DB.Deleteable<Account>().In(id).ExecuteCommand();
-		}
+        public int Delete(int id) {
+            return DataSource.DB.Deleteable<Account>().In(id).ExecuteCommand();
+        }
     }
 }

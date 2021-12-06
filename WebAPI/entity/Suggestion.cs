@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SqlSugar;
+﻿using SqlSugar;
 
 namespace WebAPI.entity {
-	public class Suggestion {
+    public class Suggestion {
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }

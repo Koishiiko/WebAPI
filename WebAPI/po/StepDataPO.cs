@@ -6,6 +6,7 @@ using SqlSugar;
 
 namespace WebAPI.po {
     public class StepData {
+
 		public int SId { get; set; }
 		public int StepId { get; set; }
 		public string StepName { get; set; }

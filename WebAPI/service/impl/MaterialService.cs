@@ -65,7 +65,7 @@ namespace WebAPI.service {
         /// </summary>
         /// <param name="guid"></param>
         /// <returns>
-        ///     { 模块id: { 报告id: 记录值, ...}, , ...}
+        ///     { 模块id: { 报告id: 记录值, ... }, ...}
         /// </returns>
         private IDictionary<string, IDictionary<string, string>> GetModuleData(string guid) {
             List<Detail> details = detailSQL.GetByGuid(guid);
@@ -87,17 +87,11 @@ namespace WebAPI.service {
         /// </summary>
         /// <param name="guid"></param>
         /// <returns>
-        ///     { 模块: 是否验证, ... }
+        ///     { 模块id: 是否验证, ... }
         /// </returns>
         private IDictionary<string, bool> GetModuleValid(string guid) {
             List<Valid> valids = validSQL.GetByGuid(guid);
-
-            var result = new Dictionary<string, bool>();
-            valids.ForEach((valid) => {
-                result.Add(valid.ModuleId, valid.Value);
-            });
-
-            return result;
+            return valids.ToDictionary(valid => valid.ModuleId, valid => valid.Value);
         }
 
         public MaterialDTO GetByGuid(string guid) {
@@ -172,8 +166,8 @@ namespace WebAPI.service {
 
             // 是否所有模块都通过验证
             int moduleCount = moduleSQL.GetCountByStepId(stepId);
-            report.TestResult = (int)(modulesValid.Count != moduleCount || modulesValid.Select(valid => !valid.Value).Any()
-                                    ? TestResult.NoValid : TestResult.Valid);
+            report.TestResult = (int)(modulesValid.Count == moduleCount && modulesValid.Values.ToList().TrueForAll(valid => valid)
+                                    ? TestResult.Valid : TestResult.NoValid) ;
 
             // 根据模块保存当前工序(test_record)下的数据
             foreach (var modulePair in modules) {

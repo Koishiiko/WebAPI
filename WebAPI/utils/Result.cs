@@ -64,6 +64,7 @@
 
         public static readonly ResultCode TOKEN_IS_INVALID = new(6001, "登录令牌无效");
         public static readonly ResultCode TOKEN_IS_EXPIRED = new(6002, "登录令牌已过期");
-        public static readonly ResultCode TOKEN_VERIFY_ERROR = new(6003, "令牌验证失败");
+        public static readonly ResultCode TOKEN_IS_EMPTY = new(6003, "令牌为空");
+        public static readonly ResultCode TOKEN_VERIFY_ERROR = new(6004, "令牌验证失败");
     }
 }

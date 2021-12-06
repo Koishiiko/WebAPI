@@ -41,25 +41,17 @@ namespace WebAPI.sql.impl {
         }
 
         public List<RoleDataPO> GetDataById(int id) {
-            string sql = @"
-               SELECT
-                   r.id, r.name, ar.account_id
-               FROM
-                   role r
-                   LEFT JOIN
-                       account_role ar
-                   ON r.id = ar.role_id
-               WHERE
-                   r.id = @id
-			";
-            return DataSource.QueryMany<RoleDataPO>(sql, new { id });
+            return DataSource.DB.Queryable<Role>()
+                .LeftJoin<AccountRole>((r, ar) => r.Id == ar.RoleId)
+                .Where(r => r.Id == id)
+                .Select((r, ar) => new RoleDataPO { Id = r.Id, Name = r.Name, AccountId = ar.AccountId })
+                .ToList();
         }
 
         public List<int> GetStepIdsByRoleId(int id) {
-            string sql = @"
-				SELECT step_id FROM role_step WHERE role_id = @id
-			";
-            return DataSource.QueryMany<int>(sql, new { id });
+            return DataSource.DB.Queryable<RoleStep>().Where(rs => rs.RoleId == id)
+                .Select(rs => rs.StepId)
+                .ToList();
         }
 
         public long Save(Role role) {
