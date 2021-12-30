@@ -18,9 +18,7 @@ namespace WebAPI.sql {
 
 		List<int> GetStepIdsByRoleId(int id);
 
-		List<Role> GetByPage(RolePagination pagination);
-
-		int GetCount(RolePagination pagination);
+		List<Role> GetByPage(RolePagination pagination, out int total);
 
 		long Save(Role role);
 

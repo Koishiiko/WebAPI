@@ -12,7 +12,7 @@ using NPOI.SS.UserModel;
 using WebAPI.utils;
 
 namespace WebAPI.controller {
-	[Route("[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class ReportTemplatesController : ControllerBase {
 

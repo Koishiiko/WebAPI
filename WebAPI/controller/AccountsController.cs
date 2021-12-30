@@ -6,7 +6,7 @@ using WebAPI.entity;
 using WebAPI.service;
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase {
 
@@ -44,8 +44,8 @@ namespace WebAPI.controller {
             return accountService.GetAll();
         }
 
-        [HttpPost("page")]
-        public AccountPageDTO GetByPage([FromBody] AccountPagination pagination) {
+        [HttpGet("page")]
+        public AccountPageDTO GetByPage([FromQuery] AccountPagination pagination) {
             return accountService.GetByPage(pagination);
         }
 

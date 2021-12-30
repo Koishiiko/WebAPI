@@ -4,7 +4,7 @@ using WebAPI.pagination;
 using WebAPI.service;
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class DetailsController : ControllerBase {
 
@@ -14,8 +14,8 @@ namespace WebAPI.controller {
 			this.detailService = detailService;
 		}
 
-		[HttpPost("page")]
-		public DetailPageDTO GetPageByGuid([FromBody] DetailPagination pagination) {
+		[HttpGet("page")]
+		public DetailPageDTO GetPageByGuid([FromQuery] DetailPagination pagination) {
 			return detailService.GetPageByGuid(pagination);
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SqlSugar;
 using WebAPI.entity;
 using WebAPI.utils;
 
@@ -37,10 +38,7 @@ namespace WebAPI.sql.impl {
         }
 
         public int DeleteByStepId(int id) {
-            string sql = @"
-				DELETE FROM item_rule WHERE EXISTS (SELECT module_id FROM module WHERE step_id = @id)
-			";
-            return DataSource.Delete(sql, new { id = id });
+            return DataSource.DB.Deleteable<ItemRule>().Where(ir => SqlFunc.Subqueryable<Module>().Where(m => m.StepId == id).Any()).ExecuteCommand();
         }
 
         public int DeleteByItemId(string moduleId, string itemId) {

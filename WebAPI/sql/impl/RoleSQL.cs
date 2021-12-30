@@ -19,25 +19,9 @@ namespace WebAPI.sql.impl {
             return DataSource.DB.Queryable<Role>().In(ids).ToList();
         }
 
-        public List<Role> GetByPage(RolePagination pagination) {
-            string sql = @"
-                    SELECT id, name
-                    FROM (
-                        SELECT TOP (@end) id, name, ROW_NUMBER() OVER(ORDER BY id) AS n FROM role 
-                    ) r
-                    where r.n > @start
-			";
-            return DataSource.QueryMany<Role>(sql, new {
-                start = pagination.Page * pagination.Size,
-                end = (pagination.Page + 1) * pagination.Size
-            });
-        }
-
-        public int GetCount(RolePagination pagination) {
-            string sql = @"
-				SELECT COUNT(id) AS rows FROM role
-			";
-            return DataSource.QueryOne<int>(sql);
+        public List<Role> GetByPage(RolePagination pagination, out int total) {
+            total = 0;
+            return DataSource.DB.Queryable<Role>().ToPageList(pagination.Page, pagination.Size, ref total);
         }
 
         public List<RoleDataPO> GetDataById(int id) {

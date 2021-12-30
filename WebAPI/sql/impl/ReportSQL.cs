@@ -47,8 +47,8 @@ namespace WebAPI.sql.impl {
 			";
 
             return DataSource.QueryMany<ReportDTO>(sql, new {
-                start = pagination.Page * pagination.Size,
-                end = (pagination.Page + 1) * pagination.Size,
+                start = (pagination.Page - 1) * pagination.Size,
+                end = pagination.Page * pagination.Size,
                 beginTime = pagination.BeginTime,
                 endTime = pagination.EndTime,
                 productId = pagination.ProductId

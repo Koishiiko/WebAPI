@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace WebAPI {
     public class Program {
@@ -10,8 +11,10 @@ namespace WebAPI {
             CreateHostBuilder(args).Build().Run();
         }
 
+
         public static IHostBuilder CreateHostBuilder(string[] args) {
             return Host.CreateDefaultBuilder(args)
+                .UseWindowsService()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureLogging(builder => {
                     builder.ClearProviders();

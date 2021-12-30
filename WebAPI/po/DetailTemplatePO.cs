@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPI.dto {
-	public class DetailTemplateDTO {
+namespace WebAPI.po {
+	public class DetailTemplatePO {
 
 		public string ModuleKey { get; set; }
 		public string ItemKey { get; set; }

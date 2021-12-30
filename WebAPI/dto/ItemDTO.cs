@@ -13,6 +13,7 @@ namespace WebAPI.dto {
 		public string Name { get; set; }
 		public string Type { get; set; }
 		public string RecordId { get; set; }
+		public string RecordName { get; set; }
 		public string ReportId { get; set; }
 		public ItemRule Rules { get; set; }
 		public List<Suggestion> Suggestions { get; set; }

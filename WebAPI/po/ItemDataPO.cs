@@ -12,6 +12,7 @@ namespace WebAPI.po {
         public string Name { get; set; }
         public string Type { get; set; }
         public string RecordId { get; set; }
+        public string RecordName { get; set; }
         public string ReportId { get; set; }
         public int RuleId { get; set; }
         public string DefaultValue { get; set; }

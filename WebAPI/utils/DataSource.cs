@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using SqlSugar;
 using System;
+using System.Configuration;
 
 namespace WebAPI.utils {
     /// <summary>
@@ -17,18 +18,25 @@ namespace WebAPI.utils {
         public static readonly SqlSugarScope DB;
 
         static DataSource() {
+            Func<string, string> camelToSnake = camelString => Regex.Replace(camelString, "(?<!_|^|[A-Z])[A-Z]", "_$0").ToLower();
             DB = new SqlSugarScope(new ConnectionConfig() {
                 ConnectionString = AppSettings.MSSQLString,
                 DbType = DbType.SqlServer,
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices() {
                     EntityService = (t, column) => {
-                        // SqlSugar在更新操作时没有提供属性名的映射(驼峰转下划线)
-                        // 所以需要手动映射
-                        column.DbColumnName = Regex.Replace(column.DbColumnName, "(?<!_|^)[A-Z]", "_$0");
-                    }
+                        column.DbColumnName = camelToSnake(column.DbColumnName);
+                        if (column.DbColumnName == "id") {
+                            column.IsPrimarykey = true;
+                            column.IsIdentity = true;
+                        }
+                    },
+                    EntityNameService = (t, info) => info.DbTableName = camelToSnake(info.DbTableName)
                 },
             });
+            DB.Aop.OnLogExecuting = (sql, args) => {
+                //Console.Write(sql);
+            };
         }
 
         public static List<T> QueryMany<T>(string sql, object args = null) {

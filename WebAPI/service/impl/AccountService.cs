@@ -65,14 +65,7 @@ namespace WebAPI.service.impl {
         }
 
         public AccountPageDTO GetByPage(AccountPagination pagination) {
-            return new AccountPageDTO() {
-                Data = GetPageData(pagination),
-                Total = accountSQL.GetCount(pagination)
-            };
-        }
-
-        private List<AccountDTO> GetPageData(AccountPagination pagination) {
-            List<AccountPagePO> rows = accountSQL.GetByPage(pagination);
+            List<AccountPagePO> rows = accountSQL.GetByPage(pagination, out int total);
             List<AccountDTO> accounts = new List<AccountDTO>();
 
             AccountDTO curr = null;
@@ -92,11 +85,16 @@ namespace WebAPI.service.impl {
                             Name = row.RoleName
                         });
                 }
+
                 if (!accounts.Any() || accounts.Last().Id != curr.Id) {
                     accounts.Add(curr);
                 }
             });
-            return accounts;
+
+            return new AccountPageDTO() {
+                Data = accounts,
+                Total = total
+            };
         }
 
         public Account GetById(int id) {

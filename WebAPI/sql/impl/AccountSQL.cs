@@ -3,6 +3,7 @@ using WebAPI.pagination;
 using WebAPI.entity;
 using WebAPI.utils;
 using WebAPI.po;
+using SqlSugar;
 
 namespace WebAPI.sql.impl {
     public class AccountSQL : IAccountSQL {
@@ -19,71 +20,14 @@ namespace WebAPI.sql.impl {
             return DataSource.DB.Queryable<Account>().InSingle(id);
         }
 
-        public List<AccountPagePO> GetByPage(AccountPagination pagination) {
-            string sql = @"
-                SELECT
-                    a.id, a.account_key, a.account_name, r.id AS role_id, r.name AS role_name
-                FROM (
-                        SELECT
-	                        TOP (@end) ROW_NUMBER() OVER(ORDER BY id) row_num,
-	                        id, account_key, account_name
-                        FROM
-	                        account
-                        WHERE
-                            @accountKey is NULL OR
-                            @accountKey = '' OR
-                            account_key = @accountKey
-                    ) a
-                    LEFT JOIN
-	                    account_role ar
-                    ON a.id = ar.account_id
-                    LEFT JOIN
-	                    role r
-                    ON r.id = ar.role_id
-                WHERE
-                    a.row_num > @start
-                AND (
-                    @roleId IS NULL OR
-                    @roleId = '' OR
-                    ar.role_id = @roleId
-                )
-                ORDER BY a.id
-			";
-            return DataSource.QueryMany<AccountPagePO>(sql, new {
-                start = pagination.Page * pagination.Size,
-                end = (pagination.Page + 1) * pagination.Size,
-                accountKey = pagination.AccountKey,
-                roleId = pagination.RoleId
-            });
-        }
-
-        public int GetCount(AccountPagination pagination) {
-            string sql = @"
-               SELECT
-	               COUNT(a.id) AS rows
-               FROM (
-	               SELECT
-		               a0.id
-	               FROM account a0
-		               LEFT JOIN
-			               account_role ar
-		               ON a0.id = ar.account_id
-                       WHERE (
-                           @accountKey IS NULL OR
-                           @accountKey = '' OR
-                           a0.account_key = @accountKey
-                       ) AND (
-                           @roleId IS NULL OR
-                           @roleId = '' OR
-                           ar.role_id = @roleId
-                       )
-	               GROUP BY a0.id
-               ) a
-			";
-            return DataSource.QueryOne<int>(sql, new {
-                accountKey = pagination.AccountKey,
-                roleId = pagination.RoleId
-            });
+        public List<AccountPagePO> GetByPage(AccountPagination pagination, out int total) {
+            total = 0;
+            return DataSource.DB.Queryable<Account, AccountRole, Role>((a, ar, r) =>
+                new JoinQueryInfos(JoinType.Left, a.Id == ar.AccountId, JoinType.Left, ar.RoleId == r.Id))
+                .Where((a, ar, r) => (a.AccountKey == pagination.AccountKey || string.IsNullOrEmpty(pagination.AccountKey)) &&
+                                        (ar.RoleId == pagination.RoleId || pagination.RoleId == 0))
+                .Select((a, ar, r) => new AccountPagePO { Id = a.Id, AccountKey = a.AccountKey, AccountName = a.AccountName, RoleId = r.Id, RoleName = r.Name })
+                .ToPageList(pagination.Page, pagination.Size, ref total);
         }
 
         public List<AccountDataPO> GetDataByAccountKey(string accountKey) {
@@ -95,7 +39,7 @@ namespace WebAPI.sql.impl {
 
         public List<AccountDataPO> GetDataById(int id) {
             return DataSource.DB.Queryable<Account>()
-                .LeftJoin<AccountRole>((a, ar)=> a.Id == ar.AccountId)
+                .LeftJoin<AccountRole>((a, ar) => a.Id == ar.AccountId)
                 .Where(a => a.Id == id)
                 .Select((a, ar) => new AccountDataPO { Id = a.Id, AccountKey = a.AccountKey, AccountName = a.AccountName, RoleId = ar.RoleId })
                 .ToList();

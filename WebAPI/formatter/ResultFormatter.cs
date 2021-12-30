@@ -27,8 +27,10 @@ namespace WebAPI.formatter {
             Result result = context.Object is Result r ? r : Result.Success(context.Object);
 
             string bodyString = JSONUtils.Serialize(result);
-            httpContext.Response.ContentType = "applictaion/json";
-            await httpContext.Response.WriteAsync(bodyString);
+            if (!httpContext.Response.HasStarted) {
+                httpContext.Response.ContentType = "applictaion/json";
+                await httpContext.Response.WriteAsync(bodyString);
+            }
 
             /// 如果需要打印返回结果的话 可以在这里打印日志
             //var log = httpContext.RequestServices.GetRequiredService<ILogger<ResultFormatter>>();

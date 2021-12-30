@@ -39,7 +39,7 @@ namespace WebAPI.service.impl {
         public IWorkbook GetTemplate(string productId, int templateId, out string name) {
             ReportTemplate template = reportTemplateSQL.GetById(templateId);
             string templatePath = Path.Combine(AppSettings.FolderPath, template.Path);
-            IDictionary<string, string> valueDict = GetDetailValues(productId);
+            var valueDict = GetDetailValues(productId);
             name = template.Name;
 
             IWorkbook workbook;
@@ -63,8 +63,8 @@ namespace WebAPI.service.impl {
         private IDictionary<string, string> GetDetailValues(string productId) {
             return detailSQL.GetTemplates(productId)
                  .ToDictionary(
-                    value => $"{value.ModuleKey}_{value.ItemKey}_{value.RecordKey}",
-                    value => value.RecordValue
+                    detailPO => $"{detailPO.ModuleKey}_{detailPO.ItemKey}_{detailPO.RecordKey}",
+                    detailPO => detailPO.RecordValue
                  );
         }
 
@@ -73,7 +73,7 @@ namespace WebAPI.service.impl {
         /// </summary>
         /// <param name="sheet"></param>
         /// <param name="valueDict"></param>
-        private void FillTemplate(ISheet sheet, IDictionary<string, string> valueDict) {
+        private void FillTemplate(ISheet sheet, in IDictionary<string, string> valueDict) {
             int rows = sheet.LastRowNum;
             for (int rowNum = 0; rowNum <= rows; rowNum++) {
                 IRow row = sheet.GetRow(rowNum);
@@ -87,8 +87,8 @@ namespace WebAPI.service.impl {
                     if (cell == null) {
                         continue;
                     }
-                    string cellValue = cell.ToString();
 
+                    string cellValue = cell.ToString();
                     // reportId(xxx_xxx_xx) 
                     if (Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
                         cell.SetCellValue(valueDict.TryGetValue(cellValue, out string value) ? value : "");

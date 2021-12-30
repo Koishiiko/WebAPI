@@ -32,7 +32,7 @@ namespace WebAPI.formatter {
             log.LogInformation($"[{httpContext.Connection.RemoteIpAddress.MapToIPv4()}:{httpContext.Connection.RemotePort}] {httpContext.Request.Method}:" +
                 $" {httpContext.Request.Path}{httpContext.Request.QueryString} {bodyString}");
 
-            return await InputFormatterResult.SuccessAsync(JSONUtils.Deserialize(bodyString, context.ModelType));
+            return await InputFormatterResult.SuccessAsync(JSONUtils.Deserialize(bodyString));
         }
     }
 }

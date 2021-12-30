@@ -5,7 +5,7 @@ using WebAPI.service;
 
 namespace WebAPI.controller {
 
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ModulesController : ControllerBase {
 

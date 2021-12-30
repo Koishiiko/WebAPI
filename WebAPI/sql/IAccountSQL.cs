@@ -19,9 +19,7 @@ namespace WebAPI.sql {
 
 		List<AccountDataPO> GetDataByAccountKey(string accountKey);
 
-		List<AccountPagePO> GetByPage(AccountPagination pagination);
-
-		int GetCount(AccountPagination pagination);
+		List<AccountPagePO> GetByPage(AccountPagination pagination, out int total);
 
 		long Save(Account account);
 

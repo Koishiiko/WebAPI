@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebAPI.service;
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UploadController : ControllerBase {
 

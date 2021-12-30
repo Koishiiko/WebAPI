@@ -37,8 +37,8 @@ namespace WebAPI.sql.impl {
         public List<StepData> GetStepDatas(int[] roles) {
             string sql = @"
 				SELECT
-					s.id AS s_id, s.step_id, s.name AS step_name,
-	                m.id AS m_id, m.module_id, m.name AS module_name
+					s.id AS sid, s.step_id, s.name AS step_name,
+	                m.id AS mid, m.module_id, m.name AS module_name
                 FROM (
                     SELECT
                         s0.id, s0.step_id, s0.name

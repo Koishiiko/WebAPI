@@ -7,7 +7,7 @@ using WebAPI.service;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase {
 

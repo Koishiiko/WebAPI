@@ -7,7 +7,7 @@ using WebAPI.service;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class ReportsController : ControllerBase {
 
@@ -17,8 +17,8 @@ namespace WebAPI.controller {
 			this.reportService = reportService;
 		}
 
-		[HttpPost("page")]
-		public ReportPageDTO GetByPage([FromBody] ReportPagination pagination) {
+		[HttpGet("page")]
+		public ReportPageDTO GetByPage([FromQuery] ReportPagination pagination) {
 			return reportService.GetByPage(pagination);
 		}
 

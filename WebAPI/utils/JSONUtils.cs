@@ -1,32 +1,23 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WebAPI.utils {
-    /// <summary>
-    /// 全局配置System.Text.Json不生效 导致解析出现问题
-    /// 所以使用工具类的形式包装 统一配置
-    /// </summary>
     public static class JSONUtils {
 
-        private static readonly JsonSerializerOptions options = new() {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-            WriteIndented = true
+        private static readonly JsonSerializerSettings settings = new() {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public static string Serialize(object obj) {
-            return JsonSerializer.Serialize(obj, options);
+            return JsonConvert.SerializeObject(obj, settings);
         }
 
         public static T Deserialize<T>(string json) {
-            return JsonSerializer.Deserialize<T>(json, options);
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
-        public static object Deserialize(string json, Type type) {
-            return JsonSerializer.Deserialize(json, type, options);
+        public static object Deserialize(string json) {
+            return JsonConvert.DeserializeObject(json, settings);
         }
     }
 }

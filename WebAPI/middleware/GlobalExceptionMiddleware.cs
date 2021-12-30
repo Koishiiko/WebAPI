@@ -40,18 +40,20 @@ namespace WebAPI.middleware {
                 400 => new BadRequestException(),
                 404 => new APINotFoundException(),
                 405 => new MethodNotAllowException(),
-                _ => new ExecuteError(),
+                _ => new ExecuteError()
             };
         }
 
         private async void ExceptionResponseHandler(HttpContext context, Exception e) {
             log.LogError(
                 $"[{context.Connection.RemoteIpAddress.MapToIPv4()}:{context.Connection.RemotePort}] {context.Request.Method} {context.Response.StatusCode}:" +
-                    $" {context.Request.Path}{context.Request.QueryString}\n{e.Message}\n{e.StackTrace}\n");
+                    $" {context.Request.Path}{context.Request.QueryString}\n{e.GetType().FullName}: {e.Message}\n{e.StackTrace}\n");
 
             Result result = Result.Failure(e is CustomException ce ? ce.resultCode : ResultCode.SERVER_EXECUTED_ERROR);
 
-            await context.Response.WriteAsJsonAsync(result);
+            if (!context.Response.HasStarted) {
+                await context.Response.WriteAsJsonAsync(result);
+            }
         }
 
     }

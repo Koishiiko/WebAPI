@@ -4,7 +4,7 @@ using WebAPI.dto;
 using WebAPI.utils;
 
 namespace WebAPI.controller {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MaterialsController : ControllerBase {
 

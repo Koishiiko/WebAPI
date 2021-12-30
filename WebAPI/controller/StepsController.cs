@@ -8,7 +8,7 @@ using System;
 
 namespace WebAPI.controller {
 
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StepsController : ControllerBase {
 

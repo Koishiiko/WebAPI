@@ -30,8 +30,8 @@ namespace WebAPI.service.impl {
 
         public RolePageDTO GetByPage(RolePagination pagination) {
             return new RolePageDTO() {
-                Data = roleSQL.GetByPage(pagination),
-                Total = roleSQL.GetCount(pagination)
+                Data = roleSQL.GetByPage(pagination, out int total),
+                Total = total
             };
         }
 

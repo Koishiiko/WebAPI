@@ -14,7 +14,7 @@ namespace WebAPI.sql.impl {
             string sql = @"
                 SELECT
                     i.id, i.module_id, i.item_id,
-                    i.name, i.type, i.record_id, i.report_id,
+                    i.name, i.type, i.record_id, i.record_name, i.report_id,
                     r.id AS rule_id, r.default_value, r.required, r.required_text, 
                     r.min_value, r.min_value_text, r.max_value, r.max_value_text,
                     r.min_length, r.min_length_text, r.max_length, r.max_length_text,
@@ -27,7 +27,7 @@ namespace WebAPI.sql.impl {
                 WHERE i.module_id = @id
                 ORDER BY i.item_id
 			";
-            return DataSource.QueryMany<ItemDataPO>(sql, new { id = id });
+            return DataSource.QueryMany<ItemDataPO>(sql, new { id });
         }
 
         public Item getById(int id) {
@@ -38,7 +38,7 @@ namespace WebAPI.sql.impl {
             string sql = @"
                 SELECT
                     i.id, i.module_id, i.item_id,
-                    i.name, i.type, i.record_id, i.report_id,
+                    i.name, i.type, i.record_id, i.record_name, i.report_id,
                     r.id AS rule_id, r.default_value, r.required, r.required_text,
                     r.min_value, r.min_value_text, r.max_value, r.max_value_text,
                     r.min_length, r.min_length_text, r.max_length, r.max_length_text,

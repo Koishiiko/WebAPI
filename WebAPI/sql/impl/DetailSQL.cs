@@ -3,71 +3,42 @@ using WebAPI.utils;
 using WebAPI.dto;
 using WebAPI.entity;
 using WebAPI.pagination;
+using WebAPI.po;
+using SqlSugar;
 
 namespace WebAPI.sql.impl {
-	public class DetailSQL : IDetailSQL {
+    public class DetailSQL : IDetailSQL {
 
-		public List<Detail> GetByGuid(string guid) {
-			return DataSource.DB.Queryable<Detail>().Where(d => d.TestGuid == guid).ToList();
-		}
+        public List<Detail> GetByGuid(string guid) {
+            return DataSource.DB.Queryable<Detail>().Where(d => d.TestGuid == guid).ToList();
+        }
 
-		public List<DetailDTO> GetPageByGuid(DetailPagination pagination) {
-			string sql = @"
-                SELECT
-	                d1.id, d1.test_guid,
-                    d1.module_key, m.name AS module_name,
-                    d1.item_key, i.name AS item_name,
-                    d1.record_key, r.name AS record_name, d1.record_value
-                FROM
-	                test_detail d1
-	                LEFT JOIN module m
-						ON d1.module_key = m.module_id
-	                LEFT JOIN item i 
-						ON d1.module_key = i.module_id AND d1.item_key = i.item_id
-	                LEFT JOIN record r 
-						ON d1.record_key = r.record_id,
-                    (
-                        SELECT
-							TOP (@end) ROW_NUMBER() OVER(ORDER BY id ASC) n,
-							id
-						FROM test_detail
-	                    WHERE
-                            test_guid = @guid
-                        AND (
-                            @moduleId IS NULL OR
-                            @moduleId = '' OR
-                            module_key = @moduleId 
-                        )
-                    ) d2
-                WHERE d1.id = d2.id AND d2.n > @start
-			";
-			return DataSource.QueryMany<DetailDTO>(sql, new {
-				start = pagination.Page * pagination.Size,
-				end = (pagination.Page + 1) * pagination.Size,
-				guid = pagination.Guid,
-				moduleId = pagination.ModuleId,
-			});
-		}
-
-		public int GetCount(DetailPagination pagination) {
-			string sql = @"
-                SELECT COUNT(id) as rows FROM test_detail
-                WHERE
-                    test_guid = @guid
-                AND (
-                    module_key = @moduleId OR
-                    @moduleId IS NULL OR
-                    @moduleId = ''
+        public List<DetailDTO> GetPageByGuid(DetailPagination pagination, out int total) {
+            total = 0;
+            return DataSource.DB.Queryable<Detail, Module, Item>((d, m, i) => new JoinQueryInfos(
+                        JoinType.Left, d.ModuleKey == m.ModuleId,
+                        JoinType.Left, d.ModuleKey == i.ModuleId && d.ItemKey == i.ItemId
+                    )
                 )
-			";
-			return DataSource.QueryOne<int>(sql, new {
-				guid = pagination.Guid,
-				moduleId = pagination.ModuleId,
-			});
-		}
+                .Where((d, m, i) => d.TestGuid == pagination.Guid &&
+                    (d.ModuleKey == pagination.ModuleId || string.IsNullOrEmpty(pagination.ModuleId))
+                )
+                .Select((d, m, i) => new DetailDTO {
+                    Id = d.Id,
+                    TestGuid = d.TestGuid,
+                    ModuleKey = d.ModuleKey,
+                    ModuleName = m.Name,
+                    ItemKey = d.ItemKey,
+                    ItemName = i.Name,
+                    RecordKey = d.RecordKey,
+                    RecordName = i.RecordName,
+                    RecordValue = d.RecordValue
+                })
+                .ToPageList(pagination.Page, pagination.Size, ref total);
+        }
 
-		public List<DetailTemplateDTO> GetTemplates(string productId) {
-			string sql = @"
+        public List<DetailTemplatePO> GetTemplates(string productId) {
+            string sql = @"
                 SELECT
 	                d.module_key, d.item_key, d.record_key, d.record_value
                 FROM
@@ -82,12 +53,11 @@ namespace WebAPI.sql.impl {
 	                ) r
 		            ON d.test_guid = r.test_guid
 			";
+            return DataSource.QueryMany<DetailTemplatePO>(sql, new { productId });
+        }
 
-			return DataSource.QueryMany<DetailTemplateDTO>(sql, new { productId });
-		}
-
-		public long Save(Detail detail) {
-			return DataSource.Save(detail);
-		}
-	}
+        public long Save(Detail detail) {
+            return DataSource.Save(detail);
+        }
+    }
 }

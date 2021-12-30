@@ -17,8 +17,8 @@ namespace WebAPI.service.impl {
 
 		public DetailPageDTO GetPageByGuid(DetailPagination pagination) {
 			return new DetailPageDTO() {
-				Data = detailSQL.GetPageByGuid(pagination),
-				Total = detailSQL.GetCount(pagination)
+				Data = detailSQL.GetPageByGuid(pagination, out int total),
+				Total = total
 			};
 		}
 	}

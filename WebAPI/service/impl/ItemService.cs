@@ -53,6 +53,7 @@ namespace WebAPI.service.impl {
                         Name = row.Name,
                         Type = row.Type,
                         RecordId = row.RecordId,
+                        RecordName = row.RecordName,
                         ReportId = row.ReportId,
                         Rules = rules,
                         Suggestions = new List<Suggestion>()
@@ -101,6 +102,7 @@ namespace WebAPI.service.impl {
                 Name = rows[0].Name,
                 Type = rows[0].Type,
                 RecordId = rows[0].RecordId,
+                RecordName = rows[0].RecordName,
                 ReportId = rows[0].ReportId,
                 Rules = rules,
                 Suggestions = new List<Suggestion>()
@@ -115,7 +117,16 @@ namespace WebAPI.service.impl {
 
         public long Save(ItemDTO item) {
             Item data =
-                new Item { Id = item.Id, ModuleId = item.ModuleId, ItemId = item.ItemId, Name = item.Name, Type = item.Type, RecordId = item.RecordId, ReportId = item.ReportId };
+                new Item {
+                    Id = item.Id,
+                    ModuleId = item.ModuleId,
+                    ItemId = item.ItemId,
+                    Name = item.Name,
+                    Type = item.Type,
+                    RecordId = item.RecordId,
+                    RecordName = item.RecordName,
+                    ReportId = item.ReportId
+                };
             long id = itemSQL.Save(data);
 
             ItemRule rules = item.Rules != null ? item.Rules : new ItemRule();
@@ -134,8 +145,16 @@ namespace WebAPI.service.impl {
         }
 
         public int Update(ItemDTO item) {
-            Item data =
-                new Item { Id = item.Id, ModuleId = item.ModuleId, ItemId = item.ItemId, Name = item.Name, Type = item.Type, RecordId = item.RecordId, ReportId = item.ReportId };
+            Item data = new Item {
+                Id = item.Id,
+                ModuleId = item.ModuleId,
+                ItemId = item.ItemId,
+                Name = item.Name,
+                Type = item.Type,
+                RecordId = item.RecordId,
+                RecordName = item.RecordName,
+                ReportId = item.ReportId 
+            };
             int res = itemSQL.Update(data) ? 1 : 0;
 
             ItemRule rules = item.Rules != null ? item.Rules : new ItemRule();

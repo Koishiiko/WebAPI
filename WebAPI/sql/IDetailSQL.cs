@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.dto;
 using WebAPI.pagination;
 
@@ -11,11 +12,9 @@ namespace WebAPI.sql {
 
 		List<Detail> GetByGuid(string guid);
 
-		List<DetailDTO> GetPageByGuid(DetailPagination pagination);
+		List<DetailDTO> GetPageByGuid(DetailPagination pagination, out int total);
 
-		int GetCount(DetailPagination pagination);
-
-		List<DetailTemplateDTO> GetTemplates(string productId);
+		List<DetailTemplatePO> GetTemplates(string productId);
 
 		long Save(Detail detail);
 	}

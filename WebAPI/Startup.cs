@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,7 @@ namespace WebAPI {
 
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
+
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -67,7 +69,7 @@ namespace WebAPI {
 
             app.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(AppSettings.FolderPath),
-                RequestPath = "/files"
+                RequestPath = "/api/files"
             });
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
@@ -79,6 +81,16 @@ namespace WebAPI {
             });
 
             log.LogInformation($"Now running on: {Configuration.GetSection("Kestrel").GetSection("Endpoints").GetSection("Http")["Url"]}");
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => {
+                try {
+                    Exception error = args.ExceptionObject as Exception;
+                    log.LogError(error == null ? $"UnhandledException: {args}" :
+                        $"{error.GetType().Name}: {error.Message}\n{error.StackTrace}\n");
+                } catch (Exception e) {
+                    log.LogError($"{e.GetType().Name}: {e.Message}\n{e.StackTrace}\n");
+                }
+            };
         }
 
         public void ConfigureContainer(ContainerBuilder builder) {
