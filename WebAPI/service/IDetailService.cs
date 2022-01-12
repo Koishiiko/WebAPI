@@ -1,9 +1,11 @@
 ﻿using WebAPI.dto;
 using WebAPI.pagination;
+using System.Collections.Generic;
+
 
 namespace WebAPI.service {
     public interface IDetailService {
 
-		DetailPageDTO GetPageByGuid(DetailPagination pagination);
-	}
+        IEnumerable<DetailDTO> GetRecordDetail(string guid);
+    }
 }

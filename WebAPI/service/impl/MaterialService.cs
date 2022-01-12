@@ -134,7 +134,7 @@ namespace WebAPI.service {
         public void Save(MaterialDTO material, AccountPayload payload) {
             var baseData = material.Data[baseStepId][baseModuleId];
             string productId = baseData[pIdReportId];
-            string productType = baseData[typeReportId];
+            string productType = baseData.TryGetValue(typeReportId, out string val) ? val : string.Empty;
             string tester = payload.AccountName;
 
             // 每个工序分别创建一条test_record记录

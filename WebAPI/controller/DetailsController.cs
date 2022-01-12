@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.dto;
-using WebAPI.pagination;
 using WebAPI.service;
+using System.Collections.Generic;
 
 namespace WebAPI.controller {
     [Route("api/[controller]")]
-	[ApiController]
-	public class DetailsController : ControllerBase {
+    [ApiController]
+    public class DetailsController : ControllerBase {
 
-		private readonly IDetailService detailService;
+        private readonly IDetailService detailService;
 
-		public DetailsController(IDetailService detailService) {
-			this.detailService = detailService;
-		}
+        public DetailsController(IDetailService detailService) {
+            this.detailService = detailService;
+        }
 
-		[HttpGet("page")]
-		public DetailPageDTO GetPageByGuid([FromQuery] DetailPagination pagination) {
-			return detailService.GetPageByGuid(pagination);
-		}
-	}
+        [HttpGet]
+        public IEnumerable<DetailDTO> GetByGuid(string guid) {
+            return detailService.GetRecordDetail(guid);
+        }
+    }
 }

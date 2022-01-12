@@ -11,7 +11,6 @@ namespace WebAPI {
             CreateHostBuilder(args).Build().Run();
         }
 
-
         public static IHostBuilder CreateHostBuilder(string[] args) {
             return Host.CreateDefaultBuilder(args)
                 .UseWindowsService()
@@ -20,6 +19,7 @@ namespace WebAPI {
                     builder.ClearProviders();
                 })
                 .ConfigureWebHostDefaults(webBuilder => {
+                    webBuilder.CaptureStartupErrors(true);
                     webBuilder.ConfigureKestrel(options => {
                         options.ConfigureHttpsDefaults(co => {
                             co.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;

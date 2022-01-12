@@ -11,6 +11,8 @@ namespace WebAPI.sql {
 
 		Item getById(int id);
 
+		List<ItemDetailPO> GetDataByStepId(int id);
+
 		List<ItemDataPO> getByItemId(string moduleId, string itemId);
 
 		bool Update(Item item);

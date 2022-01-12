@@ -12,7 +12,7 @@ namespace WebAPI.sql {
 
 		List<Detail> GetByGuid(string guid);
 
-		List<DetailDTO> GetPageByGuid(DetailPagination pagination, out int total);
+		List<DetailPO> GetDataByGuid(string guid);
 
 		List<DetailTemplatePO> GetTemplates(string productId);
 

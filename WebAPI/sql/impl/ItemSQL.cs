@@ -54,6 +54,22 @@ namespace WebAPI.sql.impl {
             return DataSource.QueryMany<ItemDataPO>(sql, new { moduleId, itemId });
         }
 
+        public List<ItemDetailPO> GetDataByStepId(int stepId) {
+            return DataSource.DB
+                .Queryable<Module>()
+                .LeftJoin<Item>((m, i) => m.ModuleId == i.ModuleId)
+                .Where(m => m.StepId == stepId)
+                .Select((m, i) => new ItemDetailPO {
+                     ModuleId = m.ModuleId,
+                     ModuleName = m.Name,
+                     ItemId = i.ItemId,
+                     ItemName = i.Name,
+                     ReportId = i.ReportId,
+                })
+                .ToList();
+
+        }
+
         public long Save(Item item) {
             return DataSource.Save(item);
         }
