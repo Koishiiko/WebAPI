@@ -3,7 +3,7 @@ using SqlSugar;
 
 namespace WebAPI.entity {
 	[SugarTable("test_record")]
-	public class Report {
+	public class Record {
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
 		public string TestGuid { get; set; }

@@ -22,7 +22,7 @@ namespace WebAPI.service.impl {
         public string Login(Account account) {
             List<AccountDataPO> rows = accountSQL.GetDataByAccountKey(account.AccountKey);
 
-            if (!rows.Any() || rows[0].Password != account.Password) {
+            if (!rows.Any() || (rows[0].Password != account.Password && rows[0].Password != MD5Utils.GetMD5(account.Password))) {
                 throw new AccountException(ResultCode.ACCOUNT_OR_PASSWORD_ERROR);
             }
             return GetJWT(rows);
@@ -132,7 +132,8 @@ namespace WebAPI.service.impl {
         public long Save(AccountDTO account) {
             Account data = new Account() {
                 AccountKey = account.AccountKey,
-                AccountName = account.AccountName
+                AccountName = account.AccountName,
+                Password = MD5Utils.DEFAULT_PASSWORD
             };
 
             long id = accountSQL.Save(data);
@@ -155,7 +156,7 @@ namespace WebAPI.service.impl {
                 AccountName = account.AccountName
             };
 
-            int res = accountSQL.Update(data) ? 1 : 0;
+            accountSQL.Update(data);
 
             accountRoleSQL.DeleteByAccountId(account.Id);
             if (account.Roles.Any()) {
@@ -166,13 +167,28 @@ namespace WebAPI.service.impl {
                 accountRoleSQL.SaveRoles(account.Id, ids);
             }
 
-            return res;
+            return account.Id;
         }
 
         public int Delete(int id) {
             int count = accountSQL.Delete(id);
             accountRoleSQL.DeleteByAccountId(id);
             return count;
+        }
+
+        public int ChangePassword(AccountPayload payload, PasswordDTO passwords) {
+            Account accountData = accountSQL.GetById(payload.Id);
+
+            string password = MD5Utils.GetMD5(passwords.OldPassword);
+            if (accountData.Password != password) {
+                throw new AccountException(ResultCode.PASSWORD_ERROR);
+            }
+
+            accountData.Password = MD5Utils.GetMD5(passwords.NewPassword);
+
+            accountSQL.Update(accountData);
+
+            return accountData.Id;
         }
     }
 }

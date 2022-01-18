@@ -21,9 +21,9 @@ namespace WebAPI.sql {
 
 		List<AccountPagePO> GetByPage(AccountPagination pagination, out int total);
 
-		long Save(Account account);
+		int Save(Account account);
 
-		bool Update(Account account);
+		int Update(Account account);
 
 		int Delete(int id);
 	}

@@ -3,12 +3,13 @@ using WebAPI.dto;
 using WebAPI.pagination;
 using WebAPI.entity;
 using WebAPI.utils;
+using WebAPI.po;
 
 namespace WebAPI.sql.impl {
     public class ReportSQL : IReportSQL {
 
-        public List<Report> GetAll() {
-            return DataSource.DB.Queryable<Report>().OrderBy(r => r.EndTime, SqlSugar.OrderByType.Desc).ToList();
+        public List<Record> GetAll() {
+            return DataSource.Switch.Queryable<Record>().OrderBy(r => r.EndTime, SqlSugar.OrderByType.Desc).ToList();
         }
 
         public List<ReportDTO> GetByPage(ReportPagination pagination) {
@@ -85,7 +86,7 @@ namespace WebAPI.sql.impl {
             });
         }
 
-        public List<ReportDTO> GetAllByProductId(string productId) {
+        public List<RecordPO> GetAllByProductId(string productId) {
             string sql = @"
                 SELECT
 	                r.step_id, r.test_guid
@@ -101,7 +102,7 @@ namespace WebAPI.sql.impl {
                 ORDER BY step_id
 			";
 
-            return DataSource.QueryMany<ReportDTO>(sql, new { productId });
+            return DataSource.QueryMany<RecordPO>(sql, new { productId });
         }
 
         public List<ReportDTO> GetByProductId(string productId) {
@@ -113,8 +114,10 @@ namespace WebAPI.sql.impl {
                     r.testor, r.test_result, r.upload_flag
                 FROM
 	                test_record r
-	                JOIN step s
-	                ON r.step_id = s.step_id
+	                JOIN
+                        step s
+	                ON
+                        r.step_id = s.step_id
                 WHERE
                     r.step_id != 0 AND product_id = @productId
                 ORDER BY
@@ -124,16 +127,15 @@ namespace WebAPI.sql.impl {
             return DataSource.QueryMany<ReportDTO>(sql, new { productId });
         }
 
-        public Report GetLastByProductId(int stepId, string productId) {
-            return DataSource.DB.Queryable<Report>().Single(r => r.ProductId == productId && r.StepId == stepId);
+        public Record GetLastByProductId(int stepId, string productId) {
+            return DataSource.Switch.Queryable<Record>().Single(r => r.ProductId == productId && r.StepId == stepId);
         }
 
-        public Report GetByGuid(string guid) {
-            return DataSource.DB.Queryable<Report>().Single(r => r.TestGuid == guid);
+        public Record GetByGuid(string guid) {
+            return DataSource.Switch.Queryable<Record>().Single(r => r.TestGuid == guid);
         }
 
-
-        public long Save(Report report) {
+        public long Save(Record report) {
             return DataSource.Save(report);
         }
     }

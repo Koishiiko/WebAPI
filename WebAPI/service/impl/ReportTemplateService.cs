@@ -9,15 +9,20 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using WebAPI.po;
 
 namespace WebAPI.service.impl {
     public class ReportTemplateService : IReportTemplateService {
 
         private readonly IReportTemplateSQL reportTemplateSQL;
+        private readonly IReportSQL reportSQL;
         private readonly IDetailSQL detailSQL;
 
-        public ReportTemplateService(IReportTemplateSQL reportTemplateSQL, IDetailSQL detailSQL) {
+        private readonly string imageFilePath = Path.Combine(AppSettings.FolderPath, AppSettings.ImagePath);
+
+        public ReportTemplateService(IReportTemplateSQL reportTemplateSQL, IReportSQL reportSQL, IDetailSQL detailSQL) {
             this.reportTemplateSQL = reportTemplateSQL;
+            this.reportSQL = reportSQL;
             this.detailSQL = detailSQL;
         }
 
@@ -47,7 +52,7 @@ namespace WebAPI.service.impl {
                 workbook = new XSSFWorkbook(fs);
             }
 
-            FillTemplate(workbook.GetSheetAt(0), valueDict);
+            FillTemplate(workbook, valueDict);
 
             return workbook;
         }
@@ -61,11 +66,20 @@ namespace WebAPI.service.impl {
         ///     Value: recordValue
         /// </returns>
         private IDictionary<string, string> GetDetailValues(string productId) {
-            return detailSQL.GetTemplates(productId)
-                 .ToDictionary(
-                    detailPO => $"{detailPO.ModuleKey}_{detailPO.ItemKey}_{detailPO.RecordKey}",
-                    detailPO => detailPO.RecordValue
-                 );
+            List<RecordPO> records = reportSQL.GetAllByProductId(productId);
+
+            IDictionary<string, string> dict = new Dictionary<string, string>();
+
+            records.ForEach(record => {
+                List<DetailPO> details = detailSQL.GetDataByGuid(record.TestGuid);
+                details.ForEach(detail => {
+                    if (!string.IsNullOrEmpty(detail.ReportId)) {
+                        dict.TryAdd(detail.ReportId, detail.Value);
+                    }
+                });
+            });
+
+            return dict;
         }
 
         /// <summary>
@@ -73,7 +87,9 @@ namespace WebAPI.service.impl {
         /// </summary>
         /// <param name="sheet"></param>
         /// <param name="valueDict"></param>
-        private void FillTemplate(ISheet sheet, in IDictionary<string, string> valueDict) {
+        private void FillTemplate(IWorkbook workbook, in IDictionary<string, string> valueDict) {
+            ISheet sheet = workbook.GetSheetAt(0);
+
             int rows = sheet.LastRowNum;
             for (int rowNum = 0; rowNum <= rows; rowNum++) {
                 IRow row = sheet.GetRow(rowNum);
@@ -90,9 +106,32 @@ namespace WebAPI.service.impl {
 
                     string cellValue = cell.ToString();
                     // reportId(xxx_xxx_xx) 
-                    if (Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
-                        cell.SetCellValue(valueDict.TryGetValue(cellValue, out string value) ? value : "");
+                    if (!Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
+                        continue;
                     }
+
+                    if (!valueDict.TryGetValue(cellValue, out string value)) {
+                        cell.SetCellValue(string.Empty);
+                        continue;
+                    }
+
+                    if (cellValue.EndsWith("00")) {
+                        cell.SetCellValue(value == "1" ? "合格" : "不合格");
+                        continue;
+                    }
+
+                    if (cellValue.EndsWith("30")) {
+                        string imageFileName = Path.GetFileName(value);
+                        byte[] bytes = File.ReadAllBytes(Path.Combine(imageFilePath, imageFileName));
+                        sheet.CreateDrawingPatriarch().CreatePicture(
+                            new XSSFClientAnchor(0, 0, 0, 0, columnNum, rowNum, columnNum + 1, rowNum + 1),
+                            workbook.AddPicture(bytes, PictureType.PNG)
+                        );
+                        cell.SetCellValue(string.Empty);
+                        continue;
+                    }
+
+                    cell.SetCellValue(value);
                 }
             }
         }

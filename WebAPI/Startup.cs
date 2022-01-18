@@ -42,7 +42,7 @@ namespace WebAPI {
 
             services.AddControllers(options => {
                 options.Filters.Add<LogFilter>();
-                options.Filters.Add<AuthorizeFilter>();
+                // options.Filters.Add<AuthorizeFilter>();
                 options.OutputFormatters.Insert(0, new ResultFormatter());
             });
 

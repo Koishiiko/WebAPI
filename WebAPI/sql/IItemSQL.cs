@@ -15,9 +15,9 @@ namespace WebAPI.sql {
 
 		List<ItemDataPO> getByItemId(string moduleId, string itemId);
 
-		bool Update(Item item);
+		int Update(Item item);
 
-		long Save(Item item);
+		int Save(Item item);
 
 		int Delete(string id);
 

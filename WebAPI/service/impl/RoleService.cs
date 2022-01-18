@@ -74,7 +74,7 @@ namespace WebAPI.service.impl {
 
         public int Update(RoleDTO role) {
             Role data = new Role() { Id = role.Id, Name = role.Name };
-            int res = roleSQL.Update(data) ? 1 : 0;
+            int res = roleSQL.Update(data);
 
             if (res == 1) {
                 roleStepSQL.DeleteByRoleId(role.Id);

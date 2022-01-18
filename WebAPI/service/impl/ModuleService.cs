@@ -30,7 +30,7 @@ namespace WebAPI.service.impl {
         }
 
         public int Update(Module module) {
-            return moduleSQL.Update(module) ? 1 : 0;
+            return moduleSQL.Update(module);
         }
 
         public int Delete(string id) {

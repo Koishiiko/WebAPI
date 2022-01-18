@@ -25,11 +25,11 @@ namespace WebAPI.sql.impl {
         }
 
         public int DeleteByRoleId(int id) {
-            return DataSource.DB.Deleteable<AccountRole>().Where(ar => ar.RoleId == id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<AccountRole>().Where(ar => ar.RoleId == id).ExecuteCommand();
         }
 
         public int DeleteByAccountId(int id) {
-            return DataSource.DB.Deleteable<AccountRole>().Where(ar => ar.AccountId == id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<AccountRole>().Where(ar => ar.AccountId == id).ExecuteCommand();
         }
     }
 }

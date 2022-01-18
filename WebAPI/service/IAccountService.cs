@@ -6,6 +6,7 @@ using WebAPI.sql;
 using WebAPI.entity;
 using WebAPI.dto;
 using WebAPI.pagination;
+using WebAPI.utils;
 
 namespace WebAPI.service {
 	public interface IAccountService {
@@ -25,6 +26,8 @@ namespace WebAPI.service {
 		Account GetByAccountKey(string accountKey);
 
 		AccountDTO GetDataByAccountKey(string accountKey);
+
+		int ChangePassword(AccountPayload payload, PasswordDTO passwords);
 
 		long Save(AccountDTO account);
 

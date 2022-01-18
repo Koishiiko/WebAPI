@@ -8,24 +8,24 @@ namespace WebAPI.sql.impl {
     public class RoleSQL : IRoleSQL {
 
         public int Delete(int id) {
-            return DataSource.DB.Deleteable<Role>().In(id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Role>().In(id).ExecuteCommand();
         }
 
         public List<Role> GetAll() {
-            return DataSource.DB.Queryable<Role>().ToList();
+            return DataSource.Switch.Queryable<Role>().ToList();
         }
 
         public List<Role> GetByIds(List<int> ids) {
-            return DataSource.DB.Queryable<Role>().In(ids).ToList();
+            return DataSource.Switch.Queryable<Role>().In(ids).ToList();
         }
 
         public List<Role> GetByPage(RolePagination pagination, out int total) {
             total = 0;
-            return DataSource.DB.Queryable<Role>().ToPageList(pagination.Page, pagination.Size, ref total);
+            return DataSource.Switch.Queryable<Role>().ToPageList(pagination.Page, pagination.Size, ref total);
         }
 
         public List<RoleDataPO> GetDataById(int id) {
-            return DataSource.DB.Queryable<Role>()
+            return DataSource.Switch.Queryable<Role>()
                 .LeftJoin<AccountRole>((r, ar) => r.Id == ar.RoleId)
                 .Where(r => r.Id == id)
                 .Select((r, ar) => new RoleDataPO { Id = r.Id, Name = r.Name, AccountId = ar.AccountId })
@@ -33,16 +33,16 @@ namespace WebAPI.sql.impl {
         }
 
         public List<int> GetStepIdsByRoleId(int id) {
-            return DataSource.DB.Queryable<RoleStep>().Where(rs => rs.RoleId == id)
+            return DataSource.Switch.Queryable<RoleStep>().Where(rs => rs.RoleId == id)
                 .Select(rs => rs.StepId)
                 .ToList();
         }
 
-        public long Save(Role role) {
+        public int Save(Role role) {
             return DataSource.Save(role);
         }
 
-        public bool Update(Role role) {
+        public int Update(Role role) {
             return DataSource.Update(role);
         }
     }

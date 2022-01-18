@@ -6,7 +6,7 @@ namespace WebAPI.sql.impl {
     public class ValidSQL : IValidSQL {
 
         public List<Valid> GetByGuid(string guid) {
-            return DataSource.DB.Queryable<Valid>().Where(v => v.Guid == guid).ToList();
+            return DataSource.Switch.Queryable<Valid>().Where(v => v.Guid == guid).ToList();
         }
 
         public long Save(Valid valid) {

@@ -10,6 +10,7 @@ namespace WebAPI.po {
         public string ModuleName { get; set; }
         public string ItemId { get; set; }
         public string ItemName { get; set; }
+        public int Type { get; set; }
         public string ReportId { get; set; }
     }
 }

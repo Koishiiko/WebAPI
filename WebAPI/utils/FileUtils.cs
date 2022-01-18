@@ -15,7 +15,7 @@ namespace WebAPI.utils {
         /// <param name="path"></param>
         /// <returns>保存后的文件名</returns>
         public static string SaveFile(IFormFile file, string path) {
-            string newPath = Renamne(path, out string newName);
+            string newPath = Rename(path, out string newName);
             using (var fs = File.Create(newPath)) {
                 file.OpenReadStream().CopyTo(fs);
             }
@@ -23,7 +23,7 @@ namespace WebAPI.utils {
             return newName;
         }
 
-        private static string Renamne(string path, out string newName) {
+        private static string Rename(string path, out string newName) {
             if (!File.Exists(path)) {
                 newName = Path.GetFileName(path);
                 return path;

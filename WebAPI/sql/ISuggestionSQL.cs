@@ -8,9 +8,9 @@ namespace WebAPI.sql {
 
 		List<Suggestion> getByItemId(string moduleId, string itemId);
 
-		bool Update(Suggestion suggestion);
+		int Update(Suggestion suggestion);
 
-		long Save(Suggestion suggestion);
+		int Save(Suggestion suggestion);
 
 		int Delete(int id);
 

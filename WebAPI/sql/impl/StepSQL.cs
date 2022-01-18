@@ -9,7 +9,7 @@ namespace WebAPI.sql.impl {
     public class StepSQL : IStepSQL {
 
         public List<Step> GetAll() {
-            return DataSource.DB.Queryable<Step>().Where(s => s.StepId > 0).OrderBy(s => s.StepId).ToList();
+            return DataSource.Switch.Queryable<Step>().Where(s => s.StepId > 0).OrderBy(s => s.StepId).ToList();
         }
 
         public List<Step> GetSteps(int[] roles) {
@@ -66,19 +66,19 @@ namespace WebAPI.sql.impl {
         }
 
         public Step GetById(int id) {
-            return DataSource.DB.Queryable<Step>().Single(s => s.StepId == id);
+            return DataSource.Switch.Queryable<Step>().Single(s => s.StepId == id);
         }
 
-        public long Save(Step step) {
+        public int Save(Step step) {
             return DataSource.Save(step);
         }
 
-        public bool Update(Step step) {
+        public int Update(Step step) {
             return DataSource.Update(step);
         }
 
         public int Delete(int id) {
-            return DataSource.DB.Deleteable<Step>().Where(s => s.StepId == id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Step>().Where(s => s.StepId == id).ExecuteCommand();
         }
     }
 }

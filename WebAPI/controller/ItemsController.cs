@@ -41,5 +41,10 @@ namespace WebAPI.controller {
         public int Delete(string moduleId, string itemId) {
             return itemService.Delete(moduleId, itemId);
         }
+
+        [HttpGet("type")]
+        public IEnumerable<ItemType> GetTypes() {
+            return itemService.GetTypes();
+        }
     }
 }

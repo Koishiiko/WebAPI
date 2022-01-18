@@ -63,7 +63,7 @@ namespace WebAPI.service.impl {
         }
 
         public int Update(Step step) {
-            return stepSQL.Update(step) ? 1 : 0;
+            return stepSQL.Update(step);
         }
 
         public int Delete(int id) {

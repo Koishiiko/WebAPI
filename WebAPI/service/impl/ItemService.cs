@@ -9,11 +9,13 @@ namespace WebAPI.service.impl {
     public class ItemService : IItemService {
 
         private readonly IItemSQL itemSQL;
+        private readonly IItemTypeSQL itemTypeSQL;
         private readonly IRuleSQL ruleSQL;
         private readonly ISuggestionSQL suggestionSQL;
 
-        public ItemService(IItemSQL itemSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL) {
+        public ItemService(IItemSQL itemSQL, IItemTypeSQL itemTypeSQL, IRuleSQL ruleSQL, ISuggestionSQL suggestionSQL) {
             this.itemSQL = itemSQL;
+            this.itemTypeSQL = itemTypeSQL;
             this.ruleSQL = ruleSQL;
             this.suggestionSQL = suggestionSQL;
         }
@@ -155,7 +157,7 @@ namespace WebAPI.service.impl {
                 RecordName = item.RecordName,
                 ReportId = item.ReportId 
             };
-            int res = itemSQL.Update(data) ? 1 : 0;
+            int res = itemSQL.Update(data);
 
             ItemRule rules = item.Rules != null ? item.Rules : new ItemRule();
             rules.ModuleId = item.ModuleId;
@@ -182,6 +184,10 @@ namespace WebAPI.service.impl {
             ruleSQL.DeleteByItemId(moduleId, itemId);
             suggestionSQL.DeleteByItemId(moduleId, itemId);
             return count;
+        }
+
+        public IEnumerable<ItemType> GetTypes() {
+            return itemTypeSQL.GetAll();
         }
     }
 }

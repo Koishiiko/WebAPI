@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using WebAPI.entity;
 using WebAPI.dto;
 using WebAPI.pagination;
+using WebAPI.po;
 
 namespace WebAPI.sql {
     public interface IReportSQL {
 
-        List<Report> GetAll();
+        List<Record> GetAll();
 
         List<ReportDTO> GetByPage(ReportPagination pagination);
 
@@ -29,12 +30,12 @@ namespace WebAPI.sql {
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
-        List<ReportDTO> GetAllByProductId(string productId);
+        List<RecordPO> GetAllByProductId(string productId);
 
-        Report GetLastByProductId(int stepId, string productId);
+        Record GetLastByProductId(int stepId, string productId);
 
-        Report GetByGuid(string guid);
+        Record GetByGuid(string guid);
 
-        long Save(Report report);
+        long Save(Record report);
     }
 }

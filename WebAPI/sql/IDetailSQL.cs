@@ -14,8 +14,6 @@ namespace WebAPI.sql {
 
 		List<DetailPO> GetDataByGuid(string guid);
 
-		List<DetailTemplatePO> GetTemplates(string productId);
-
 		long Save(Detail detail);
 	}
 }

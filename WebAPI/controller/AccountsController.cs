@@ -4,6 +4,7 @@ using WebAPI.dto;
 using WebAPI.pagination;
 using WebAPI.entity;
 using WebAPI.service;
+using WebAPI.utils;
 
 namespace WebAPI.controller {
     [Route("api/[controller]")]
@@ -67,6 +68,11 @@ namespace WebAPI.controller {
         [HttpGet("data/accountkey/{key}")]
         public AccountDTO GetDataByAccountKey(string key) {
             return accountService.GetDataByAccountKey(key);
+        }
+
+        [HttpPost("password")]
+        public int ChangePassword([FromHeader] string authorization, [FromBody] PasswordDTO passwords) {
+            return accountService.ChangePassword(JWTUtils.Decode<AccountPayload>(authorization), passwords);
         }
 
         [HttpPost]

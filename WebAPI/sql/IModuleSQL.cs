@@ -13,12 +13,11 @@ namespace WebAPI.sql {
 
 		List<Module> GetByStepId(int id);
 
-
 		int GetCountByStepId(int id);
 
-		bool Update(Module module);
+		int Update(Module module);
 
-		long Save(Module module);
+		int Save(Module module);
 
 		int Delete(string id);
 

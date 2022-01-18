@@ -17,9 +17,9 @@ namespace WebAPI.sql {
 
         Step GetById(int id);
 
-        bool Update(Step step);
+        int Update(Step step);
 
-        long Save(Step step);
+        int Save(Step step);
 
         int Delete(int id);
     }

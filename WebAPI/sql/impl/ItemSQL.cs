@@ -7,7 +7,7 @@ namespace WebAPI.sql.impl {
     public class ItemSQL : IItemSQL {
 
         public List<Item> getByModuleId(string id) {
-            return DataSource.DB.Queryable<Item>().Where(i => i.ModuleId == id).OrderBy("item_id").ToList();
+            return DataSource.Switch.Queryable<Item>().Where(i => i.ModuleId == id).OrderBy("item_id").ToList();
         }
 
         public List<ItemDataPO> getDataByModuleId(string id) {
@@ -31,7 +31,7 @@ namespace WebAPI.sql.impl {
         }
 
         public Item getById(int id) {
-            return DataSource.DB.Queryable<Item>().InSingle(id);
+            return DataSource.Switch.Queryable<Item>().InSingle(id);
         }
 
         public List<ItemDataPO> getByItemId(string moduleId, string itemId) {
@@ -55,35 +55,36 @@ namespace WebAPI.sql.impl {
         }
 
         public List<ItemDetailPO> GetDataByStepId(int stepId) {
-            return DataSource.DB
+            return DataSource.Switch
                 .Queryable<Module>()
                 .LeftJoin<Item>((m, i) => m.ModuleId == i.ModuleId)
                 .Where(m => m.StepId == stepId)
                 .Select((m, i) => new ItemDetailPO {
-                     ModuleId = m.ModuleId,
-                     ModuleName = m.Name,
-                     ItemId = i.ItemId,
-                     ItemName = i.Name,
-                     ReportId = i.ReportId,
+                    ModuleId = m.ModuleId,
+                    ModuleName = m.Name,
+                    ItemId = i.ItemId,
+                    ItemName = i.Name,
+                    Type = i.Type,
+                    ReportId = i.ReportId,
                 })
                 .ToList();
 
         }
 
-        public long Save(Item item) {
+        public int Save(Item item) {
             return DataSource.Save(item);
         }
 
-        public bool Update(Item item) {
+        public int Update(Item item) {
             return DataSource.Update(item);
         }
 
         public int Delete(string id) {
-            return DataSource.DB.Deleteable<Item>().In(id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Item>().In(id).ExecuteCommand();
         }
 
         public int DeleteByModuleId(string id) {
-            return DataSource.DB.Deleteable<Item>().Where(i => i.ModuleId == id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Item>().Where(i => i.ModuleId == id).ExecuteCommand();
         }
 
         public int DeleteByStepId(int id) {
@@ -94,7 +95,7 @@ namespace WebAPI.sql.impl {
         }
 
         public int DeleteByItemId(string moduleId, string itemId) {
-            return DataSource.DB.Deleteable<Item>().Where(i => i.ModuleId == moduleId).Where(i => i.ItemId == itemId).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Item>().Where(i => i.ModuleId == moduleId).Where(i => i.ItemId == itemId).ExecuteCommand();
         }
     }
 }

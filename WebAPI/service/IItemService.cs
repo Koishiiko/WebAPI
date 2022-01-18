@@ -12,6 +12,8 @@ namespace WebAPI.service {
 
 		List<ItemDTO> GetDataByModuleId(string moduleId);
 
+		IEnumerable<ItemType> GetTypes();
+
 		ItemDTO getByItemId(string moduleId, string itemId);
 
 		long Save(ItemDTO item);

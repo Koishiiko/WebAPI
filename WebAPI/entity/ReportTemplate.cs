@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SqlSugar;
+﻿using SqlSugar;
 
 namespace WebAPI.entity {
-	[SugarTable("report_template")]
+    [SugarTable("report_template")]
 	public class ReportTemplate {
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

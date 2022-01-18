@@ -15,8 +15,13 @@ namespace WebAPI.controller {
         }
 
         [HttpGet]
+        public IEnumerable<DetailDTO> GetByProductId(string productId) {
+            return detailService.GetByProductId(productId);
+        }
+
+        [HttpGet("step")]
         public IEnumerable<DetailDTO> GetByGuid(string guid) {
-            return detailService.GetRecordDetail(guid);
+            return detailService.GetByGuid(guid);
         }
     }
 }

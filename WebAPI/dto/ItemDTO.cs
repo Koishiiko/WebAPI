@@ -11,7 +11,7 @@ namespace WebAPI.dto {
 		public string ModuleId { get; set; }
 		public string ItemId { get; set; }
 		public string Name { get; set; }
-		public string Type { get; set; }
+		public int Type { get; set; }
 		public string RecordId { get; set; }
 		public string RecordName { get; set; }
 		public string ReportId { get; set; }

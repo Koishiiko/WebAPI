@@ -20,9 +20,9 @@ namespace WebAPI.sql {
 
 		List<Role> GetByPage(RolePagination pagination, out int total);
 
-		long Save(Role role);
+		int Save(Role role);
 
-		bool Update(Role role);
+		int Update(Role role);
 
 		int Delete(int id);
 	}

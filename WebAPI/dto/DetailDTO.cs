@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace WebAPI.dto {
-	public class DetailDTO {
+    public class DetailDTO {
 
 		public string ModuleId { get; set; }
 		public string ModuleName { get; set; }
@@ -15,6 +12,7 @@ namespace WebAPI.dto {
 
 		public string ReportId { get; set; }
 		public string ItemName { get; set; }
+		public int Type { get; set; }
 		public string Value { get; set; }
 	}
 }

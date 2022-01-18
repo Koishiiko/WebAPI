@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebAPI.dto;
 using WebAPI.entity;
-using WebAPI.pagination;
 using WebAPI.po;
 using WebAPI.sql;
 
@@ -21,38 +18,51 @@ namespace WebAPI.service.impl {
             this.itemSQL = itemSQL;
         }
 
-        public IEnumerable<DetailDTO> GetRecordDetail(string guid) {
-            Report report = reportSQL.GetByGuid(guid);
-            List<ItemDetailPO> items = itemSQL.GetDataByStepId(report.StepId);
+        public IEnumerable<DetailDTO> GetByProductId(string productId) {
+            List<RecordPO> records = reportSQL.GetAllByProductId(productId);
+            var result = new List<DetailDTO>();
 
-            List<DetailPO> details = detailSQL.GetDataByGuid(guid);
+            records.ForEach(record => {
+                GetByGuid(record.StepId, record.TestGuid, result);
+            });
+            return result;
+        }
+
+        public IEnumerable<DetailDTO> GetByGuid(string guid) {
+            var result = new List<DetailDTO>();
+            Record record = reportSQL.GetByGuid(guid);
+            GetByGuid(record.StepId, guid, result);
+            return result;
+        }
+
+        private void GetByGuid(int stepId, string guid, in List<DetailDTO> list) {
+            IEnumerable<ItemDetailPO> items = itemSQL.GetDataByStepId(stepId);
+
+            IEnumerable<DetailPO> details = detailSQL.GetDataByGuid(guid);
             IDictionary<string, string> detailsDict = new Dictionary<string, string>();
             foreach (var detail in details) {
-                if (string.IsNullOrEmpty(detail.ReportId)) {
-                    continue;
+                if (!string.IsNullOrEmpty(detail.ReportId)) {
+                    detailsDict.TryAdd(detail.ReportId, detail.Value);
                 }
-                detailsDict.Add(detail.ReportId, detail.Value);
             }
 
-            var result = new List<DetailDTO>();
-            items.ForEach(item => {
-                if (!result.Any() || result.Last().ModuleId != item.ModuleId) {
-                    result.Add(new DetailDTO {
+            foreach (var item in items) {
+                if (!list.Any() || list.Last().ModuleId != item.ModuleId) {
+                    list.Add(new DetailDTO {
                         ModuleId = item.ModuleId,
                         ModuleName = item.ModuleName,
                         Items = new List<DetailItem>()
                     });
                 }
 
-                string value = detailsDict.TryGetValue(item.ReportId, out string val) ? val : string.Empty;
-                result.Last().Items.Add(new DetailItem {
+                list.Last().Items.Add(new DetailItem {
                     ReportId = item.ReportId,
                     ItemName = item.ItemName,
-                    Value = value
+                    Type = item.Type,
+                    Value = detailsDict.TryGetValue(item.ReportId, out string val) ? val : string.Empty
                 });
-            });
-
-            return result;
+            }
         }
+
     }
 }

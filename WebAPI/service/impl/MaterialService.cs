@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using WebAPI.dto;
 using WebAPI.entity;
+using WebAPI.po;
 using WebAPI.sql;
 using WebAPI.utils;
 
+
 namespace WebAPI.service {
+
     public class MaterialService : IMaterialService {
 
         private readonly IReportSQL reportSQL;
@@ -22,7 +25,7 @@ namespace WebAPI.service {
         private static readonly int baseStepId = 0;
         private static readonly string baseModuleId = "000";
         // 产品id对应的报告id
-        private static readonly string pIdReportId = "000_001_31";
+        private static readonly string productReportId = "000_001_31";
         // 产品类型对应的报告id
         private static readonly string typeReportId = "000_002_31";
 
@@ -38,14 +41,14 @@ namespace WebAPI.service {
         }
 
         public MaterialDTO GetByProductId(string productId) {
-            List<ReportDTO> rows = reportSQL.GetAllByProductId(productId);
+            List<RecordPO> rows = reportSQL.GetAllByProductId(productId);
             if (rows != null && !rows.Any()) {
                 return null;
             }
 
             MaterialDTO result = new MaterialDTO() {
-                Data = new Dictionary<int, IDictionary<string, IDictionary<string, string>>>(),
-                Valids = new Dictionary<int, IDictionary<string, bool>>()
+                Data = new StepsData(),
+                Valids = new StepsValid()
             };
 
             rows.ForEach((row) => {
@@ -60,20 +63,13 @@ namespace WebAPI.service {
             return result;
         }
 
-        /// <summary>
-        /// 将detail表数据转换为字典形式
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns>
-        ///     { 模块id: { 报告id: 记录值, ... }, ...}
-        /// </returns>
-        private IDictionary<string, IDictionary<string, string>> GetModuleData(string guid) {
+        private ModulesData GetModuleData(string guid) {
             List<Detail> details = detailSQL.GetByGuid(guid);
 
-            var result = new Dictionary<string, IDictionary<string, string>>();
+            var result = new ModulesData();
             details.ForEach((detail) => {
                 if (!result.ContainsKey(detail.ModuleKey)) {
-                    result.Add(detail.ModuleKey, new Dictionary<string, string>());
+                    result.Add(detail.ModuleKey, new ItemsData());
                 }
                 string reportId = $"{detail.ModuleKey}_{detail.ItemKey}_{detail.RecordKey}";
                 result[detail.ModuleKey].Add(reportId, detail.RecordValue);
@@ -82,29 +78,26 @@ namespace WebAPI.service {
             return result;
         }
 
-        /// <summary>
-        /// 将valid表数据转换为字典形式
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns>
-        ///     { 模块id: 是否验证, ... }
-        /// </returns>
-        private IDictionary<string, bool> GetModuleValid(string guid) {
+        private ModulesValid GetModuleValid(string guid) {
             List<Valid> valids = validSQL.GetByGuid(guid);
-            return valids.ToDictionary(valid => valid.ModuleId, valid => valid.Value);
+            var res = new ModulesValid();
+            valids.ForEach(valid => {
+                res.Add(valid.ModuleId, valid.Value);
+            });
+            return res;
         }
 
         public MaterialDTO GetByGuid(string guid) {
-            Report report = reportSQL.GetByGuid(guid);
+            Record report = reportSQL.GetByGuid(guid);
 
             MaterialDTO result = new MaterialDTO() {
-                Data = new Dictionary<int, IDictionary<string, IDictionary<string, string>>>(),
-                Valids = new Dictionary<int, IDictionary<string, bool>>()
+                Data = new StepsData(),
+                Valids = new StepsValid()
             };
 
             // 除了获取当前guid的记录
             // 还需要获取产品信息
-            Report baseReport = reportSQL.GetLastByProductId(baseStepId, report.ProductId);
+            Record baseReport = reportSQL.GetLastByProductId(baseStepId, report.ProductId);
 
             result.Data.Add(baseStepId, GetModuleData(baseReport.TestGuid));
             result.Data.Add(report.StepId, GetModuleData(guid));
@@ -115,14 +108,14 @@ namespace WebAPI.service {
 
         public MaterialDTO GetStepDataByProductId(int stepId, string productId) {
             MaterialDTO result = new MaterialDTO() {
-                Data = new Dictionary<int, IDictionary<string, IDictionary<string, string>>>(),
-                Valids = new Dictionary<int, IDictionary<string, bool>>()
+                Data = new StepsData(),
+                Valids = new StepsValid()
             };
 
             // 除了获取当前工序的记录
             // 还需要获取产品信息
-            Report baseReport = reportSQL.GetLastByProductId(baseStepId, productId);
-            Report report = reportSQL.GetLastByProductId(stepId, productId);
+            Record baseReport = reportSQL.GetLastByProductId(baseStepId, productId);
+            Record report = reportSQL.GetLastByProductId(stepId, productId);
 
             result.Data.Add(baseStepId, GetModuleData(baseReport.TestGuid));
             result.Data.Add(report.StepId, GetModuleData(report.TestGuid));
@@ -133,7 +126,7 @@ namespace WebAPI.service {
 
         public void Save(MaterialDTO material, AccountPayload payload) {
             var baseData = material.Data[baseStepId][baseModuleId];
-            string productId = baseData[pIdReportId];
+            string productId = baseData[productReportId];
             string productType = baseData.TryGetValue(typeReportId, out string val) ? val : string.Empty;
             string tester = payload.AccountName;
 
@@ -146,14 +139,10 @@ namespace WebAPI.service {
             }
         }
 
-        private void SaveReport(int stepId, in IDictionary<string, IDictionary<string, string>> modules, in IDictionary<string, bool> modulesValid,
-           string productId, string productType, string tester) {
+        private void SaveReport(int stepId, in ModulesData modules, in ModulesValid modulesValid, string productId, string productType, string tester) {
             string guid = Guid.NewGuid().ToString();
 
-            // XXX: 目前是在开始保存之前记录BeginTime
-            // 执行完毕后记录EndTime 再将数据插入到表中
-            // 大概先插入数据 执行完成后更新EndTime会比较好
-            Report report = new Report() {
+            Record report = new Record() {
                 TestGuid = guid,
                 ProductId = productId,
                 ProductType = productType,
@@ -167,7 +156,7 @@ namespace WebAPI.service {
             // 是否所有模块都通过验证
             int moduleCount = moduleSQL.GetCountByStepId(stepId);
             report.TestResult = (int)(modulesValid.Count == moduleCount && modulesValid.Values.ToList().TrueForAll(valid => valid)
-                                    ? TestResult.Valid : TestResult.NoValid) ;
+                                    ? TestResult.Valid : TestResult.NoValid);
 
             // 根据模块保存当前工序(test_record)下的数据
             foreach (var modulePair in modules) {
@@ -185,16 +174,11 @@ namespace WebAPI.service {
             reportSQL.Save(report);
         }
 
-        private void SaveValid(string guid, string moduleId, bool isValid) {
-            Valid valid = new Valid() {
-                Guid = guid,
-                ModuleId = moduleId,
-                Value = isValid
-            };
-            validSQL.Save(valid);
+        private void SaveValid(string guid, string moduleId, bool valid) {
+            validSQL.Save(new Valid() { Guid = guid, ModuleId = moduleId, Value = valid });
         }
 
-        private void SaveDetails(string guid, in IDictionary<string, string> items) {
+        private void SaveDetails(string guid, in ItemsData items) {
             if (items == null || !items.Any()) {
                 return;
             }
@@ -206,7 +190,7 @@ namespace WebAPI.service {
 
                 // reportId: moduleId_itemId_recordId
                 var arr = reportId.Split('_');
-                Detail detail = new Detail() {
+                var detail = new Detail() {
                     TestGuid = guid,
                     ModuleKey = arr[0],
                     ItemKey = arr[1],
