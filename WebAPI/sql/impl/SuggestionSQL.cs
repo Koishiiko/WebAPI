@@ -6,8 +6,8 @@ using WebAPI.utils;
 namespace WebAPI.sql.impl {
     public class SuggestionSQL : ISuggestionSQL {
 
-        public List<Suggestion> getByItemId(string moduleId, string itemId) {
-            return DataSource.Switch.Queryable<Suggestion>().Where(s => s.ModuleId == moduleId).Where(s => s.ItemId == itemId).ToList();
+        public List<Suggestion> getByReportId(string reportId) {
+            return DataSource.Switch.Queryable<Suggestion>().Where(s => s.ReportId == reportId).ToList();
         }
 
         public Suggestion getById(int id) {
@@ -27,15 +27,15 @@ namespace WebAPI.sql.impl {
         }
 
         public int DeleteByModuleId(string id) {
-            return DataSource.Switch.Deleteable<Suggestion>().Where(s => s.ModuleId == id).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Suggestion>().Where(s => SqlFunc.Subqueryable<Module>().Where(m => m.ModuleId == id).Any()).ExecuteCommand();
         }
 
         public int DeleteByStepId(int id) {
-            return DataSource.Switch.Deleteable<Suggestion>().Where(ir => SqlFunc.Subqueryable<Module>().Where(m => m.StepId == id).Any()).ExecuteCommand();
+            return DataSource.Switch.Deleteable<Suggestion>().Where(s => SqlFunc.Subqueryable<Module>().Where(m => m.StepId == id).Any()).ExecuteCommand();
         }
 
-        public int DeleteByItemId(string moduleId, string itemId) {
-            return DataSource.Switch.Deleteable<Suggestion>().Where(s => s.ModuleId == moduleId).Where(s => s.ItemId == itemId).ExecuteCommand();
+        public int DeleteByReportId(string reportId) {
+            return DataSource.Switch.Deleteable<Suggestion>().Where(s => s.ReportId == reportId).ExecuteCommand();
         }
     }
 }

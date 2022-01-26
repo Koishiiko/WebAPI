@@ -14,10 +14,9 @@ namespace WebAPI.sql.impl {
             return DataSource.Switch.Queryable<ItemRule>().InSingle(id);
         }
 
-        public List<ItemRule> getByItemId(string moduleId, string itemId) {
+        public List<ItemRule> getByReportId(string reportId) {
             return DataSource.Switch.Queryable<ItemRule>()
-                .Where(r => r.ModuleId == moduleId)
-                .Where(r => r.ItemId == itemId)
+                .Where(r => r.ReportId == reportId)
                 .ToList();
         }
 
@@ -33,16 +32,17 @@ namespace WebAPI.sql.impl {
             return DataSource.Switch.Deleteable<ItemRule>().In(id).ExecuteCommand();
         }
 
-        public int DeleteByModuleId(string id) {
-            return DataSource.Switch.Deleteable<ItemRule>().Where(ir => ir.ModuleId == id).ExecuteCommand();
+        public int DeleteByModuleId(string moduleId) {
+            return DataSource.Switch.Deleteable<ItemRule>().Where(ir => SqlFunc.Subqueryable<Module>().Where(m => m.ModuleId == moduleId).Any()).ExecuteCommand();
         }
 
         public int DeleteByStepId(int id) {
             return DataSource.Switch.Deleteable<ItemRule>().Where(ir => SqlFunc.Subqueryable<Module>().Where(m => m.StepId == id).Any()).ExecuteCommand();
         }
 
-        public int DeleteByItemId(string moduleId, string itemId) {
-            return DataSource.Switch.Deleteable<ItemRule>().Where(ir => ir.ModuleId == moduleId).Where(ir => ir.ItemId == itemId).ExecuteCommand();
+
+        public int DeleteByReportId(string reportId) {
+            return DataSource.Switch.Deleteable<ItemRule>().Where(ir => ir.ReportId == reportId).ExecuteCommand();
         }
     }
 }

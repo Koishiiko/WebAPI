@@ -17,7 +17,7 @@ namespace WebAPI.service {
 
 		Step GetById(int id);
 
-		long Save(Step step);
+		long Save(AccountPayload payload, Step step);
 
 		int Update(Step step);
 

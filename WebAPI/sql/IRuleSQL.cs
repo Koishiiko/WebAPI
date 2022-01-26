@@ -12,7 +12,7 @@ namespace WebAPI.sql {
 
 		ItemRule getById(int id);
 
-		List<ItemRule> getByItemId(string moduleId, string itemId);
+		List<ItemRule> getByReportId(string reportId);
 
 		int Update(ItemRule rule);
 
@@ -24,6 +24,6 @@ namespace WebAPI.sql {
 
 		int DeleteByModuleId(string id);
 
-		int DeleteByItemId(string moduleId, string itemId);
+		int DeleteByReportId(string reportId);
 	}
 }

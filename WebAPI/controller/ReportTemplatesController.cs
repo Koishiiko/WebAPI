@@ -38,8 +38,8 @@ namespace WebAPI.controller {
 			return reportTemplateService.Save(file);
 		}
 
-		[HttpGet("{productId}/{templateId}")]
-		public IActionResult GetTemplate(string productId, int templateId) {
+		[HttpGet("export")]
+		public IActionResult GetTemplate([FromQuery] string productId, [FromQuery] int templateId) {
 			IWorkbook workbook = reportTemplateService.GetTemplate(productId, templateId, out string name);
 
 			var ms = new MemoryStream();

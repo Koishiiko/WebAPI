@@ -60,6 +60,15 @@ namespace WebAPI.service {
                 }
             });
 
+            // 兼容以前的产品id
+            if (!result.Data.TryGetValue(baseStepId, out var baseModules)) {
+                result.Data.TryAdd(baseStepId, new ModulesData { { baseModuleId, new ItemsData { { productReportId, productId } } } });
+            } else if (!baseModules.TryGetValue(baseModuleId, out var BaseItems)) {
+                baseModules.TryAdd(baseModuleId, new ItemsData { { productReportId, productId } });
+            } else {
+                BaseItems.TryAdd(productReportId, productId);
+            }
+
             return result;
         }
 
@@ -72,7 +81,7 @@ namespace WebAPI.service {
                     result.Add(detail.ModuleKey, new ItemsData());
                 }
                 string reportId = $"{detail.ModuleKey}_{detail.ItemKey}_{detail.RecordKey}";
-                result[detail.ModuleKey].Add(reportId, detail.RecordValue);
+                result[detail.ModuleKey].TryAdd(reportId, detail.RecordValue);
             });
 
             return result;

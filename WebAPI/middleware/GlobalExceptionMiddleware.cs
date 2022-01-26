@@ -6,15 +6,10 @@ using WebAPI.exception;
 using WebAPI.utils;
 
 namespace WebAPI.middleware {
-    /// <summary>
-    /// 全局异常捕获
-    /// 
-    /// 404 405等错误不会进入Filter中
-    /// 所以这些错误的处理需要在该方法中实现
-    /// </summary>
     public class GlobalExceptionMiddleware {
 
         private readonly RequestDelegate next;
+
         private readonly ILogger<GlobalExceptionMiddleware> log;
 
         public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> log) {
@@ -55,6 +50,5 @@ namespace WebAPI.middleware {
                 await context.Response.WriteAsJsonAsync(result);
             }
         }
-
     }
 }

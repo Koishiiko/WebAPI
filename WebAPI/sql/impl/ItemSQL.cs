@@ -21,9 +21,9 @@ namespace WebAPI.sql.impl {
                     s.id AS suggestion_id, s.value AS suggestion_value
                 FROM item i
 	                LEFT JOIN item_rule r
-		                ON i.module_id = r.module_id AND i.item_id = r.item_id
+		                ON i.report_id = r.report_id
 	                LEFT JOIN suggestion s
-		                ON i.module_id = s.module_id AND i.item_id = s.item_id
+		                ON i.report_id = s.report_id 
                 WHERE i.module_id = @id
                 ORDER BY i.item_id
 			";
@@ -45,27 +45,53 @@ namespace WebAPI.sql.impl {
                     s.id AS suggestion_id, s.value AS suggestion_value
                 FROM item i
 	                LEFT JOIN item_rule r
-		                ON i.module_id = r.module_id AND i.item_id = r.item_id
+		                ON i.report_id = r.report_id 
 	                LEFT JOIN suggestion s
-		                ON i.module_id = s.module_id AND i.item_id = s.item_id
+		                ON i.report_id = s.report_id 
                 WHERE i.module_id = @moduleId AND i.item_id = @itemId
                 ORDER BY i.item_id
 			";
             return DataSource.QueryMany<ItemDataPO>(sql, new { moduleId, itemId });
         }
 
+        public List<ItemDataPO> getByReportId(string reportId) {
+            string sql = @"
+                SELECT
+                    i.id, i.module_id, i.item_id,
+                    i.name, i.type, i.record_id, i.record_name, i.report_id,
+                    r.id AS rule_id, r.default_value, r.required, r.required_text,
+                    r.min_value, r.min_value_text, r.max_value, r.max_value_text,
+                    r.min_length, r.min_length_text, r.max_length, r.max_length_text,
+                    s.id AS suggestion_id, s.value AS suggestion_value
+                FROM item i
+	                LEFT JOIN item_rule r
+		                ON i.report_id = r.report_id
+	                LEFT JOIN suggestion s
+		                ON i.report_id = s.report_id
+                WHERE i.report_id = @reportId
+                ORDER BY i.item_id
+			";
+            return DataSource.QueryMany<ItemDataPO>(sql, new { reportId });
+        }
+
         public List<ItemDetailPO> GetDataByStepId(int stepId) {
             return DataSource.Switch
                 .Queryable<Module>()
                 .LeftJoin<Item>((m, i) => m.ModuleId == i.ModuleId)
+                .LeftJoin<ItemRule>((m, i, ir) => i.ReportId == ir.ReportId)
                 .Where(m => m.StepId == stepId)
-                .Select((m, i) => new ItemDetailPO {
+                .Select((m, i, ir) => new ItemDetailPO {
                     ModuleId = m.ModuleId,
                     ModuleName = m.Name,
                     ItemId = i.ItemId,
                     ItemName = i.Name,
                     Type = i.Type,
                     ReportId = i.ReportId,
+                    Required = ir.Required,
+                    MinValue = ir.MinValue,
+                    MaxValue = ir.MaxValue,
+                    MinLength = ir.MinLength,
+                    MaxLength = ir.MaxLength
                 })
                 .ToList();
 
@@ -94,8 +120,8 @@ namespace WebAPI.sql.impl {
             return DataSource.Delete(sql, new { id = id });
         }
 
-        public int DeleteByItemId(string moduleId, string itemId) {
-            return DataSource.Switch.Deleteable<Item>().Where(i => i.ModuleId == moduleId).Where(i => i.ItemId == itemId).ExecuteCommand();
+        public int DeleteByReportId(string reportId) {
+            return DataSource.Switch.Deleteable<Item>().Where(i => i.ReportId == reportId).ExecuteCommand();
         }
     }
 }

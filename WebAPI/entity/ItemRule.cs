@@ -9,9 +9,8 @@ namespace WebAPI.entity {
 	public class ItemRule {
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-		public int Id { get; set; }
-		public string ModuleId { get; set; }
-		public string ItemId { get; set; }
+		public int? Id { get; set; }
+		public string ReportId { get; set; }
 		public string DefaultValue { get; set; }
 		public bool? Required { get; set; }
 		public string RequiredText { get; set; }

@@ -27,9 +27,9 @@ namespace WebAPI.controller {
             return itemService.GetDataByModuleId(moduleId);
         }
 
-        [HttpGet("{moduleId}/{itemId}")]
-        public ItemDTO GetById(string moduleId, string itemId) {
-            return itemService.getByItemId(moduleId, itemId);
+        [HttpGet("{reportId}")]
+        public ItemDTO GetByReportId(string reportId) {
+            return itemService.getByReportId(reportId);
         }
 
         [HttpPost]
@@ -37,9 +37,9 @@ namespace WebAPI.controller {
             return item.Id == 0 ? itemService.Save(item) : itemService.Update(item);
         }
 
-        [HttpDelete("{moduleId}/{itemId}")]
-        public int Delete(string moduleId, string itemId) {
-            return itemService.Delete(moduleId, itemId);
+        [HttpDelete("{reportId}")]
+        public int Delete(string reportId) {
+            return itemService.Delete(reportId);
         }
 
         [HttpGet("type")]

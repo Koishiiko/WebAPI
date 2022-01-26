@@ -33,8 +33,7 @@ namespace WebAPI.service.impl {
                 if (curr == null || curr.Id != row.Id) {
                     ItemRule rules = row.RuleId != 0 ? new ItemRule {
                         Id = row.RuleId,
-                        ModuleId = row.ModuleId,
-                        ItemId = row.ItemId,
+                        ReportId = row.ReportId,
                         DefaultValue = row.DefaultValue,
                         Required = row.Required,
                         RequiredText = row.RequiredText,
@@ -63,7 +62,7 @@ namespace WebAPI.service.impl {
                 }
                 if (row.SuggestionId != 0) {
                     Suggestion suggestion =
-                        new Suggestion { Id = row.SuggestionId, ModuleId = row.ModuleId, ItemId = row.ItemId, Value = row.SuggestionValue };
+                        new Suggestion { Id = row.SuggestionId, ReportId = row.ReportId, Value = row.SuggestionValue };
                     curr.Suggestions.Add(suggestion);
                 }
                 if (!datas.Any() || datas.Last().Id != curr.Id) {
@@ -73,8 +72,8 @@ namespace WebAPI.service.impl {
             return datas;
         }
 
-        public ItemDTO getByItemId(string moduleId, string itemId) {
-            List<ItemDataPO> rows = itemSQL.getByItemId(moduleId, itemId);
+        public ItemDTO getByReportId(string reportId) {
+            List<ItemDataPO> rows = itemSQL.getByReportId(reportId);
             if (!rows.Any()) {
                 return null;
             }
@@ -82,8 +81,7 @@ namespace WebAPI.service.impl {
             ItemRule rules = rows[0].RuleId != 0 ?
                     new ItemRule {
                         Id = rows[0].RuleId,
-                        ModuleId = rows[0].ModuleId,
-                        ItemId = rows[0].ItemId,
+                        ReportId = rows[0].ReportId,
                         DefaultValue = rows[0].DefaultValue,
                         Required = rows[0].Required,
                         RequiredText = rows[0].RequiredText,
@@ -111,7 +109,7 @@ namespace WebAPI.service.impl {
             };
             if (rows[0].SuggestionId != 0) {
                 rows.ForEach((row) => {
-                    data.Suggestions.Add(new Suggestion { Id = row.SuggestionId, ModuleId = row.ModuleId, ItemId = row.ItemId, Value = row.SuggestionValue });
+                    data.Suggestions.Add(new Suggestion { Id = row.SuggestionId, ReportId = row.ReportId, Value = row.SuggestionValue });
                 });
             }
             return data;
@@ -131,15 +129,12 @@ namespace WebAPI.service.impl {
                 };
             long id = itemSQL.Save(data);
 
-            ItemRule rules = item.Rules != null ? item.Rules : new ItemRule();
-            rules.ModuleId = item.ModuleId;
-            rules.ItemId = item.ItemId;
+            ItemRule rules = item.Rules != null ? item.Rules : new ItemRule() { ReportId = item.ReportId };
             ruleSQL.Save(rules);
 
             if (item.Suggestions != null && item.Suggestions.Any()) {
                 item.Suggestions.ForEach((suggestion) => {
-                    suggestion.ModuleId = item.ModuleId;
-                    suggestion.ItemId = item.ItemId;
+                    suggestion.ReportId = item.ReportId;
                     suggestionSQL.Save(suggestion);
                 });
             }
@@ -155,34 +150,32 @@ namespace WebAPI.service.impl {
                 Type = item.Type,
                 RecordId = item.RecordId,
                 RecordName = item.RecordName,
-                ReportId = item.ReportId 
+                ReportId = item.ReportId
             };
             int res = itemSQL.Update(data);
 
-            ItemRule rules = item.Rules != null ? item.Rules : new ItemRule();
-            rules.ModuleId = item.ModuleId;
-            rules.ItemId = item.ItemId;
-            if (rules.Id == 0) {
-                ruleSQL.Save(rules);
-            } else {
+            var rules = item.Rules == null ? new ItemRule() : item.Rules;
+            rules.ReportId = item.ReportId;
+            if (rules.Id.HasValue) {
                 ruleSQL.Update(rules);
+            } else {
+                ruleSQL.Save(rules);
             }
 
-            suggestionSQL.DeleteByItemId(item.ModuleId, item.ItemId);
+            suggestionSQL.DeleteByReportId(item.ReportId);
             if (item.Suggestions != null && item.Suggestions.Any()) {
                 item.Suggestions.ForEach((suggestion) => {
-                    suggestion.ModuleId = item.ModuleId;
-                    suggestion.ItemId = item.ItemId;
+                    suggestion.ReportId = item.ReportId;
                     suggestionSQL.Save(suggestion);
                 });
             }
             return res;
         }
 
-        public int Delete(string moduleId, string itemId) {
-            int count = itemSQL.DeleteByItemId(moduleId, itemId);
-            ruleSQL.DeleteByItemId(moduleId, itemId);
-            suggestionSQL.DeleteByItemId(moduleId, itemId);
+        public int Delete(string reportId) {
+            int count = itemSQL.DeleteByReportId(reportId);
+            ruleSQL.DeleteByReportId(reportId);
+            suggestionSQL.DeleteByReportId(reportId);
             return count;
         }
 

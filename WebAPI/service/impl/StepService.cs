@@ -58,7 +58,7 @@ namespace WebAPI.service.impl {
             return stepSQL.GetSteps(payload.Roles.ToArray());
         }
 
-        public long Save(Step step) {
+        public long Save(AccountPayload payload, Step step) {
             return stepSQL.Save(step);
         }
 

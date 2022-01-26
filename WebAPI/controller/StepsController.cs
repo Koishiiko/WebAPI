@@ -41,8 +41,9 @@ namespace WebAPI.controller {
         }
 
         [HttpPost]
-        public long Save(Step step) {
-            return step.Id == 0 ? stepService.Save(step) : stepService.Update(step);
+        public long Save([FromHeader] string authorization, Step step) {
+            var payload = JWTUtils.Decode<AccountPayload>(authorization);
+            return step.Id == 0 ? stepService.Save(payload, step) : stepService.Update(step);
         }
 
         [HttpDelete("{id}")]

@@ -59,6 +59,11 @@ namespace WebAPI.service.impl {
                     ReportId = item.ReportId,
                     ItemName = item.ItemName,
                     Type = item.Type,
+                    Required = item.Required.HasValue && item.Required.Value,
+                    MaxValue = item.MaxValue.HasValue ? item.MaxValue.Value : int.MaxValue,
+                    MinValue = item.MinValue.HasValue ? item.MinValue.Value : int.MinValue,
+                    MaxLength = item.MaxLength.HasValue ? item.MaxLength.Value : int.MaxValue,
+                    MinLength = item.MinLength.HasValue ? item.MinLength.Value : int.MinValue,
                     Value = detailsDict.TryGetValue(item.ReportId, out string val) ? val : string.Empty
                 });
             }

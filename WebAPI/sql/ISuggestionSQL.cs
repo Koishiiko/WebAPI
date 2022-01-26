@@ -6,7 +6,7 @@ namespace WebAPI.sql {
 
 		Suggestion getById(int id);
 
-		List<Suggestion> getByItemId(string moduleId, string itemId);
+		List<Suggestion> getByReportId(string reportId);
 
 		int Update(Suggestion suggestion);
 
@@ -18,6 +18,6 @@ namespace WebAPI.sql {
 
 		int DeleteByModuleId(string id);
 
-		int DeleteByItemId(string moduleId, string itemId);
+		int DeleteByReportId(string reportId);
 	}
 }

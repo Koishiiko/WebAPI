@@ -10,6 +10,7 @@ using NPOI.XSSF.UserModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using WebAPI.po;
+using NPOI.HSSF.UserModel;
 
 namespace WebAPI.service.impl {
     public class ReportTemplateService : IReportTemplateService {

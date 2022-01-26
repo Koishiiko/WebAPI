@@ -15,6 +15,8 @@ namespace WebAPI.sql {
 
 		List<ItemDataPO> getByItemId(string moduleId, string itemId);
 
+		List<ItemDataPO> getByReportId(string reportId);
+
 		int Update(Item item);
 
 		int Save(Item item);
@@ -25,6 +27,6 @@ namespace WebAPI.sql {
 
 		int DeleteByModuleId(string id);
 
-		int DeleteByItemId(string moduleId, string itemId);
+		int DeleteByReportId(string reportId);
 	}
 }

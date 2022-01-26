@@ -5,8 +5,7 @@ namespace WebAPI.entity {
 
 		[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
 		public int Id { get; set; }
-		public string ModuleId { get; set; }
-		public string ItemId { get; set; }
+		public string ReportId { get; set; }
 		public string Value { get; set; }
 	}
 }

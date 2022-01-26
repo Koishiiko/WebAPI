@@ -14,12 +14,12 @@ namespace WebAPI.service {
 
 		IEnumerable<ItemType> GetTypes();
 
-		ItemDTO getByItemId(string moduleId, string itemId);
+		ItemDTO getByReportId(string reportId);
 
 		long Save(ItemDTO item);
 
 		int Update(ItemDTO item);
 
-		int Delete(string moduleId, string itemId);
+		int Delete(string reportId);
 	}
 }
