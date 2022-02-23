@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using Spire.Xls;
 
 namespace WebAPI {
     public class Program {

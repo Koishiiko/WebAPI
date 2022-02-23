@@ -24,7 +24,7 @@ namespace WebAPI.utils {
 
         public static string Encode(AccountPayload payload) {
             return GetJwtBuilder()
-                   //.AddClaim("exp", EXPIRED_TIME)
+                   .AddClaim("exp", EXPIRED_TIME)
                    .AddClaim("data", payload)
                    .Encode();
         }

@@ -10,17 +10,20 @@ namespace WebAPI.service.impl {
 
         private readonly IReportSQL reportSQL;
         private readonly IDetailSQL detailSQL;
+        private readonly IStepSQL stepSQL;
         private readonly IItemSQL itemSQL;
 
-        public DetailService(IReportSQL reportSQL, IDetailSQL detailSQL, IItemSQL itemSQL) {
+        public DetailService(IReportSQL reportSQL, IDetailSQL detailSQL, IStepSQL stepSQL, IItemSQL itemSQL) {
             this.reportSQL = reportSQL;
             this.detailSQL = detailSQL;
+            this.stepSQL = stepSQL;
             this.itemSQL = itemSQL;
         }
 
         public IEnumerable<DetailDTO> GetByProductId(string productId) {
             List<RecordPO> records = reportSQL.GetAllByProductId(productId);
             var result = new List<DetailDTO>();
+            List<Step> steps = stepSQL.GetAll();
 
             records.ForEach(record => {
                 GetByGuid(record.StepId, record.TestGuid, result);

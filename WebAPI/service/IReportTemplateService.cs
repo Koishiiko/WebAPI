@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NPOI.SS.UserModel;
+using Spire.Xls;
 using WebAPI.entity;
 
 namespace WebAPI.service {
@@ -14,6 +15,8 @@ namespace WebAPI.service {
 
 		string Save(IFormFile file);
 
-		IWorkbook GetTemplate(string productId, int templateId, out string name);
+		Workbook GetTemplate(string productId, int templateId, out string name);
+
+		void PrintTemplate(string productId, int templateId);
 	}
 }

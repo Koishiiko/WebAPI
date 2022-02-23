@@ -78,12 +78,12 @@ namespace WebAPI.service.impl {
 
             if (res == 1) {
                 roleStepSQL.DeleteByRoleId(role.Id);
-                if (role.StepIds.Any()) {
+                if (role.StepIds != null && role.StepIds.Any()) {
                     roleStepSQL.SaveSteps(role.Id, role.StepIds);
                 }
 
                 accountRoleSQL.DeleteByRoleId(role.Id);
-                if (role.AccountIds.Any()) {
+                if (role.AccountIds != null && role.AccountIds.Any()) {
                     accountRoleSQL.SaveAccounts(role.Id, role.AccountIds);
                 }
             }

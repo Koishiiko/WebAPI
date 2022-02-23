@@ -10,6 +10,7 @@ using WebAPI.entity;
 using WebAPI.service;
 using NPOI.SS.UserModel;
 using WebAPI.utils;
+using Spire.Xls;
 
 namespace WebAPI.controller {
 	[Route("api/[controller]")]
@@ -38,15 +39,20 @@ namespace WebAPI.controller {
 			return reportTemplateService.Save(file);
 		}
 
-		[HttpGet("export")]
+		[HttpGet("excel")]
 		public IActionResult GetTemplate([FromQuery] string productId, [FromQuery] int templateId) {
-			IWorkbook workbook = reportTemplateService.GetTemplate(productId, templateId, out string name);
+			Workbook workbook = reportTemplateService.GetTemplate(productId, templateId, out string name);
 
 			var ms = new MemoryStream();
-			workbook.Write(ms);
+			workbook.SaveToStream(ms);
 			ms.Position = 0;
 
 			return File(ms, "application/octet-stream", name);
+		}
+
+		[HttpGet("print")]
+		public void PrintTemplate([FromQuery] string productId, [FromQuery] int templateId) {
+			reportTemplateService.PrintTemplate(productId, templateId);
 		}
 	}
 }

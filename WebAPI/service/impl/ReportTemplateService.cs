@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using WebAPI.po;
 using NPOI.HSSF.UserModel;
+using Spire.Xls;
 
 namespace WebAPI.service.impl {
     public class ReportTemplateService : IReportTemplateService {
@@ -42,35 +43,71 @@ namespace WebAPI.service.impl {
             return relativePath;
         }
 
-        public IWorkbook GetTemplate(string productId, int templateId, out string name) {
+        public Workbook GetTemplate(string productId, int templateId, out string name) {
             ReportTemplate template = reportTemplateSQL.GetById(templateId);
             string templatePath = Path.Combine(AppSettings.FolderPath, template.Path);
-            var valueDict = GetDetailValues(productId);
             name = template.Name;
+            return GetWorkbook(productId, templatePath);
+        }
 
-            IWorkbook workbook;
-            using (var fs = File.OpenRead(templatePath)) {
-                workbook = new XSSFWorkbook(fs);
+        public void PrintTemplate(string productId, int templateId) {
+            ReportTemplate template = reportTemplateSQL.GetById(templateId);
+            string templatePath = Path.Combine(AppSettings.FolderPath, template.Path);
+
+            Workbook workbook = GetWorkbook(productId, templatePath);
+
+            workbook.PrintDocument.Print();
+        }
+
+        private Workbook GetWorkbook(string productId, string path) {
+            Workbook workbook = new Workbook();
+            workbook.LoadFromFile(path);
+
+            var dict = GetDetailValues(productId);
+
+            var sheet = workbook.ActiveSheet;
+
+            int rows = sheet.LastRow;
+            int cols = sheet.LastColumn;
+            for (int row = 1; row <= rows; row++) {
+                for (int col = 1; col <= cols; col++) {
+                    var cell = sheet.Range[row, col];
+                    string cellValue = cell.Text;
+                    if (string.IsNullOrEmpty(cellValue)) {
+                        continue;
+                    }
+
+                    // reportId(xxx_xxx_xx) 
+                    if (!Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
+                        continue;
+                    }
+
+                    if (!dict.TryGetValue(cellValue, out string value)) {
+                        cell.Text = string.Empty;
+                        continue;
+                    }
+
+                    if (cellValue.EndsWith("00")) {
+                        cell.Text = (value == "1" ? "合格" : "不合格");
+                        continue;
+                    }
+
+                    if (cellValue.EndsWith("30")) {
+                        string imageFileName = Path.GetFileName(value);
+                        sheet.Pictures.Add(row, col, Path.Combine(imageFilePath, imageFileName));
+                        cell.Text = string.Empty;
+                        continue;
+                    }
+
+                    cell.Text = value;
+                }
             }
-
-            FillTemplate(workbook, valueDict);
-
             return workbook;
         }
 
-        /// <summary>
-        /// 获取当前产品的所有记录值字典
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <returns>
-        ///     Key: reportId
-        ///     Value: recordValue
-        /// </returns>
         private IDictionary<string, string> GetDetailValues(string productId) {
             List<RecordPO> records = reportSQL.GetAllByProductId(productId);
-
             IDictionary<string, string> dict = new Dictionary<string, string>();
-
             records.ForEach(record => {
                 List<DetailPO> details = detailSQL.GetDataByGuid(record.TestGuid);
                 details.ForEach(detail => {
@@ -79,62 +116,7 @@ namespace WebAPI.service.impl {
                     }
                 });
             });
-
             return dict;
-        }
-
-        /// <summary>
-        /// 将sheet表中的reportId替换为对应的recordValue
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="valueDict"></param>
-        private void FillTemplate(IWorkbook workbook, in IDictionary<string, string> valueDict) {
-            ISheet sheet = workbook.GetSheetAt(0);
-
-            int rows = sheet.LastRowNum;
-            for (int rowNum = 0; rowNum <= rows; rowNum++) {
-                IRow row = sheet.GetRow(rowNum);
-                if (row == null) {
-                    continue;
-                }
-
-                int columns = row.LastCellNum;
-                for (int columnNum = 0; columnNum <= columns; columnNum++) {
-                    ICell cell = row.GetCell(columnNum);
-                    if (cell == null) {
-                        continue;
-                    }
-
-                    string cellValue = cell.ToString();
-                    // reportId(xxx_xxx_xx) 
-                    if (!Regex.IsMatch(cellValue, @"^(\d{3}_){2}\d{2}$")) {
-                        continue;
-                    }
-
-                    if (!valueDict.TryGetValue(cellValue, out string value)) {
-                        cell.SetCellValue(string.Empty);
-                        continue;
-                    }
-
-                    if (cellValue.EndsWith("00")) {
-                        cell.SetCellValue(value == "1" ? "合格" : "不合格");
-                        continue;
-                    }
-
-                    if (cellValue.EndsWith("30")) {
-                        string imageFileName = Path.GetFileName(value);
-                        byte[] bytes = File.ReadAllBytes(Path.Combine(imageFilePath, imageFileName));
-                        sheet.CreateDrawingPatriarch().CreatePicture(
-                            new XSSFClientAnchor(0, 0, 0, 0, columnNum, rowNum, columnNum + 1, rowNum + 1),
-                            workbook.AddPicture(bytes, PictureType.PNG)
-                        );
-                        cell.SetCellValue(string.Empty);
-                        continue;
-                    }
-
-                    cell.SetCellValue(value);
-                }
-            }
         }
     }
 }
